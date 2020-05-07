@@ -1,0 +1,207 @@
+/*
+* @name bison.yy
+* @description A Simple Tools of Expression Analysis
+* @date 03/26/2020 
+* @author Lrq
+*/
+
+%language "C++"
+%defines
+%locations
+%skeleton "lalr1.cc"
+%debug 
+
+%code{
+	#include <iostream>
+	#include <unistd.h>
+	int yydebug=1;
+}
+
+%code requires{
+	#define YYDEBUG 1
+	#include "ast.h"
+	#include "visitor.h"
+	#include "codegen.h"
+}
+%union{
+	AstNode* a;
+	Expression* e;
+	Identifier* id;
+	Statement* stmt;
+	Int10* int10;
+	Real10* real10;
+	Assign* assign;
+	int n;
+	double d;
+}
+
+%parse-param {Expression** root} {Statement** stmt}
+
+/* declearation */
+%token END_OF_FILE
+%token EOL
+%token REAL8 REAL16
+%token REAL10 
+%token <e> INT8 INT16
+%token <int10> INT10 
+%token <e> ADD SUB MUL DIV 
+%token <assign> ASSIGN
+%token LP RP MLP MRP LLP LRP 
+%token THEN WHILE DO ELSE RETURN TYPE_INT TYPE_VOID
+%token LT GT IF SEMICOLON COMMA
+%token EQ GET LET NEQ
+%token <id> ID
+
+%type <e> expression simple-expression relop additive-expression addop term mulop factor
+%type <stmt> expression-stmt statement compound-stmt selection-stmt 
+			 iteration-stmt return-stmt
+%type <id> var
+%{
+	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
+%}
+
+%%
+	program: declearation-list;
+
+	declearation-list: declearation-list declearation
+					 | declearation
+					 ;
+
+	declearation: var-declearation 
+				| fun-declearation
+				;
+
+	var-declearation: type-specifier ID SEMICOLON 
+					| type-specifier ID MLP INT10 MRP SEMICOLON;
+
+	type-specifier: TYPE_INT
+	;
+
+	fun-declearation: type-specifier ID LP params RP compound-stmt{cout << $6->type;};
+
+	params: param-list
+		  | TYPE_VOID
+		  ;
+
+	param-list: param-list COMMA param
+			  | param
+			  ;
+
+	param: type-specifier ID
+		 | type-specifier ID MLP MRP
+		 ; 
+
+	compound-stmt: LLP local-declearations statement-list LRP
+				 ;
+
+	local-declearations: local-declearations var-declearation
+					   |
+					   ;
+
+	statement-list: statement-list statement
+				  |
+				  ;
+
+	statement: expression-stmt 
+			 | compound-stmt {$$ = $1; cout << $1->type;}
+			 | selection-stmt {*stmt = $1; $$ = $1;}
+			 | iteration-stmt
+			 | return-stmt
+			 ;
+
+	expression-stmt: expression SEMICOLON {$$ = new ExpStmt($1);}
+				   | SEMICOLON {$$ = new EmptyStmt();}
+				   ;
+
+
+	selection-stmt: IF LP expression RP	statement {$$ = new If("if", $3, $5); }
+				  | IF LP expression RP statement ELSE statement {$$ = new If("if", $3, $5, $7);}
+	
+	
+	iteration-stmt: WHILE LP expression RP statement {
+													 $$ = new While("while", $3, $5);
+												}
+				  ;
+	
+	return-stmt: RETURN SEMICOLON {}
+	           | RETURN expression SEMICOLON {$$->e = $2;}
+			   ;
+
+	expression: var ASSIGN expression {
+									  $2 = new Assign("=", $1, $3);
+								      Gen::genAssign($2, $1, $3);
+									  $$ = $2; 
+									  *root = $2; }
+	          | simple-expression
+			  ;
+
+	var: ID { Gen::genId($$, $1); $$ = $1;}
+	   | ID MLP expression MRP
+	   ;
+	
+	simple-expression: additive-expression relop additive-expression{
+																	$2->left = $1; 
+																	$2->right = $3; 
+																	//Gen::genRelop($2, $1, $3, $2->type);
+																	$$ = $2;
+																}
+					 | additive-expression
+					 ;
+
+	relop: GT { $$ = new BinOp(">");}
+		 | LT { $$ = new BinOp("<");}
+		 | LET { $$ = new BinOp("<=");}
+		 | GET { $$ = new BinOp(">=");}
+		 | EQ { $$ = new BinOp("==");}
+		 | NEQ { $$ = new BinOp("!=");}
+		 ;	
+	
+	additive-expression: additive-expression addop term {
+														$2->left = $1; 
+														$2->right = $3; 
+														Gen::genBinary($2, $1, $3, $2->type);
+														$$ = $2;
+													}
+					   | term 
+					   ;
+	
+	addop: ADD { $$ = new BinOp("+");}
+	     | SUB { $$ = new BinOp("-");}
+		 ;
+
+	term: term mulop factor {
+							$2->left = $1;
+							$2->right = $3;
+							Gen::genBinary($2, $1, $3, $2->type);
+							$$ = $2;
+							}
+	    | factor 
+		;
+	
+	mulop: MUL { $$ = new BinOp("*");}
+	     | DIV { $$ = new BinOp("/");}
+		 ;
+
+	factor: LP expression RP {$$ = $2;}
+	      | var {$$ = $1;} 
+		  | call
+		  | INT10 {Gen::genInt10($$, $1); $$ = $1;}
+		  ;
+
+	call: ID LP args RP;
+
+	args: arg-list 
+	    | ;
+
+	arg-list: arg-list COMMA expression 
+			| expression
+			;
+
+%%
+
+namespace yy{
+	void
+	parser::error(location const &loc, const std::string &s){
+			std::cerr << "error at " << loc << ": " << s << std::endl;
+	}
+}
