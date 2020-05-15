@@ -31,23 +31,21 @@
 // version 2.2 of Bison.
 
 /**
- ** \file bison.tab.hxx
+ ** \file bison.tab.hh
  ** Define the yy::parser class.
  */
 
 // C++ LALR(1) parser skeleton written by Akim Demaille.
 
-#ifndef YY_YY_BISON_TAB_HXX_INCLUDED
-# define YY_YY_BISON_TAB_HXX_INCLUDED
+#ifndef YY_YY_BISON_TAB_HH_INCLUDED
+# define YY_YY_BISON_TAB_HH_INCLUDED
 // //                    "%code requires" blocks.
-#line 20 "bison.yxx" // lalr1.cc:377
+#line 19 "bison.y" // lalr1.cc:377
 
-	#define YYDEBUG 1
 	#include "ast.h"
 	#include "visitor.h"
-	#include "codegen.h"
 
-#line 51 "bison.tab.hxx" // lalr1.cc:377
+#line 49 "bison.tab.hh" // lalr1.cc:377
 
 
 # include <cstdlib> // std::abort
@@ -119,7 +117,7 @@
 
 
 namespace yy {
-#line 123 "bison.tab.hxx" // lalr1.cc:377
+#line 121 "bison.tab.hh" // lalr1.cc:377
 
 
 
@@ -133,20 +131,12 @@ namespace yy {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 26 "bison.yxx" // lalr1.cc:377
+    #line 23 "bison.y" // lalr1.cc:377
 
 	AstNode* a;
-	Expression* e;
-	Identifier* id;
-	Statement* stmt;
-	vector<Statement*>* stmt_list;
-	Int10* int10;
-	Real10* real10;
-	Assign* assign;
-	int n;
 	double d;
 
-#line 150 "bison.tab.hxx" // lalr1.cc:377
+#line 140 "bison.tab.hh" // lalr1.cc:377
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -166,42 +156,14 @@ namespace yy {
     {
       enum yytokentype
       {
-        END_OF_FILE = 258,
-        EOL = 259,
-        REAL8 = 260,
-        REAL16 = 261,
-        REAL10 = 262,
-        INT8 = 263,
-        INT16 = 264,
-        INT10 = 265,
-        ADD = 266,
-        SUB = 267,
-        MUL = 268,
-        DIV = 269,
-        ASSIGN = 270,
-        LP = 271,
-        RP = 272,
-        MLP = 273,
-        MRP = 274,
-        LLP = 275,
-        LRP = 276,
-        THEN = 277,
-        WHILE = 278,
-        DO = 279,
-        ELSE = 280,
-        RETURN = 281,
-        TYPE_INT = 282,
-        TYPE_VOID = 283,
-        LT = 284,
-        GT = 285,
-        IF = 286,
-        SEMICOLON = 287,
-        COMMA = 288,
-        EQ = 289,
-        GET = 290,
-        LET = 291,
-        NEQ = 292,
-        ID = 293
+        EOL = 258,
+        NUMBER = 259,
+        ADD = 260,
+        SUB = 261,
+        MUL = 262,
+        DIV = 263,
+        OP = 264,
+        CP = 265
       };
     };
 
@@ -306,7 +268,7 @@ namespace yy {
 
 
     /// Build a parser object.
-    parser (Expression** root_yyarg, Statement** stmt_yyarg);
+    parser (AstNode** root_yyarg);
     virtual ~parser ();
 
     /// Parse.
@@ -506,26 +468,25 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 97,     ///< Last index in yytable_.
-      yynnts_ = 30,  ///< Number of nonterminal symbols.
-      yyfinal_ = 8, ///< Termination state number.
+      yylast_ = 19,     ///< Last index in yytable_.
+      yynnts_ = 5,  ///< Number of nonterminal symbols.
+      yyfinal_ = 2, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 39  ///< Number of tokens.
+      yyntokens_ = 11  ///< Number of tokens.
     };
 
 
     // User arguments.
-    Expression** root;
-    Statement** stmt;
+    AstNode** root;
   };
 
 
 
 } // yy
-#line 527 "bison.tab.hxx" // lalr1.cc:377
+#line 488 "bison.tab.hh" // lalr1.cc:377
 
 
 
 
-#endif // !YY_YY_BISON_TAB_HXX_INCLUDED
+#endif // !YY_YY_BISON_TAB_HH_INCLUDED

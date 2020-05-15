@@ -28,6 +28,7 @@
 	Expression* e;
 	Identifier* id;
 	Statement* stmt;
+	vector<Statement*>* stmt_list;
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
@@ -54,7 +55,9 @@
 
 %type <e> expression simple-expression relop additive-expression addop term mulop factor
 %type <stmt> expression-stmt statement compound-stmt selection-stmt 
-			 iteration-stmt return-stmt
+			 iteration-stmt return-stmt var-declearation
+%type <stmt_list> local-declearations statement-list
+
 %type <id> var
 %{
 	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
@@ -91,15 +94,23 @@
 		 | type-specifier ID MLP MRP
 		 ; 
 
-	compound-stmt: LLP local-declearations statement-list LRP
+	compound-stmt: LLP local-declearations statement-list LRP {
+															  $$ = new BlockStmt("block", $2, $3);
+														}
 				 ;
 
-	local-declearations: local-declearations var-declearation
-					   |
+	local-declearations: local-declearations var-declearation{
+															 $1->push_back($2);
+															 $$ = $1;		
+														}
+					   | {$$ = new vector<Statement*>();}
 					   ;
 
-	statement-list: statement-list statement
-				  |
+	statement-list: statement-list statement {
+											 $1->push_back($2);
+											 $$ = $1;
+										}
+				  | {$$ = new vector<Statement*>();}
 				  ;
 
 	statement: expression-stmt 
@@ -109,22 +120,22 @@
 			 | return-stmt
 			 ;
 
-	expression-stmt: expression SEMICOLON {$$ = new ExpStmt($1);}
-				   | SEMICOLON {$$ = new EmptyStmt();}
+	expression-stmt: expression SEMICOLON {$$ = new ExpStmt("exp", $1);}
+				   | SEMICOLON {$$ = new EmptyStmt("empty");}
 				   ;
 
 
-	selection-stmt: IF LP expression RP	statement {$$ = new If("if", $3, $5); }
-				  | IF LP expression RP statement ELSE statement {$$ = new If("if", $3, $5, $7);}
+	selection-stmt: IF LP expression RP	statement {$$ = new IfStmt("if", $3, $5); }
+				  | IF LP expression RP statement ELSE statement {$$ = new IfStmt("if", $3, $5, $7);}
 	
 	
 	iteration-stmt: WHILE LP expression RP statement {
-													 $$ = new While("while", $3, $5);
+													 $$ = new WhileStmt("while", $3, $5);
 												}
 				  ;
 	
 	return-stmt: RETURN SEMICOLON {}
-	           | RETURN expression SEMICOLON {$$->e = $2;}
+	           | RETURN expression SEMICOLON {}
 			   ;
 
 	expression: var ASSIGN expression {

@@ -21,8 +21,9 @@
 #ifndef _AST_H
 #define _AST_H
 #include <iostream>
+#include <vector>
 #include "visitor.h"
-
+using namespace std;
 class AstNode{
 public:
 	AstNode(){ }
@@ -31,9 +32,9 @@ public:
 
 class Statement : public AstNode{
 public:
-	std::string type;
+	string type;
 	
-	Statement(std::string type):
+	Statement(string type):
 		type(type) {}
 };
 
@@ -42,7 +43,7 @@ public:
 	Statement* s1;
 	Statement* s2;
 	Expression* e;
-	IfStmt(std::string type, Expression* e, Statement* s1, Statement* s2 = nullptr):
+	IfStmt(string type, Expression* e, Statement* s1, Statement* s2 = nullptr):
 		Statement(type), s1(s1), s2(s2), e(e) {}
 
 	double accept( Visitor* v) {}
@@ -52,7 +53,7 @@ class WhileStmt : public Statement{
 public:
 	Statement* s;
 	Expression* e;
-	WhileStmt(std::string type, Expression* e, Statement* s):
+	WhileStmt(string type, Expression* e, Statement* s):
 		Statement(type), s(s), e(e) {}
 	
 	double accept( Visitor* v) {}
@@ -64,44 +65,57 @@ class ReturnStmt : public Statement{
 
 class ExpStmt : public Statement{
 public:
-	ExpStmt(std::string type):
-		Statement(type) {}
+	Expression* e;
+	ExpStmt(string type, Expression* e):
+		Statement(type), e(e) {}
 	double accept( Visitor* v) {}
 };
 
 class BlockStmt : public Statement{
 public:
-	Statement* s;
-	BlockStmt(std::string type, Statement* s):
-		Statement(type), s(s) {}
+	vector<Statement*>* stmt_list;
+	vector<Statement*>* decl;
+	BlockStmt(string type, vector<Statement*>* decl, vector<Statement*>* stmt_list):
+		Statement(type), stmt_list(stmt_list), decl(decl) {}
 	double accept( Visitor* v) {}
 };
 
 class EmptyStmt : public Statement{
 public:
+	EmptyStmt(string type):
+		Statement(type){ }
+	double accept( Visitor* v) {}
+};
+
+class VariableDecl: public Statement{
+public:
+	string v_type;
+	string v_name;
+	VariableDecl(string type, string v_type, string v_name):
+		Statement(type), v_type(v_type), v_name(v_name) { }
 	double accept( Visitor* v) {}
 };
 
 class Expression : public AstNode{
 public:
-	std::string type;
-	std::string code;
-	std::string place;
+	string type;
+	string code;
+	string place;
 
 	Expression* left;
 	Expression* right;
 	Expression(){ }
-	Expression(std::string type): type(type) { }
-	Expression(std::string type, Expression* left, Expression* right) : type(type), left(left), right(right) { }
+	Expression(string type): type(type) { }
+	Expression(string type, Expression* left, Expression* right) : type(type), left(left), right(right) { }
 };
 
 class BinOp : public Expression{
 public:
 	double accept( Visitor* v) {return v->visit(this);}
 	
-	BinOp( std::string type, Expression* left, Expression* right ) : 
+	BinOp( string type, Expression* left, Expression* right ) : 
 				Expression(type, left, right){ }
-	BinOp( std::string type) : 
+	BinOp( string type) : 
 				Expression(type){ }
 };
 
@@ -115,9 +129,9 @@ public:
 class Assign : public Expression{
 public:
 	double accept(Visitor * v){return v->visit(this);}
-	Assign( std::string type, Expression* left, Expression* right ) : 
+	Assign( string type, Expression* left, Expression* right ) : 
 			Expression(type, left, right){ }
-	Assign(std::string type):
+	Assign(string type):
 		Expression(type){
 
 		}
@@ -125,9 +139,9 @@ public:
 
 class Identifier : public Expression{
 public:
-	std::string name;
+	string name;
 	double accept( Visitor* v){ return v->visit(this); }
-	Identifier(std::string type, std::string name) :
+	Identifier(string type, string name) :
 			Expression(type), name(name) {
 				//std::cout << this->name << std::endl;
 			}

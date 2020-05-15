@@ -56,7 +56,9 @@ int main(int argc, char** argv)
 	parser.parse();
 	
 	//cout << ((If*)stmt)->s2->type << endl;
-	cout << ((Identifier*)(((If*)stmt)->s1))->name << ' ' << ((Identifier*)(stmt->e->right))->name << endl;
+	vector<Statement*>* stmt_list = ((BlockStmt*)((IfStmt*)stmt)->s1)->stmt_list;
+	
+	cout <<  (*stmt_list->begin())->type << ' ' << ((IfStmt*)stmt)->e->type << endl;
 	//preOrder(root);
 	//std::cout << root->type << ' ' << root->left->type << ' ' << root->right->left->type << std::endl;
 	/*if(root == NULL){
