@@ -181,14 +181,14 @@ public:
 	double accept( Visitor* v) {}
 };
 
-class Function : public AstNode{
+class Function : public Statement{
 public:
 	PrimitiveType* f_type;
 	Identifier* id;
 	vector<Variable*>* param_list;
 	Statement* block;
-	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block):
-			f_type(f_type), id(id), param_list(param_list), block(block){}
+	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block, string type):
+			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){}
 	double accept( Visitor* v) {}
 };
 

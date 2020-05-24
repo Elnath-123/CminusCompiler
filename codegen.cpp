@@ -37,6 +37,16 @@ void Gen::write2File(string content){
     f << content << endl;
 }
 
+string Gen::genCode(vector<Statement*>* gloabal_decl_list){
+    string code = "";
+    for(Statement* global_decl : *gloabal_decl_list){
+        code += global_decl->code;
+    }
+    write2File(code);
+    return code;
+}
+
+
 void Gen::genBinary(Expression*& E, Expression* E1, Expression* E2, string op){
     string place = "";
     string code = "";
@@ -139,9 +149,9 @@ void Gen::genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2){
         code += genLabel(S->next);
     }
     S->code = code;
-    write2File(code);
+
 }
-void Gen::genFunction(Function*& F, Identifier* id, Statement* block){
+void Gen::genFunction(Statement*& F, Identifier* id, Statement* block){
 
 }
 
@@ -157,3 +167,4 @@ void Gen::genAssign(Assign*& S, Identifier* id, Expression* E){
     S->code = code;
     
 }
+

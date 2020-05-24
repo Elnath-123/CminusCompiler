@@ -61,26 +61,36 @@
 
 %type <e> expression simple_expression relop additive_expression addop term mulop factor
 %type <stmt> expression_stmt statement compound_stmt selection_stmt 
-			 iteration_stmt return_stmt var_declearation
+			 iteration_stmt return_stmt var_declearation fun_declearation 
+			 declearation
 %type <type> type_specifier
 %type <variable> param
 %type <variable_list> param_list params
-%type <stmt_decl_list> local_declearations statement_list
-%type <function> fun_declearation
+%type <stmt_decl_list> local_declearations statement_list declearation_list program
+
 %type <id> var
 %{
 	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
 %}
 
 %%
-	program: declearation_list
+	program: declearation_list {
+								$$ = $1;
+								Gen::genCode($1);
+							}
 	       ;
 
-	declearation_list: declearation_list declearation
-					 | declearation
+	declearation_list: declearation_list declearation{
+													  $1->push_back($2);
+													  $$ = $1;
+												}
+					 | declearation {
+									$$ = new vector<Statement*>();
+									$$->push_back($1);
+								}
 					 ;
 
-	declearation: var_declearation
+	declearation: var_declearation  {$$ = $1;}
 				| fun_declearation {$$ = $1;}
 				;
 
@@ -93,8 +103,7 @@
 				  ;
 
 	fun_declearation: type_specifier ID LP params RP compound_stmt{
-																	$$ = new Function($1, $2, $4, $6);
-
+																	$$ = new Function($1, $2, $4, $6, "Function");
 																	/* As for code generation, we only need
 																	   function name($2) and function body($6) */
 																	Gen::genFunction($$, $2, $6);

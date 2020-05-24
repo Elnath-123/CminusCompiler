@@ -28,6 +28,8 @@ public:
 
     static void genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2 = NULL);
 
+    static string genCode(vector<Statement*>* gloabal_decl_list);
+
     /*  function: genFunction
         parameters:
             f_type: return value; 
@@ -35,7 +37,7 @@ public:
             param_list: parameter list;
             block: function body;
     */
-    static void genFunction(Function*& F, Identifier* id, Statement* block);
+    static void genFunction(Statement*& F, Identifier* id, Statement* block);
 
 
     /* Assign node is root (need to write S->code to file) */
