@@ -39,6 +39,7 @@ public:
     */
     static void genFunction(Statement*& F, Identifier* id, Statement* block);
 
+    static void genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list);
 
     /* Assign node is root (need to write S->code to file) */
     static void genAssign(Assign*& S, Identifier* id, Expression* E);

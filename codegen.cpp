@@ -8,6 +8,14 @@ string genFuncName(string func_name){
     return func_name + ":\n"; 
 }
 
+string genCall(string func_name, int argc){
+    return tab + "call " + func_name + ", " + to_string(argc) + '\n';
+}
+
+string genParam(string id_name){
+    return tab + "param " + id_name + '\n';
+}
+
 string genLabel(string label){
     return label + ":\n";
 }
@@ -50,6 +58,15 @@ string Gen::genCode(vector<Statement*>* gloabal_decl_list){
     return code;
 }
 
+void Gen::genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list){
+    string code = "";
+    /* Searching function:id from symbol table
+       if function:id has return value , genreate
+       a temp value and assign the function to it */
+    /* not implement (2020.5.24) */
+    code += genCall(id->name, arg_list->size());
+    E->code = code;
+}
 
 void Gen::genBinary(Expression*& E, Expression* E1, Expression* E2, string op){
     string place = "";

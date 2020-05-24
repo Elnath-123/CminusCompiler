@@ -141,6 +141,7 @@ namespace yy {
 	Statement* stmt;
 	vector<Statement*>* stmt_decl_list;
 	vector<Variable*>* variable_list;
+	vector<Expression*>* arg_list;
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
@@ -151,7 +152,7 @@ namespace yy {
 	int n;
 	double d;
 
-#line 155 "bison.tab.hxx" // lalr1.cc:377
+#line 156 "bison.tab.hxx" // lalr1.cc:377
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -528,7 +529,7 @@ namespace yy {
 
 
 } // yy
-#line 532 "bison.tab.hxx" // lalr1.cc:377
+#line 533 "bison.tab.hxx" // lalr1.cc:377
 
 
 

@@ -156,11 +156,10 @@ public:
 class Identifier : public Expression{
 public:
 	string name;
+	bool hasRetVal;
 	double accept( Visitor* v){ return v->visit(this); }
-	Identifier(string type, string name) :
-			Expression(type), name(name) {
-				//std::cout << this->name << std::endl;
-			}
+	Identifier(string type, string name, bool hasRetVal=false) :
+			Expression(type), name(name), hasRetVal(hasRetVal) { }
 };
 
 class PrimitiveType : AstNode{
@@ -177,6 +176,15 @@ public:
 	Variable(PrimitiveType* v_type, Identifier* id, string type):
 				Statement(type), v_type(v_type), id(id){}
 	double accept( Visitor* v) {}
+};
+
+class FunctionInvocation : public Expression{
+public:
+	Identifier* id;
+	vector<Expression*>* arg_list;
+	FunctionInvocation(Identifier* id, vector<Expression*>* arg_list, string type):
+			Expression(type), id(id), arg_list(arg_list){}
+	double accept( Visitor* v){ return v->visit(this); }
 };
 
 class Function : public Statement{

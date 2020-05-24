@@ -30,6 +30,7 @@
 	Statement* stmt;
 	vector<Statement*>* stmt_decl_list;
 	vector<Variable*>* variable_list;
+	vector<Expression*>* arg_list;
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
@@ -59,15 +60,15 @@
 %token EQ GET LET NEQ
 %token <id> ID
 
-%type <e> expression simple_expression relop additive_expression addop term mulop factor
+%type <e> expression simple_expression relop additive_expression addop term mulop factor call
 %type <stmt> expression_stmt statement compound_stmt selection_stmt 
 			 iteration_stmt return_stmt var_declearation fun_declearation 
 			 declearation
 %type <type> type_specifier
 %type <variable> param
-%type <variable_list> param_list params
+%type <variable_list> param_list params 
+%type <arg_list> arg_list args
 %type <stmt_decl_list> local_declearations statement_list declearation_list program
-
 %type <id> var
 %{
 	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
@@ -166,21 +167,21 @@
 				   ;
 
 
-	selection_stmt: IF LP expression RP	statement {
-												   $$ = new IfStmt("if", $3, $5); 
-												   Gen::genIfStmt($1, $3, $5);
-												   $$ = $1;
-												}
-				  | IF LP expression RP statement ELSE statement {
+	selection_stmt: IF LP expression RP	statement{
+												     $$ = new IfStmt("if", $3, $5); 
+													 Gen::genIfStmt($1, $3, $5);
+													 $$ = $1;
+												 }
+				  | IF LP expression RP statement ELSE statement{
 																    $$ = new IfStmt("if", $3, $5, $7);
 																	Gen::genIfStmt($1, $3, $5, $7);
 																	$$ = $1;
 																}
 	
 	
-	iteration_stmt: WHILE LP expression RP statement {
-													 $$ = new WhileStmt("while", $3, $5);
-												}
+	iteration_stmt: WHILE LP expression RP statement{
+													 	$$ = new WhileStmt("while", $3, $5);
+													}
 				  ;
 	
 	return_stmt: RETURN SEMICOLON {}
@@ -188,10 +189,11 @@
 			   ;
 
 	expression: var ASSIGN expression {
-									  $2 = new Assign("=", $1, $3);
-								      Gen::genAssign($2, $1, $3);
-									  $$ = $2; 
-									  *root = $2; }
+										$2 = new Assign("=", $1, $3);
+										Gen::genAssign($2, $1, $3);
+										$$ = $2; 
+										*root = $2; 
+									  }
 	          | simple_expression
 			  ;
 
@@ -200,11 +202,11 @@
 	   ;
 	
 	simple_expression: additive_expression relop additive_expression{
-																	$2->left = $1; 
-																	$2->right = $3; 
-																	Gen::genRelop($2, $1, $3, $2->type);
-																	$$ = $2;
-																}
+																		$2->left = $1; 
+																		$2->right = $3; 
+																		Gen::genRelop($2, $1, $3, $2->type);
+																		$$ = $2;
+																	}
 					 | additive_expression
 					 ;
 
@@ -217,11 +219,11 @@
 		 ;	
 	
 	additive_expression: additive_expression addop term {
-														$2->left = $1; 
-														$2->right = $3; 
-														Gen::genBinary($2, $1, $3, $2->type);
-														$$ = $2;
-													}
+															$2->left = $1; 
+															$2->right = $3; 
+															Gen::genBinary($2, $1, $3, $2->type);
+															$$ = $2;
+														}
 					   | term 
 					   ;
 	
@@ -230,10 +232,10 @@
 		 ;
 
 	term: term mulop factor {
-							$2->left = $1;
-							$2->right = $3;
-							Gen::genBinary($2, $1, $3, $2->type);
-							$$ = $2;
+								$2->left = $1;
+								$2->right = $3;
+								Gen::genBinary($2, $1, $3, $2->type);
+								$$ = $2;
 							}
 	    | factor 
 		;
@@ -244,17 +246,26 @@
 
 	factor: LP expression RP {$$ = $2;}
 	      | var {$$ = $1;} 
-		  | call
+		  | call {$$ = $1;}
 		  | INT10 {Gen::genInt10($$, $1); $$ = $1;}
 		  ;
 
-	call: ID LP args RP;
+	call: ID LP args RP {
+						   $$ = new FunctionInvocation($1, $3, "invoke");
+						   Gen::genFunctionInvoke($$, $1, $3);
+						}
+		;
 
-	args: arg_list 
-	    | ;
+	args: arg_list {$$ = $1;}
+	    | {$$ = new vector<Expression*>();};
 
-	arg_list: arg_list COMMA expression 
-			| expression
+	arg_list: arg_list COMMA expression {
+											$1->push_back($3);
+										}
+			| expression {
+						    $$ = new vector<Expression*>();
+							$$->push_back($1);
+						}
 			;
 
 %%

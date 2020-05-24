@@ -7,11 +7,13 @@ int fun(){
         a = 0;
     }
 }
+
 int main(){
     if(c > d){
         aa = 5 + 6;
         bb = 3 + 4; 
     }else{
+        f = fun();
         cc = 9 + 8;
         dd = 6 + 7;
     }
