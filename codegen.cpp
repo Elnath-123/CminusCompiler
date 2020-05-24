@@ -4,6 +4,10 @@ int Gen::label_num = 1;
 int Gen::temp_num = 1;
 string tab = "\t";
 
+string genFuncName(string func_name){
+    return func_name + ":\n"; 
+}
+
 string genLabel(string label){
     return label + ":\n";
 }
@@ -152,7 +156,10 @@ void Gen::genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2){
 
 }
 void Gen::genFunction(Statement*& F, Identifier* id, Statement* block){
-
+    string code = "";
+    code = genFuncName(id->name);
+    code += block->code;
+    F->code = code;
 }
 
 

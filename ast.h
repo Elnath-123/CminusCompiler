@@ -83,14 +83,12 @@ public:
 	vector<Statement*>* local_decl_list;
 	BlockStmt(string type, vector<Statement*>* local_decl_list, vector<Statement*>* stmt_list):
 		Statement(type), stmt_list(stmt_list), local_decl_list(local_decl_list) {
-			cout << "come here" << endl;
 			/* Merge(pass) code */
 			for(Statement* local_decl : *local_decl_list)
 				code += local_decl->code;
 			
 			for(Statement* stmt : *stmt_list)
 				code += stmt->code;
-			cout << code << endl;
 		}
 	double accept( Visitor* v) {}
 };

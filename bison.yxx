@@ -87,10 +87,11 @@
 					 | declearation {
 									$$ = new vector<Statement*>();
 									$$->push_back($1);
+									
 								}
 					 ;
 
-	declearation: var_declearation  {$$ = $1;}
+	declearation: var_declearation {$$ = $1;}
 				| fun_declearation {$$ = $1;}
 				;
 
@@ -99,7 +100,8 @@
 					;
 
 	type_specifier: TYPE_INT {$$ = new PrimitiveType("int");}
-				  | TYPE_FLOAT{$$ = new PrimitiveType("int");}
+				  | TYPE_FLOAT{$$ = new PrimitiveType("float");}
+				  | TYPE_VOID {$$ = new PrimitiveType("void");}
 				  ;
 
 	fun_declearation: type_specifier ID LP params RP compound_stmt{
@@ -149,7 +151,7 @@
 				  ;
 
 	statement: expression_stmt {$$ = $1;} 
-			 | compound_stmt {$$ = $1; cout << $1->type;}
+			 | compound_stmt {$$ = $1;}
 			 | selection_stmt {*stmt = $1; $$ = $1;}
 			 | iteration_stmt
 			 | return_stmt
