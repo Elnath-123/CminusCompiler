@@ -148,8 +148,9 @@ void Gen::genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2){
     string r_place = E->right->place;
     string label_1 = newlabel();
     string label_2 = newlabel();
-    code = genBinaryOperation(l_place, op, r_place);
-    code = genIfGotoOperation(code, label_1);
+    string bin = genBinaryOperation(l_place, op, r_place);
+    code = l_code + r_code;
+    code += genIfGotoOperation(bin, label_1);
     //code += "if " + l_place + op + r_place + " goto " + label_1 + "\n";
     code += genGotoOperation(label_2);
     //code += "goto " + label_2 + "\n";
