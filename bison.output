@@ -7,7 +7,6 @@ Terminals unused in grammar
    REAL10
    INT8
    INT16
-   THEN
    DO
 
 
@@ -18,95 +17,97 @@ Grammar
 
     0 $accept: program $end
 
-    1 program: declearation-list
+    1 program: declearation_list
 
-    2 declearation-list: declearation-list declearation
+    2 declearation_list: declearation_list declearation
     3                  | declearation
 
-    4 declearation: var-declearation
-    5             | fun-declearation
+    4 declearation: var_declearation
+    5             | fun_declearation
 
-    6 var-declearation: type-specifier ID SEMICOLON
-    7                 | type-specifier ID MLP INT10 MRP SEMICOLON
+    6 var_declearation: type_specifier ID SEMICOLON
+    7                 | type_specifier ID MLP INT10 MRP SEMICOLON
 
-    8 type-specifier: TYPE_INT
+    8 type_specifier: TYPE_INT
+    9               | TYPE_FLOAT
 
-    9 fun-declearation: type-specifier ID LP params RP compound-stmt
+   10 fun_declearation: type_specifier ID LP params RP compound_stmt
 
-   10 params: param-list
-   11       | TYPE_VOID
+   11 params: param_list
+   12       | TYPE_VOID
 
-   12 param-list: param-list COMMA param
-   13           | param
+   13 param_list: param_list COMMA param
+   14           | param
+   15           | %empty
 
-   14 param: type-specifier ID
-   15      | type-specifier ID MLP MRP
+   16 param: type_specifier ID
+   17      | type_specifier ID MLP MRP
 
-   16 compound-stmt: LLP local-declearations statement-list LRP
+   18 compound_stmt: LLP local_declearations statement_list LRP
 
-   17 local-declearations: local-declearations var-declearation
-   18                    | %empty
+   19 local_declearations: local_declearations var_declearation
+   20                    | %empty
 
-   19 statement-list: statement-list statement
-   20               | %empty
+   21 statement_list: statement_list statement
+   22               | %empty
 
-   21 statement: expression-stmt
-   22          | compound-stmt
-   23          | selection-stmt
-   24          | iteration-stmt
-   25          | return-stmt
+   23 statement: expression_stmt
+   24          | compound_stmt
+   25          | selection_stmt
+   26          | iteration_stmt
+   27          | return_stmt
 
-   26 expression-stmt: expression SEMICOLON
-   27                | SEMICOLON
+   28 expression_stmt: expression SEMICOLON
+   29                | SEMICOLON
 
-   28 selection-stmt: IF LP expression RP statement
-   29               | IF LP expression RP statement ELSE statement
+   30 selection_stmt: IF LP expression RP statement
+   31               | IF LP expression RP statement ELSE statement
 
-   30 iteration-stmt: WHILE LP expression RP statement
+   32 iteration_stmt: WHILE LP expression RP statement
 
-   31 return-stmt: RETURN SEMICOLON
-   32            | RETURN expression SEMICOLON
+   33 return_stmt: RETURN SEMICOLON
+   34            | RETURN expression SEMICOLON
 
-   33 expression: var ASSIGN expression
-   34           | simple-expression
+   35 expression: var ASSIGN expression
+   36           | simple_expression
 
-   35 var: ID
-   36    | ID MLP expression MRP
+   37 var: ID
+   38    | ID MLP expression MRP
 
-   37 simple-expression: additive-expression relop additive-expression
-   38                  | additive-expression
+   39 simple_expression: additive_expression relop additive_expression
+   40                  | additive_expression
 
-   39 relop: GT
-   40      | LT
-   41      | LET
-   42      | GET
-   43      | EQ
-   44      | NEQ
+   41 relop: GT
+   42      | LT
+   43      | LET
+   44      | GET
+   45      | EQ
+   46      | NEQ
 
-   45 additive-expression: additive-expression addop term
-   46                    | term
+   47 additive_expression: additive_expression addop term
+   48                    | term
 
-   47 addop: ADD
-   48      | SUB
+   49 addop: ADD
+   50      | SUB
 
-   49 term: term mulop factor
-   50     | factor
+   51 term: term mulop factor
+   52     | factor
 
-   51 mulop: MUL
-   52      | DIV
+   53 mulop: MUL
+   54      | DIV
 
-   53 factor: LP expression RP
-   54       | var
-   55       | call
-   56       | INT10
+   55 factor: LP expression RP
+   56       | var
+   57       | call
+   58       | INT10
 
-   57 call: ID LP args RP
+   59 call: ID LP args RP
 
-   58 args: arg-list
-   59     | %empty
+   60 args: arg_list
+   61     | %empty
 
-   60 arg-list: arg-list COMMA expression
-   61         | expression
+   62 arg_list: arg_list COMMA expression
+   63         | expression
 
 
 Terminals, with rules where they appear
@@ -120,35 +121,35 @@ REAL16 (261)
 REAL10 (262)
 INT8 (263)
 INT16 (264)
-INT10 (265) 7 56
-ADD (266) 47
-SUB (267) 48
-MUL (268) 51
-DIV (269) 52
-ASSIGN (270) 33
-LP (271) 9 28 29 30 53 57
-RP (272) 9 28 29 30 53 57
-MLP (273) 7 15 36
-MRP (274) 7 15 36
-LLP (275) 16
-LRP (276) 16
-THEN (277)
-WHILE (278) 30
+INT10 (265) 7 58
+ADD (266) 49
+SUB (267) 50
+MUL (268) 53
+DIV (269) 54
+ASSIGN (270) 35
+IF (271) 30 31
+LP (272) 10 30 31 32 55 59
+RP (273) 10 30 31 32 55 59
+MLP (274) 7 17 38
+MRP (275) 7 17 38
+LLP (276) 18
+LRP (277) 18
+WHILE (278) 32
 DO (279)
-ELSE (280) 29
-RETURN (281) 31 32
+ELSE (280) 31
+RETURN (281) 33 34
 TYPE_INT (282) 8
-TYPE_VOID (283) 11
-LT (284) 40
-GT (285) 39
-IF (286) 28 29
-SEMICOLON (287) 6 7 26 27 31 32
-COMMA (288) 12 60
-EQ (289) 43
-GET (290) 42
-LET (291) 41
-NEQ (292) 44
-ID (293) 6 7 9 14 15 35 36 57
+TYPE_VOID (283) 12
+TYPE_FLOAT (284) 9
+LT (285) 42
+GT (286) 41
+SEMICOLON (287) 6 7 28 29 33 34
+COMMA (288) 13 62
+EQ (289) 45
+GET (290) 44
+LET (291) 43
+NEQ (292) 46
+ID (293) 6 7 10 16 17 37 38 59
 
 
 Nonterminals, with rules where they appear
@@ -157,1061 +158,1075 @@ $accept (39)
     on left: 0
 program (40)
     on left: 1, on right: 0
-declearation-list (41)
+declearation_list (41)
     on left: 2 3, on right: 1 2
 declearation (42)
     on left: 4 5, on right: 2 3
-var-declearation (43)
-    on left: 6 7, on right: 4 17
-type-specifier (44)
-    on left: 8, on right: 6 7 9 14 15
-fun-declearation (45)
-    on left: 9, on right: 5
+var_declearation (43)
+    on left: 6 7, on right: 4 19
+type_specifier (44)
+    on left: 8 9, on right: 6 7 10 16 17
+fun_declearation (45)
+    on left: 10, on right: 5
 params (46)
-    on left: 10 11, on right: 9
-param-list (47)
-    on left: 12 13, on right: 10 12
+    on left: 11 12, on right: 10
+param_list (47)
+    on left: 13 14 15, on right: 11 13
 param (48)
-    on left: 14 15, on right: 12 13
-compound-stmt (49)
-    on left: 16, on right: 9 22
-local-declearations (50)
-    on left: 17 18, on right: 16 17
-statement-list (51)
-    on left: 19 20, on right: 16 19
+    on left: 16 17, on right: 13 14
+compound_stmt (49)
+    on left: 18, on right: 10 24
+local_declearations (50)
+    on left: 19 20, on right: 18 19
+statement_list (51)
+    on left: 21 22, on right: 18 21
 statement (52)
-    on left: 21 22 23 24 25, on right: 19 28 29 30
-expression-stmt (53)
-    on left: 26 27, on right: 21
-selection-stmt (54)
+    on left: 23 24 25 26 27, on right: 21 30 31 32
+expression_stmt (53)
     on left: 28 29, on right: 23
-iteration-stmt (55)
-    on left: 30, on right: 24
-return-stmt (56)
-    on left: 31 32, on right: 25
+selection_stmt (54)
+    on left: 30 31, on right: 25
+iteration_stmt (55)
+    on left: 32, on right: 26
+return_stmt (56)
+    on left: 33 34, on right: 27
 expression (57)
-    on left: 33 34, on right: 26 28 29 30 32 33 36 53 60 61
+    on left: 35 36, on right: 28 30 31 32 34 35 38 55 62 63
 var (58)
-    on left: 35 36, on right: 33 54
-simple-expression (59)
-    on left: 37 38, on right: 34
+    on left: 37 38, on right: 35 56
+simple_expression (59)
+    on left: 39 40, on right: 36
 relop (60)
-    on left: 39 40 41 42 43 44, on right: 37
-additive-expression (61)
-    on left: 45 46, on right: 37 38 45
+    on left: 41 42 43 44 45 46, on right: 39
+additive_expression (61)
+    on left: 47 48, on right: 39 40 47
 addop (62)
-    on left: 47 48, on right: 45
+    on left: 49 50, on right: 47
 term (63)
-    on left: 49 50, on right: 45 46 49
+    on left: 51 52, on right: 47 48 51
 mulop (64)
-    on left: 51 52, on right: 49
+    on left: 53 54, on right: 51
 factor (65)
-    on left: 53 54 55 56, on right: 49 50
+    on left: 55 56 57 58, on right: 51 52
 call (66)
-    on left: 57, on right: 55
+    on left: 59, on right: 57
 args (67)
-    on left: 58 59, on right: 57
-arg-list (68)
-    on left: 60 61, on right: 58 60
+    on left: 60 61, on right: 59
+arg_list (68)
+    on left: 62 63, on right: 60 62
 
 
 State 0
 
     0 $accept: . program $end
 
-    TYPE_INT  shift, and go to state 1
+    TYPE_INT    shift, and go to state 1
+    TYPE_FLOAT  shift, and go to state 2
 
-    program            go to state 2
-    declearation-list  go to state 3
-    declearation       go to state 4
-    var-declearation   go to state 5
-    type-specifier     go to state 6
-    fun-declearation   go to state 7
+    program            go to state 3
+    declearation_list  go to state 4
+    declearation       go to state 5
+    var_declearation   go to state 6
+    type_specifier     go to state 7
+    fun_declearation   go to state 8
 
 
 State 1
 
-    8 type-specifier: TYPE_INT .
+    8 type_specifier: TYPE_INT .
 
-    $default  reduce using rule 8 (type-specifier)
+    $default  reduce using rule 8 (type_specifier)
 
 
 State 2
 
-    0 $accept: program . $end
+    9 type_specifier: TYPE_FLOAT .
 
-    $end  shift, and go to state 8
+    $default  reduce using rule 9 (type_specifier)
 
 
 State 3
 
-    1 program: declearation-list .
-    2 declearation-list: declearation-list . declearation
+    0 $accept: program . $end
 
-    TYPE_INT  shift, and go to state 1
-
-    $default  reduce using rule 1 (program)
-
-    declearation      go to state 9
-    var-declearation  go to state 5
-    type-specifier    go to state 6
-    fun-declearation  go to state 7
+    $end  shift, and go to state 9
 
 
 State 4
 
-    3 declearation-list: declearation .
+    1 program: declearation_list .
+    2 declearation_list: declearation_list . declearation
 
-    $default  reduce using rule 3 (declearation-list)
+    TYPE_INT    shift, and go to state 1
+    TYPE_FLOAT  shift, and go to state 2
+
+    $default  reduce using rule 1 (program)
+
+    declearation      go to state 10
+    var_declearation  go to state 6
+    type_specifier    go to state 7
+    fun_declearation  go to state 8
 
 
 State 5
 
-    4 declearation: var-declearation .
+    3 declearation_list: declearation .
 
-    $default  reduce using rule 4 (declearation)
+    $default  reduce using rule 3 (declearation_list)
 
 
 State 6
 
-    6 var-declearation: type-specifier . ID SEMICOLON
-    7                 | type-specifier . ID MLP INT10 MRP SEMICOLON
-    9 fun-declearation: type-specifier . ID LP params RP compound-stmt
+    4 declearation: var_declearation .
 
-    ID  shift, and go to state 10
+    $default  reduce using rule 4 (declearation)
 
 
 State 7
 
-    5 declearation: fun-declearation .
+    6 var_declearation: type_specifier . ID SEMICOLON
+    7                 | type_specifier . ID MLP INT10 MRP SEMICOLON
+   10 fun_declearation: type_specifier . ID LP params RP compound_stmt
+
+    ID  shift, and go to state 11
+
+
+State 8
+
+    5 declearation: fun_declearation .
 
     $default  reduce using rule 5 (declearation)
 
 
-State 8
+State 9
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 9
-
-    2 declearation-list: declearation-list declearation .
-
-    $default  reduce using rule 2 (declearation-list)
-
-
 State 10
 
-    6 var-declearation: type-specifier ID . SEMICOLON
-    7                 | type-specifier ID . MLP INT10 MRP SEMICOLON
-    9 fun-declearation: type-specifier ID . LP params RP compound-stmt
+    2 declearation_list: declearation_list declearation .
 
-    LP         shift, and go to state 11
-    MLP        shift, and go to state 12
-    SEMICOLON  shift, and go to state 13
+    $default  reduce using rule 2 (declearation_list)
 
 
 State 11
 
-    9 fun-declearation: type-specifier ID LP . params RP compound-stmt
+    6 var_declearation: type_specifier ID . SEMICOLON
+    7                 | type_specifier ID . MLP INT10 MRP SEMICOLON
+   10 fun_declearation: type_specifier ID . LP params RP compound_stmt
 
-    TYPE_INT   shift, and go to state 1
-    TYPE_VOID  shift, and go to state 14
-
-    type-specifier  go to state 15
-    params          go to state 16
-    param-list      go to state 17
-    param           go to state 18
+    LP         shift, and go to state 12
+    MLP        shift, and go to state 13
+    SEMICOLON  shift, and go to state 14
 
 
 State 12
 
-    7 var-declearation: type-specifier ID MLP . INT10 MRP SEMICOLON
+   10 fun_declearation: type_specifier ID LP . params RP compound_stmt
 
-    INT10  shift, and go to state 19
+    TYPE_INT    shift, and go to state 1
+    TYPE_VOID   shift, and go to state 15
+    TYPE_FLOAT  shift, and go to state 2
+
+    $default  reduce using rule 15 (param_list)
+
+    type_specifier  go to state 16
+    params          go to state 17
+    param_list      go to state 18
+    param           go to state 19
 
 
 State 13
 
-    6 var-declearation: type-specifier ID SEMICOLON .
+    7 var_declearation: type_specifier ID MLP . INT10 MRP SEMICOLON
 
-    $default  reduce using rule 6 (var-declearation)
+    INT10  shift, and go to state 20
 
 
 State 14
 
-   11 params: TYPE_VOID .
+    6 var_declearation: type_specifier ID SEMICOLON .
 
-    $default  reduce using rule 11 (params)
+    $default  reduce using rule 6 (var_declearation)
 
 
 State 15
 
-   14 param: type-specifier . ID
-   15      | type-specifier . ID MLP MRP
+   12 params: TYPE_VOID .
 
-    ID  shift, and go to state 20
+    $default  reduce using rule 12 (params)
 
 
 State 16
 
-    9 fun-declearation: type-specifier ID LP params . RP compound-stmt
+   16 param: type_specifier . ID
+   17      | type_specifier . ID MLP MRP
 
-    RP  shift, and go to state 21
+    ID  shift, and go to state 21
 
 
 State 17
 
-   10 params: param-list .
-   12 param-list: param-list . COMMA param
+   10 fun_declearation: type_specifier ID LP params . RP compound_stmt
 
-    COMMA  shift, and go to state 22
-
-    $default  reduce using rule 10 (params)
+    RP  shift, and go to state 22
 
 
 State 18
 
-   13 param-list: param .
+   11 params: param_list .
+   13 param_list: param_list . COMMA param
 
-    $default  reduce using rule 13 (param-list)
+    COMMA  shift, and go to state 23
+
+    $default  reduce using rule 11 (params)
 
 
 State 19
 
-    7 var-declearation: type-specifier ID MLP INT10 . MRP SEMICOLON
+   14 param_list: param .
 
-    MRP  shift, and go to state 23
+    $default  reduce using rule 14 (param_list)
 
 
 State 20
 
-   14 param: type-specifier ID .
-   15      | type-specifier ID . MLP MRP
+    7 var_declearation: type_specifier ID MLP INT10 . MRP SEMICOLON
 
-    MLP  shift, and go to state 24
-
-    $default  reduce using rule 14 (param)
+    MRP  shift, and go to state 24
 
 
 State 21
 
-    9 fun-declearation: type-specifier ID LP params RP . compound-stmt
+   16 param: type_specifier ID .
+   17      | type_specifier ID . MLP MRP
 
-    LLP  shift, and go to state 25
+    MLP  shift, and go to state 25
 
-    compound-stmt  go to state 26
+    $default  reduce using rule 16 (param)
 
 
 State 22
 
-   12 param-list: param-list COMMA . param
+   10 fun_declearation: type_specifier ID LP params RP . compound_stmt
 
-    TYPE_INT  shift, and go to state 1
+    LLP  shift, and go to state 26
 
-    type-specifier  go to state 15
-    param           go to state 27
+    compound_stmt  go to state 27
 
 
 State 23
 
-    7 var-declearation: type-specifier ID MLP INT10 MRP . SEMICOLON
+   13 param_list: param_list COMMA . param
 
-    SEMICOLON  shift, and go to state 28
+    TYPE_INT    shift, and go to state 1
+    TYPE_FLOAT  shift, and go to state 2
+
+    type_specifier  go to state 16
+    param           go to state 28
 
 
 State 24
 
-   15 param: type-specifier ID MLP . MRP
+    7 var_declearation: type_specifier ID MLP INT10 MRP . SEMICOLON
 
-    MRP  shift, and go to state 29
+    SEMICOLON  shift, and go to state 29
 
 
 State 25
 
-   16 compound-stmt: LLP . local-declearations statement-list LRP
+   17 param: type_specifier ID MLP . MRP
 
-    $default  reduce using rule 18 (local-declearations)
-
-    local-declearations  go to state 30
+    MRP  shift, and go to state 30
 
 
 State 26
 
-    9 fun-declearation: type-specifier ID LP params RP compound-stmt .
+   18 compound_stmt: LLP . local_declearations statement_list LRP
 
-    $default  reduce using rule 9 (fun-declearation)
+    $default  reduce using rule 20 (local_declearations)
+
+    local_declearations  go to state 31
 
 
 State 27
 
-   12 param-list: param-list COMMA param .
+   10 fun_declearation: type_specifier ID LP params RP compound_stmt .
 
-    $default  reduce using rule 12 (param-list)
+    $default  reduce using rule 10 (fun_declearation)
 
 
 State 28
 
-    7 var-declearation: type-specifier ID MLP INT10 MRP SEMICOLON .
+   13 param_list: param_list COMMA param .
 
-    $default  reduce using rule 7 (var-declearation)
+    $default  reduce using rule 13 (param_list)
 
 
 State 29
 
-   15 param: type-specifier ID MLP MRP .
+    7 var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON .
 
-    $default  reduce using rule 15 (param)
+    $default  reduce using rule 7 (var_declearation)
 
 
 State 30
 
-   16 compound-stmt: LLP local-declearations . statement-list LRP
-   17 local-declearations: local-declearations . var-declearation
+   17 param: type_specifier ID MLP MRP .
 
-    TYPE_INT  shift, and go to state 1
-
-    $default  reduce using rule 20 (statement-list)
-
-    var-declearation  go to state 31
-    type-specifier    go to state 32
-    statement-list    go to state 33
+    $default  reduce using rule 17 (param)
 
 
 State 31
 
-   17 local-declearations: local-declearations var-declearation .
+   18 compound_stmt: LLP local_declearations . statement_list LRP
+   19 local_declearations: local_declearations . var_declearation
 
-    $default  reduce using rule 17 (local-declearations)
+    TYPE_INT    shift, and go to state 1
+    TYPE_FLOAT  shift, and go to state 2
+
+    $default  reduce using rule 22 (statement_list)
+
+    var_declearation  go to state 32
+    type_specifier    go to state 33
+    statement_list    go to state 34
 
 
 State 32
 
-    6 var-declearation: type-specifier . ID SEMICOLON
-    7                 | type-specifier . ID MLP INT10 MRP SEMICOLON
+   19 local_declearations: local_declearations var_declearation .
 
-    ID  shift, and go to state 34
+    $default  reduce using rule 19 (local_declearations)
 
 
 State 33
 
-   16 compound-stmt: LLP local-declearations statement-list . LRP
-   19 statement-list: statement-list . statement
+    6 var_declearation: type_specifier . ID SEMICOLON
+    7                 | type_specifier . ID MLP INT10 MRP SEMICOLON
 
-    INT10      shift, and go to state 35
-    LP         shift, and go to state 36
-    LLP        shift, and go to state 25
-    LRP        shift, and go to state 37
-    WHILE      shift, and go to state 38
-    RETURN     shift, and go to state 39
-    IF         shift, and go to state 40
-    SEMICOLON  shift, and go to state 41
-    ID         shift, and go to state 42
-
-    compound-stmt        go to state 43
-    statement            go to state 44
-    expression-stmt      go to state 45
-    selection-stmt       go to state 46
-    iteration-stmt       go to state 47
-    return-stmt          go to state 48
-    expression           go to state 49
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    ID  shift, and go to state 35
 
 
 State 34
 
-    6 var-declearation: type-specifier ID . SEMICOLON
-    7                 | type-specifier ID . MLP INT10 MRP SEMICOLON
+   18 compound_stmt: LLP local_declearations statement_list . LRP
+   21 statement_list: statement_list . statement
 
-    MLP        shift, and go to state 12
-    SEMICOLON  shift, and go to state 13
+    INT10      shift, and go to state 36
+    IF         shift, and go to state 37
+    LP         shift, and go to state 38
+    LLP        shift, and go to state 26
+    LRP        shift, and go to state 39
+    WHILE      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    SEMICOLON  shift, and go to state 42
+    ID         shift, and go to state 43
+
+    compound_stmt        go to state 44
+    statement            go to state 45
+    expression_stmt      go to state 46
+    selection_stmt       go to state 47
+    iteration_stmt       go to state 48
+    return_stmt          go to state 49
+    expression           go to state 50
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 35
 
-   56 factor: INT10 .
+    6 var_declearation: type_specifier ID . SEMICOLON
+    7                 | type_specifier ID . MLP INT10 MRP SEMICOLON
 
-    $default  reduce using rule 56 (factor)
+    MLP        shift, and go to state 13
+    SEMICOLON  shift, and go to state 14
 
 
 State 36
 
-   53 factor: LP . expression RP
+   58 factor: INT10 .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    expression           go to state 56
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 58 (factor)
 
 
 State 37
 
-   16 compound-stmt: LLP local-declearations statement-list LRP .
-
-    $default  reduce using rule 16 (compound-stmt)
-
-
-State 38
-
-   30 iteration-stmt: WHILE . LP expression RP statement
+   30 selection_stmt: IF . LP expression RP statement
+   31               | IF . LP expression RP statement ELSE statement
 
     LP  shift, and go to state 57
 
 
+State 38
+
+   55 factor: LP . expression RP
+
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    expression           go to state 58
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
+
+
 State 39
 
-   31 return-stmt: RETURN . SEMICOLON
-   32            | RETURN . expression SEMICOLON
+   18 compound_stmt: LLP local_declearations statement_list LRP .
 
-    INT10      shift, and go to state 35
-    LP         shift, and go to state 36
-    SEMICOLON  shift, and go to state 58
-    ID         shift, and go to state 42
-
-    expression           go to state 59
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 18 (compound_stmt)
 
 
 State 40
 
-   28 selection-stmt: IF . LP expression RP statement
-   29               | IF . LP expression RP statement ELSE statement
+   32 iteration_stmt: WHILE . LP expression RP statement
 
-    LP  shift, and go to state 60
+    LP  shift, and go to state 59
 
 
 State 41
 
-   27 expression-stmt: SEMICOLON .
+   33 return_stmt: RETURN . SEMICOLON
+   34            | RETURN . expression SEMICOLON
 
-    $default  reduce using rule 27 (expression-stmt)
+    INT10      shift, and go to state 36
+    LP         shift, and go to state 38
+    SEMICOLON  shift, and go to state 60
+    ID         shift, and go to state 43
+
+    expression           go to state 61
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 42
 
-   35 var: ID .
-   36    | ID . MLP expression MRP
-   57 call: ID . LP args RP
+   29 expression_stmt: SEMICOLON .
 
-    LP   shift, and go to state 61
-    MLP  shift, and go to state 62
-
-    $default  reduce using rule 35 (var)
+    $default  reduce using rule 29 (expression_stmt)
 
 
 State 43
 
-   22 statement: compound-stmt .
+   37 var: ID .
+   38    | ID . MLP expression MRP
+   59 call: ID . LP args RP
 
-    $default  reduce using rule 22 (statement)
+    LP   shift, and go to state 62
+    MLP  shift, and go to state 63
+
+    $default  reduce using rule 37 (var)
 
 
 State 44
 
-   19 statement-list: statement-list statement .
+   24 statement: compound_stmt .
 
-    $default  reduce using rule 19 (statement-list)
+    $default  reduce using rule 24 (statement)
 
 
 State 45
 
-   21 statement: expression-stmt .
+   21 statement_list: statement_list statement .
 
-    $default  reduce using rule 21 (statement)
+    $default  reduce using rule 21 (statement_list)
 
 
 State 46
 
-   23 statement: selection-stmt .
+   23 statement: expression_stmt .
 
     $default  reduce using rule 23 (statement)
 
 
 State 47
 
-   24 statement: iteration-stmt .
-
-    $default  reduce using rule 24 (statement)
-
-
-State 48
-
-   25 statement: return-stmt .
+   25 statement: selection_stmt .
 
     $default  reduce using rule 25 (statement)
 
 
+State 48
+
+   26 statement: iteration_stmt .
+
+    $default  reduce using rule 26 (statement)
+
+
 State 49
 
-   26 expression-stmt: expression . SEMICOLON
+   27 statement: return_stmt .
 
-    SEMICOLON  shift, and go to state 63
+    $default  reduce using rule 27 (statement)
 
 
 State 50
 
-   33 expression: var . ASSIGN expression
-   54 factor: var .
+   28 expression_stmt: expression . SEMICOLON
 
-    ASSIGN  shift, and go to state 64
-
-    $default  reduce using rule 54 (factor)
+    SEMICOLON  shift, and go to state 64
 
 
 State 51
 
-   34 expression: simple-expression .
+   35 expression: var . ASSIGN expression
+   56 factor: var .
 
-    $default  reduce using rule 34 (expression)
+    ASSIGN  shift, and go to state 65
+
+    $default  reduce using rule 56 (factor)
 
 
 State 52
 
-   37 simple-expression: additive-expression . relop additive-expression
-   38                  | additive-expression .
-   45 additive-expression: additive-expression . addop term
+   36 expression: simple_expression .
 
-    ADD  shift, and go to state 65
-    SUB  shift, and go to state 66
-    LT   shift, and go to state 67
-    GT   shift, and go to state 68
-    EQ   shift, and go to state 69
-    GET  shift, and go to state 70
-    LET  shift, and go to state 71
-    NEQ  shift, and go to state 72
-
-    $default  reduce using rule 38 (simple-expression)
-
-    relop  go to state 73
-    addop  go to state 74
+    $default  reduce using rule 36 (expression)
 
 
 State 53
 
-   46 additive-expression: term .
-   49 term: term . mulop factor
+   39 simple_expression: additive_expression . relop additive_expression
+   40                  | additive_expression .
+   47 additive_expression: additive_expression . addop term
 
-    MUL  shift, and go to state 75
-    DIV  shift, and go to state 76
+    ADD  shift, and go to state 66
+    SUB  shift, and go to state 67
+    LT   shift, and go to state 68
+    GT   shift, and go to state 69
+    EQ   shift, and go to state 70
+    GET  shift, and go to state 71
+    LET  shift, and go to state 72
+    NEQ  shift, and go to state 73
 
-    $default  reduce using rule 46 (additive-expression)
+    $default  reduce using rule 40 (simple_expression)
 
-    mulop  go to state 77
+    relop  go to state 74
+    addop  go to state 75
 
 
 State 54
 
-   50 term: factor .
+   48 additive_expression: term .
+   51 term: term . mulop factor
 
-    $default  reduce using rule 50 (term)
+    MUL  shift, and go to state 76
+    DIV  shift, and go to state 77
+
+    $default  reduce using rule 48 (additive_expression)
+
+    mulop  go to state 78
 
 
 State 55
 
-   55 factor: call .
+   52 term: factor .
 
-    $default  reduce using rule 55 (factor)
+    $default  reduce using rule 52 (term)
 
 
 State 56
 
-   53 factor: LP expression . RP
+   57 factor: call .
 
-    RP  shift, and go to state 78
+    $default  reduce using rule 57 (factor)
 
 
 State 57
 
-   30 iteration-stmt: WHILE LP . expression RP statement
+   30 selection_stmt: IF LP . expression RP statement
+   31               | IF LP . expression RP statement ELSE statement
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
 
     expression           go to state 79
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 58
 
-   31 return-stmt: RETURN SEMICOLON .
+   55 factor: LP expression . RP
 
-    $default  reduce using rule 31 (return-stmt)
+    RP  shift, and go to state 80
 
 
 State 59
 
-   32 return-stmt: RETURN expression . SEMICOLON
+   32 iteration_stmt: WHILE LP . expression RP statement
 
-    SEMICOLON  shift, and go to state 80
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    expression           go to state 81
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 60
 
-   28 selection-stmt: IF LP . expression RP statement
-   29               | IF LP . expression RP statement ELSE statement
+   33 return_stmt: RETURN SEMICOLON .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    expression           go to state 81
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 33 (return_stmt)
 
 
 State 61
 
-   57 call: ID LP . args RP
+   34 return_stmt: RETURN expression . SEMICOLON
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    $default  reduce using rule 59 (args)
-
-    expression           go to state 82
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
-    args                 go to state 83
-    arg-list             go to state 84
+    SEMICOLON  shift, and go to state 82
 
 
 State 62
 
-   36 var: ID MLP . expression MRP
+   59 call: ID LP . args RP
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
 
-    expression           go to state 85
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 61 (args)
+
+    expression           go to state 83
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
+    args                 go to state 84
+    arg_list             go to state 85
 
 
 State 63
 
-   26 expression-stmt: expression SEMICOLON .
+   38 var: ID MLP . expression MRP
 
-    $default  reduce using rule 26 (expression-stmt)
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    expression           go to state 86
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 64
 
-   33 expression: var ASSIGN . expression
+   28 expression_stmt: expression SEMICOLON .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    expression           go to state 86
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 28 (expression_stmt)
 
 
 State 65
 
-   47 addop: ADD .
+   35 expression: var ASSIGN . expression
 
-    $default  reduce using rule 47 (addop)
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    expression           go to state 87
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 66
 
-   48 addop: SUB .
+   49 addop: ADD .
 
-    $default  reduce using rule 48 (addop)
+    $default  reduce using rule 49 (addop)
 
 
 State 67
 
-   40 relop: LT .
+   50 addop: SUB .
 
-    $default  reduce using rule 40 (relop)
+    $default  reduce using rule 50 (addop)
 
 
 State 68
 
-   39 relop: GT .
-
-    $default  reduce using rule 39 (relop)
-
-
-State 69
-
-   43 relop: EQ .
-
-    $default  reduce using rule 43 (relop)
-
-
-State 70
-
-   42 relop: GET .
+   42 relop: LT .
 
     $default  reduce using rule 42 (relop)
 
 
-State 71
+State 69
 
-   41 relop: LET .
+   41 relop: GT .
 
     $default  reduce using rule 41 (relop)
 
 
-State 72
+State 70
 
-   44 relop: NEQ .
+   45 relop: EQ .
+
+    $default  reduce using rule 45 (relop)
+
+
+State 71
+
+   44 relop: GET .
 
     $default  reduce using rule 44 (relop)
 
 
+State 72
+
+   43 relop: LET .
+
+    $default  reduce using rule 43 (relop)
+
+
 State 73
 
-   37 simple-expression: additive-expression relop . additive-expression
+   46 relop: NEQ .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    var                  go to state 87
-    additive-expression  go to state 88
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 46 (relop)
 
 
 State 74
 
-   45 additive-expression: additive-expression addop . term
+   39 simple_expression: additive_expression relop . additive_expression
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
 
-    var     go to state 87
-    term    go to state 89
-    factor  go to state 54
-    call    go to state 55
+    var                  go to state 88
+    additive_expression  go to state 89
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 75
 
-   51 mulop: MUL .
+   47 additive_expression: additive_expression addop . term
 
-    $default  reduce using rule 51 (mulop)
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    var     go to state 88
+    term    go to state 90
+    factor  go to state 55
+    call    go to state 56
 
 
 State 76
 
-   52 mulop: DIV .
+   53 mulop: MUL .
 
-    $default  reduce using rule 52 (mulop)
+    $default  reduce using rule 53 (mulop)
 
 
 State 77
 
-   49 term: term mulop . factor
+   54 mulop: DIV .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    var     go to state 87
-    factor  go to state 90
-    call    go to state 55
+    $default  reduce using rule 54 (mulop)
 
 
 State 78
 
-   53 factor: LP expression RP .
+   51 term: term mulop . factor
 
-    $default  reduce using rule 53 (factor)
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    var     go to state 88
+    factor  go to state 91
+    call    go to state 56
 
 
 State 79
 
-   30 iteration-stmt: WHILE LP expression . RP statement
-
-    RP  shift, and go to state 91
-
-
-State 80
-
-   32 return-stmt: RETURN expression SEMICOLON .
-
-    $default  reduce using rule 32 (return-stmt)
-
-
-State 81
-
-   28 selection-stmt: IF LP expression . RP statement
-   29               | IF LP expression . RP statement ELSE statement
+   30 selection_stmt: IF LP expression . RP statement
+   31               | IF LP expression . RP statement ELSE statement
 
     RP  shift, and go to state 92
 
 
-State 82
+State 80
 
-   61 arg-list: expression .
+   55 factor: LP expression RP .
 
-    $default  reduce using rule 61 (arg-list)
+    $default  reduce using rule 55 (factor)
 
 
-State 83
+State 81
 
-   57 call: ID LP args . RP
+   32 iteration_stmt: WHILE LP expression . RP statement
 
     RP  shift, and go to state 93
 
 
+State 82
+
+   34 return_stmt: RETURN expression SEMICOLON .
+
+    $default  reduce using rule 34 (return_stmt)
+
+
+State 83
+
+   63 arg_list: expression .
+
+    $default  reduce using rule 63 (arg_list)
+
+
 State 84
 
-   58 args: arg-list .
-   60 arg-list: arg-list . COMMA expression
+   59 call: ID LP args . RP
 
-    COMMA  shift, and go to state 94
-
-    $default  reduce using rule 58 (args)
+    RP  shift, and go to state 94
 
 
 State 85
 
-   36 var: ID MLP expression . MRP
+   60 args: arg_list .
+   62 arg_list: arg_list . COMMA expression
 
-    MRP  shift, and go to state 95
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 60 (args)
 
 
 State 86
 
-   33 expression: var ASSIGN expression .
+   38 var: ID MLP expression . MRP
 
-    $default  reduce using rule 33 (expression)
+    MRP  shift, and go to state 96
 
 
 State 87
 
-   54 factor: var .
+   35 expression: var ASSIGN expression .
 
-    $default  reduce using rule 54 (factor)
+    $default  reduce using rule 35 (expression)
 
 
 State 88
 
-   37 simple-expression: additive-expression relop additive-expression .
-   45 additive-expression: additive-expression . addop term
+   56 factor: var .
 
-    ADD  shift, and go to state 65
-    SUB  shift, and go to state 66
-
-    $default  reduce using rule 37 (simple-expression)
-
-    addop  go to state 74
+    $default  reduce using rule 56 (factor)
 
 
 State 89
 
-   45 additive-expression: additive-expression addop term .
-   49 term: term . mulop factor
+   39 simple_expression: additive_expression relop additive_expression .
+   47 additive_expression: additive_expression . addop term
 
-    MUL  shift, and go to state 75
-    DIV  shift, and go to state 76
+    ADD  shift, and go to state 66
+    SUB  shift, and go to state 67
 
-    $default  reduce using rule 45 (additive-expression)
+    $default  reduce using rule 39 (simple_expression)
 
-    mulop  go to state 77
+    addop  go to state 75
 
 
 State 90
 
-   49 term: term mulop factor .
+   47 additive_expression: additive_expression addop term .
+   51 term: term . mulop factor
 
-    $default  reduce using rule 49 (term)
+    MUL  shift, and go to state 76
+    DIV  shift, and go to state 77
+
+    $default  reduce using rule 47 (additive_expression)
+
+    mulop  go to state 78
 
 
 State 91
 
-   30 iteration-stmt: WHILE LP expression RP . statement
+   51 term: term mulop factor .
 
-    INT10      shift, and go to state 35
-    LP         shift, and go to state 36
-    LLP        shift, and go to state 25
-    WHILE      shift, and go to state 38
-    RETURN     shift, and go to state 39
-    IF         shift, and go to state 40
-    SEMICOLON  shift, and go to state 41
-    ID         shift, and go to state 42
-
-    compound-stmt        go to state 43
-    statement            go to state 96
-    expression-stmt      go to state 45
-    selection-stmt       go to state 46
-    iteration-stmt       go to state 47
-    return-stmt          go to state 48
-    expression           go to state 49
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 51 (term)
 
 
 State 92
 
-   28 selection-stmt: IF LP expression RP . statement
-   29               | IF LP expression RP . statement ELSE statement
+   30 selection_stmt: IF LP expression RP . statement
+   31               | IF LP expression RP . statement ELSE statement
 
-    INT10      shift, and go to state 35
-    LP         shift, and go to state 36
-    LLP        shift, and go to state 25
-    WHILE      shift, and go to state 38
-    RETURN     shift, and go to state 39
-    IF         shift, and go to state 40
-    SEMICOLON  shift, and go to state 41
-    ID         shift, and go to state 42
+    INT10      shift, and go to state 36
+    IF         shift, and go to state 37
+    LP         shift, and go to state 38
+    LLP        shift, and go to state 26
+    WHILE      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    SEMICOLON  shift, and go to state 42
+    ID         shift, and go to state 43
 
-    compound-stmt        go to state 43
+    compound_stmt        go to state 44
     statement            go to state 97
-    expression-stmt      go to state 45
-    selection-stmt       go to state 46
-    iteration-stmt       go to state 47
-    return-stmt          go to state 48
-    expression           go to state 49
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    expression_stmt      go to state 46
+    selection_stmt       go to state 47
+    iteration_stmt       go to state 48
+    return_stmt          go to state 49
+    expression           go to state 50
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 93
 
-   57 call: ID LP args RP .
+   32 iteration_stmt: WHILE LP expression RP . statement
 
-    $default  reduce using rule 57 (call)
+    INT10      shift, and go to state 36
+    IF         shift, and go to state 37
+    LP         shift, and go to state 38
+    LLP        shift, and go to state 26
+    WHILE      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    SEMICOLON  shift, and go to state 42
+    ID         shift, and go to state 43
+
+    compound_stmt        go to state 44
+    statement            go to state 98
+    expression_stmt      go to state 46
+    selection_stmt       go to state 47
+    iteration_stmt       go to state 48
+    return_stmt          go to state 49
+    expression           go to state 50
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 94
 
-   60 arg-list: arg-list COMMA . expression
+   59 call: ID LP args RP .
 
-    INT10  shift, and go to state 35
-    LP     shift, and go to state 36
-    ID     shift, and go to state 42
-
-    expression           go to state 98
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 59 (call)
 
 
 State 95
 
-   36 var: ID MLP expression MRP .
+   62 arg_list: arg_list COMMA . expression
 
-    $default  reduce using rule 36 (var)
+    INT10  shift, and go to state 36
+    LP     shift, and go to state 38
+    ID     shift, and go to state 43
+
+    expression           go to state 99
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
 
 
 State 96
 
-   30 iteration-stmt: WHILE LP expression RP statement .
+   38 var: ID MLP expression MRP .
 
-    $default  reduce using rule 30 (iteration-stmt)
+    $default  reduce using rule 38 (var)
 
 
 State 97
 
-   28 selection-stmt: IF LP expression RP statement .
-   29               | IF LP expression RP statement . ELSE statement
+   30 selection_stmt: IF LP expression RP statement .
+   31               | IF LP expression RP statement . ELSE statement
 
-    ELSE  shift, and go to state 99
+    ELSE  shift, and go to state 100
 
-    ELSE      [reduce using rule 28 (selection-stmt)]
-    $default  reduce using rule 28 (selection-stmt)
+    ELSE      [reduce using rule 30 (selection_stmt)]
+    $default  reduce using rule 30 (selection_stmt)
 
 
 State 98
 
-   60 arg-list: arg-list COMMA expression .
+   32 iteration_stmt: WHILE LP expression RP statement .
 
-    $default  reduce using rule 60 (arg-list)
+    $default  reduce using rule 32 (iteration_stmt)
 
 
 State 99
 
-   29 selection-stmt: IF LP expression RP statement ELSE . statement
+   62 arg_list: arg_list COMMA expression .
 
-    INT10      shift, and go to state 35
-    LP         shift, and go to state 36
-    LLP        shift, and go to state 25
-    WHILE      shift, and go to state 38
-    RETURN     shift, and go to state 39
-    IF         shift, and go to state 40
-    SEMICOLON  shift, and go to state 41
-    ID         shift, and go to state 42
-
-    compound-stmt        go to state 43
-    statement            go to state 100
-    expression-stmt      go to state 45
-    selection-stmt       go to state 46
-    iteration-stmt       go to state 47
-    return-stmt          go to state 48
-    expression           go to state 49
-    var                  go to state 50
-    simple-expression    go to state 51
-    additive-expression  go to state 52
-    term                 go to state 53
-    factor               go to state 54
-    call                 go to state 55
+    $default  reduce using rule 62 (arg_list)
 
 
 State 100
 
-   29 selection-stmt: IF LP expression RP statement ELSE statement .
+   31 selection_stmt: IF LP expression RP statement ELSE . statement
 
-    $default  reduce using rule 29 (selection-stmt)
+    INT10      shift, and go to state 36
+    IF         shift, and go to state 37
+    LP         shift, and go to state 38
+    LLP        shift, and go to state 26
+    WHILE      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    SEMICOLON  shift, and go to state 42
+    ID         shift, and go to state 43
+
+    compound_stmt        go to state 44
+    statement            go to state 101
+    expression_stmt      go to state 46
+    selection_stmt       go to state 47
+    iteration_stmt       go to state 48
+    return_stmt          go to state 49
+    expression           go to state 50
+    var                  go to state 51
+    simple_expression    go to state 52
+    additive_expression  go to state 53
+    term                 go to state 54
+    factor               go to state 55
+    call                 go to state 56
+
+
+State 101
+
+   31 selection_stmt: IF LP expression RP statement ELSE statement .
+
+    $default  reduce using rule 31 (selection_stmt)

@@ -139,14 +139,19 @@ namespace yy {
 	Expression* e;
 	Identifier* id;
 	Statement* stmt;
-	vector<Statement*>* stmt_list;
+	vector<Statement*>* stmt_decl_list;
+	vector<Variable*>* variable_list;
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
+	IfStmt* If;
+	PrimitiveType* type;
+	Variable* variable;
+	Function* function;
 	int n;
 	double d;
 
-#line 150 "bison.tab.hxx" // lalr1.cc:377
+#line 155 "bison.tab.hxx" // lalr1.cc:377
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -179,22 +184,22 @@ namespace yy {
         MUL = 268,
         DIV = 269,
         ASSIGN = 270,
-        LP = 271,
-        RP = 272,
-        MLP = 273,
-        MRP = 274,
-        LLP = 275,
-        LRP = 276,
-        THEN = 277,
+        IF = 271,
+        LP = 272,
+        RP = 273,
+        MLP = 274,
+        MRP = 275,
+        LLP = 276,
+        LRP = 277,
         WHILE = 278,
         DO = 279,
         ELSE = 280,
         RETURN = 281,
         TYPE_INT = 282,
         TYPE_VOID = 283,
-        LT = 284,
-        GT = 285,
-        IF = 286,
+        TYPE_FLOAT = 284,
+        LT = 285,
+        GT = 286,
         SEMICOLON = 287,
         COMMA = 288,
         EQ = 289,
@@ -389,7 +394,7 @@ namespace yy {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const unsigned char yytable_[];
 
-  static const signed char yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -506,9 +511,9 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 97,     ///< Last index in yytable_.
+      yylast_ = 95,     ///< Last index in yytable_.
       yynnts_ = 30,  ///< Number of nonterminal symbols.
-      yyfinal_ = 8, ///< Termination state number.
+      yyfinal_ = 9, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 39  ///< Number of tokens.
@@ -523,7 +528,7 @@ namespace yy {
 
 
 } // yy
-#line 527 "bison.tab.hxx" // lalr1.cc:377
+#line 532 "bison.tab.hxx" // lalr1.cc:377
 
 
 

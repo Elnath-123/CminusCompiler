@@ -28,10 +28,15 @@
 	Expression* e;
 	Identifier* id;
 	Statement* stmt;
-	vector<Statement*>* stmt_list;
+	vector<Statement*>* stmt_decl_list;
+	vector<Variable*>* variable_list;
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
+	IfStmt* If;
+	PrimitiveType* type;
+	Variable* variable;
+	Function* function;
 	int n;
 	double d;
 }
@@ -47,94 +52,127 @@
 %token <int10> INT10 
 %token <e> ADD SUB MUL DIV 
 %token <assign> ASSIGN
+%token <If> IF
 %token LP RP MLP MRP LLP LRP 
-%token THEN WHILE DO ELSE RETURN TYPE_INT TYPE_VOID
-%token LT GT IF SEMICOLON COMMA
+%token WHILE DO ELSE RETURN TYPE_INT TYPE_VOID TYPE_FLOAT
+%token LT GT  SEMICOLON COMMA
 %token EQ GET LET NEQ
 %token <id> ID
 
-%type <e> expression simple-expression relop additive-expression addop term mulop factor
-%type <stmt> expression-stmt statement compound-stmt selection-stmt 
-			 iteration-stmt return-stmt var-declearation
-%type <stmt_list> local-declearations statement-list
-
+%type <e> expression simple_expression relop additive_expression addop term mulop factor
+%type <stmt> expression_stmt statement compound_stmt selection_stmt 
+			 iteration_stmt return_stmt var_declearation
+%type <type> type_specifier
+%type <variable> param
+%type <variable_list> param_list params
+%type <stmt_decl_list> local_declearations statement_list
+%type <function> fun_declearation
 %type <id> var
 %{
 	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
 %}
 
 %%
-	program: declearation-list;
+	program: declearation_list
+	       ;
 
-	declearation-list: declearation-list declearation
+	declearation_list: declearation_list declearation
 					 | declearation
 					 ;
 
-	declearation: var-declearation 
-				| fun-declearation
+	declearation: var_declearation
+				| fun_declearation {$$ = $1;}
 				;
 
-	var-declearation: type-specifier ID SEMICOLON 
-					| type-specifier ID MLP INT10 MRP SEMICOLON;
+	var_declearation: type_specifier ID SEMICOLON {$$ = new Variable($1, $2, "local_id_var");}
+					| type_specifier ID MLP INT10 MRP SEMICOLON //{$$ = new ArrayVariable($1, $2, "local_arr_var");}
+					;
 
-	type-specifier: TYPE_INT
-	;
+	type_specifier: TYPE_INT {$$ = new PrimitiveType("int");}
+				  | TYPE_FLOAT{$$ = new PrimitiveType("int");}
+				  ;
 
-	fun-declearation: type-specifier ID LP params RP compound-stmt{cout << $6->type;};
+	fun_declearation: type_specifier ID LP params RP compound_stmt{
+																	$$ = new Function($1, $2, $4, $6);
 
-	params: param-list
-		  | TYPE_VOID
+																	/* As for code generation, we only need
+																	   function name($2) and function body($6) */
+																	Gen::genFunction($$, $2, $6);
+																};
+
+	params: param_list {$$ = $1;}
+		  | TYPE_VOID  {
+						/* Empty param list */
+						$$ = new vector<Variable*>();
+					}
 		  ;
 
-	param-list: param-list COMMA param
-			  | param
+	param_list: param_list COMMA param{
+										$1->push_back($3);
+										$$ = $1;
+									}
+			  | param {$$->push_back($1);}
+			  | {$$ = new vector<Variable*>();}
 			  ;
 
-	param: type-specifier ID
-		 | type-specifier ID MLP MRP
+	param: type_specifier ID {$$ = new Variable($1, $2, "param_id_var");}
+		 | type_specifier ID MLP MRP//{$$ = new ArrayVariable($1, $2, "param_arr_var");} 
 		 ; 
 
-	compound-stmt: LLP local-declearations statement-list LRP {
+	compound_stmt: LLP local_declearations statement_list LRP {
+										/* Need to pass ($2, $3)->code to $$->code (implemented in construct function) */
 															  $$ = new BlockStmt("block", $2, $3);
 														}
 				 ;
-
-	local-declearations: local-declearations var-declearation{
+	
+	local_declearations: local_declearations var_declearation{
 															 $1->push_back($2);
 															 $$ = $1;		
 														}
 					   | {$$ = new vector<Statement*>();}
 					   ;
 
-	statement-list: statement-list statement {
+	statement_list: statement_list statement {
 											 $1->push_back($2);
 											 $$ = $1;
 										}
 				  | {$$ = new vector<Statement*>();}
 				  ;
 
-	statement: expression-stmt 
-			 | compound-stmt {$$ = $1; cout << $1->type;}
-			 | selection-stmt {*stmt = $1; $$ = $1;}
-			 | iteration-stmt
-			 | return-stmt
+	statement: expression_stmt {$$ = $1;} 
+			 | compound_stmt {$$ = $1; cout << $1->type;}
+			 | selection_stmt {*stmt = $1; $$ = $1;}
+			 | iteration_stmt
+			 | return_stmt
 			 ;
 
-	expression-stmt: expression SEMICOLON {$$ = new ExpStmt("exp", $1);}
+	expression_stmt: expression SEMICOLON {
+						/* Need to pass $1->code to $$->code (implemented in construct function) */
+											$$ = new ExpStmt("exp", $1);
+											$$->code = $1->code;
+										}
 				   | SEMICOLON {$$ = new EmptyStmt("empty");}
 				   ;
 
 
-	selection-stmt: IF LP expression RP	statement {$$ = new IfStmt("if", $3, $5); }
-				  | IF LP expression RP statement ELSE statement {$$ = new IfStmt("if", $3, $5, $7);}
+	selection_stmt: IF LP expression RP	statement {
+												   $$ = new IfStmt("if", $3, $5); 
+												   Gen::genIfStmt($1, $3, $5);
+												   $$ = $1;
+												}
+				  | IF LP expression RP statement ELSE statement {
+																    $$ = new IfStmt("if", $3, $5, $7);
+																	Gen::genIfStmt($1, $3, $5, $7);
+																	$$ = $1;
+																}
 	
 	
-	iteration-stmt: WHILE LP expression RP statement {
+	iteration_stmt: WHILE LP expression RP statement {
 													 $$ = new WhileStmt("while", $3, $5);
 												}
 				  ;
 	
-	return-stmt: RETURN SEMICOLON {}
+	return_stmt: RETURN SEMICOLON {}
 	           | RETURN expression SEMICOLON {}
 			   ;
 
@@ -143,20 +181,20 @@
 								      Gen::genAssign($2, $1, $3);
 									  $$ = $2; 
 									  *root = $2; }
-	          | simple-expression
+	          | simple_expression
 			  ;
 
 	var: ID { Gen::genId($$, $1); $$ = $1;}
 	   | ID MLP expression MRP
 	   ;
 	
-	simple-expression: additive-expression relop additive-expression{
+	simple_expression: additive_expression relop additive_expression{
 																	$2->left = $1; 
 																	$2->right = $3; 
-																	//Gen::genRelop($2, $1, $3, $2->type);
+																	Gen::genRelop($2, $1, $3, $2->type);
 																	$$ = $2;
 																}
-					 | additive-expression
+					 | additive_expression
 					 ;
 
 	relop: GT { $$ = new BinOp(">");}
@@ -167,7 +205,7 @@
 		 | NEQ { $$ = new BinOp("!=");}
 		 ;	
 	
-	additive-expression: additive-expression addop term {
+	additive_expression: additive_expression addop term {
 														$2->left = $1; 
 														$2->right = $3; 
 														Gen::genBinary($2, $1, $3, $2->type);
@@ -177,7 +215,7 @@
 					   ;
 	
 	addop: ADD { $$ = new BinOp("+");}
-	     | SUB { $$ = new BinOp("-");}
+	     | SUB { $$ = new BinOp("_");}
 		 ;
 
 	term: term mulop factor {
@@ -201,10 +239,10 @@
 
 	call: ID LP args RP;
 
-	args: arg-list 
+	args: arg_list 
 	    | ;
 
-	arg-list: arg-list COMMA expression 
+	arg_list: arg_list COMMA expression 
 			| expression
 			;
 

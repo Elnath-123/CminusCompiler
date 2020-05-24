@@ -33,9 +33,12 @@ public:
 class Statement : public AstNode{
 public:
 	string type;
-	
+	string next;
+	string code;
 	Statement(string type):
 		type(type) {}
+	Statement(string type, string code):
+		type(type), code(code) {}
 };
 
 class IfStmt : public Statement{
@@ -67,16 +70,28 @@ class ExpStmt : public Statement{
 public:
 	Expression* e;
 	ExpStmt(string type, Expression* e):
-		Statement(type), e(e) {}
+		Statement(type), e(e) {
+			/* Pass code */
+			
+		}
 	double accept( Visitor* v) {}
 };
 
 class BlockStmt : public Statement{
 public:
 	vector<Statement*>* stmt_list;
-	vector<Statement*>* decl;
-	BlockStmt(string type, vector<Statement*>* decl, vector<Statement*>* stmt_list):
-		Statement(type), stmt_list(stmt_list), decl(decl) {}
+	vector<Statement*>* local_decl_list;
+	BlockStmt(string type, vector<Statement*>* local_decl_list, vector<Statement*>* stmt_list):
+		Statement(type), stmt_list(stmt_list), local_decl_list(local_decl_list) {
+			cout << "come here" << endl;
+			/* Merge(pass) code */
+			for(Statement* local_decl : *local_decl_list)
+				code += local_decl->code;
+			
+			for(Statement* stmt : *stmt_list)
+				code += stmt->code;
+			cout << code << endl;
+		}
 	double accept( Visitor* v) {}
 };
 
@@ -101,12 +116,15 @@ public:
 	string type;
 	string code;
 	string place;
+	string True;
+	string False;
 
 	Expression* left;
 	Expression* right;
 	Expression(){ }
 	Expression(string type): type(type) { }
-	Expression(string type, Expression* left, Expression* right) : type(type), left(left), right(right) { }
+	Expression(string type, Expression* left, Expression* right) : 
+					type(type), left(left), right(right) { }
 };
 
 class BinOp : public Expression{
@@ -145,6 +163,33 @@ public:
 			Expression(type), name(name) {
 				//std::cout << this->name << std::endl;
 			}
+};
+
+class PrimitiveType : AstNode{
+public:
+	string type;
+	PrimitiveType(string type) : type(type){}
+	double accept( Visitor* v) {}
+};
+
+class Variable : public Statement{
+public:
+	PrimitiveType* v_type;
+	Identifier* id;
+	Variable(PrimitiveType* v_type, Identifier* id, string type):
+				Statement(type), v_type(v_type), id(id){}
+	double accept( Visitor* v) {}
+};
+
+class Function : public AstNode{
+public:
+	PrimitiveType* f_type;
+	Identifier* id;
+	vector<Variable*>* param_list;
+	Statement* block;
+	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block):
+			f_type(f_type), id(id), param_list(param_list), block(block){}
+	double accept( Visitor* v) {}
 };
 
 

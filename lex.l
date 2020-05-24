@@ -61,7 +61,6 @@ using namespace std;
 %%
 
 "if" {return yy::parser::token::IF;}
-"then" {return yy::parser::token::THEN;}
 "while" {return yy::parser::token::WHILE;}
 "else" {return yy::parser::token::ELSE;}
 "do" {return yy::parser::token::DO;}

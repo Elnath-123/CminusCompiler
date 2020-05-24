@@ -46,7 +46,7 @@
 #include "bison.tab.hxx"
 
 // User implementation prologue.
-#line 62 "bison.yxx" // lalr1.cc:412
+#line 71 "bison.yxx" // lalr1.cc:412
 
 	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
 
@@ -584,235 +584,320 @@ namespace yy {
         {
           switch (yyn)
             {
-  case 10:
-#line 83 "bison.yxx" // lalr1.cc:859
-    {cout << (yystack_[0].value.stmt)->type;}
+  case 7:
+#line 87 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt) = new Variable((yystack_[2].value.type), (yystack_[1].value.id), "local_id_var");}
 #line 591 "bison.tab.cxx" // lalr1.cc:859
     break;
 
-  case 17:
-#line 97 "bison.yxx" // lalr1.cc:859
-    {
-															  (yylhs.value.stmt) = new BlockStmt("block", (yystack_[2].value.stmt_list), (yystack_[1].value.stmt_list));
-														}
-#line 599 "bison.tab.cxx" // lalr1.cc:859
+  case 9:
+#line 91 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.type) = new PrimitiveType("int");}
+#line 597 "bison.tab.cxx" // lalr1.cc:859
     break;
 
-  case 18:
-#line 102 "bison.yxx" // lalr1.cc:859
+  case 10:
+#line 92 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.type) = new PrimitiveType("int");}
+#line 603 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 11:
+#line 95 "bison.yxx" // lalr1.cc:859
     {
-															 (yystack_[1].value.stmt_list)->push_back((yystack_[0].value.stmt));
-															 (yylhs.value.stmt_list) = (yystack_[1].value.stmt_list);		
-														}
-#line 608 "bison.tab.cxx" // lalr1.cc:859
+																	(yylhs.value.function) = new Function((yystack_[5].value.type), (yystack_[4].value.id), (yystack_[2].value.variable_list), (yystack_[0].value.stmt));
+
+																	/* As for code generation, we only need
+																	   function name($2) and function body($6) */
+																	Gen::genFunction((yylhs.value.function), (yystack_[4].value.id), (yystack_[0].value.stmt));
+																}
+#line 615 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 12:
+#line 103 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.variable_list) = (yystack_[0].value.variable_list);}
+#line 621 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 13:
+#line 104 "bison.yxx" // lalr1.cc:859
+    {
+						/* Empty param list */
+						(yylhs.value.variable_list) = new vector<Variable*>();
+					}
+#line 630 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 14:
+#line 110 "bison.yxx" // lalr1.cc:859
+    {
+										(yystack_[2].value.variable_list)->push_back((yystack_[0].value.variable));
+										(yylhs.value.variable_list) = (yystack_[2].value.variable_list);
+									}
+#line 639 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 15:
+#line 114 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.variable_list)->push_back((yystack_[0].value.variable));}
+#line 645 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 16:
+#line 115 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.variable_list) = new vector<Variable*>();}
+#line 651 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 17:
+#line 118 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.variable) = new Variable((yystack_[1].value.type), (yystack_[0].value.id), "param_id_var");}
+#line 657 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 19:
-#line 106 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt_list) = new vector<Statement*>();}
-#line 614 "bison.tab.cxx" // lalr1.cc:859
+#line 122 "bison.yxx" // lalr1.cc:859
+    {
+										/* Need to pass ($2, $3)->code to $$->code (implemented in construct function) */
+															  (yylhs.value.stmt) = new BlockStmt("block", (yystack_[2].value.stmt_decl_list), (yystack_[1].value.stmt_decl_list));
+														}
+#line 666 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 20:
-#line 109 "bison.yxx" // lalr1.cc:859
+#line 128 "bison.yxx" // lalr1.cc:859
     {
-											 (yystack_[1].value.stmt_list)->push_back((yystack_[0].value.stmt));
-											 (yylhs.value.stmt_list) = (yystack_[1].value.stmt_list);
-										}
-#line 623 "bison.tab.cxx" // lalr1.cc:859
+															 (yystack_[1].value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
+															 (yylhs.value.stmt_decl_list) = (yystack_[1].value.stmt_decl_list);		
+														}
+#line 675 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 21:
-#line 113 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt_list) = new vector<Statement*>();}
-#line 629 "bison.tab.cxx" // lalr1.cc:859
+#line 132 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt_decl_list) = new vector<Statement*>();}
+#line 681 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 22:
+#line 135 "bison.yxx" // lalr1.cc:859
+    {
+											 (yystack_[1].value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
+											 (yylhs.value.stmt_decl_list) = (yystack_[1].value.stmt_decl_list);
+										}
+#line 690 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 23:
-#line 117 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt) = (yystack_[0].value.stmt); cout << (yystack_[0].value.stmt)->type;}
-#line 635 "bison.tab.cxx" // lalr1.cc:859
+#line 139 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt_decl_list) = new vector<Statement*>();}
+#line 696 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 24:
-#line 118 "bison.yxx" // lalr1.cc:859
+#line 142 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt) = (yystack_[0].value.stmt);}
+#line 702 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 25:
+#line 143 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt) = (yystack_[0].value.stmt); cout << (yystack_[0].value.stmt)->type;}
+#line 708 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 26:
+#line 144 "bison.yxx" // lalr1.cc:859
     {*stmt = (yystack_[0].value.stmt); (yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 641 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 27:
-#line 123 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt) = new ExpStmt("exp", (yystack_[1].value.e));}
-#line 647 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 28:
-#line 124 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt) = new EmptyStmt("empty");}
-#line 653 "bison.tab.cxx" // lalr1.cc:859
+#line 714 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 29:
-#line 128 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt) = new IfStmt("if", (yystack_[2].value.e), (yystack_[0].value.stmt)); }
-#line 659 "bison.tab.cxx" // lalr1.cc:859
+#line 149 "bison.yxx" // lalr1.cc:859
+    {
+						/* Need to pass $1->code to $$->code (implemented in construct function) */
+											(yylhs.value.stmt) = new ExpStmt("exp", (yystack_[1].value.e));
+											(yylhs.value.stmt)->code = (yystack_[1].value.e)->code;
+										}
+#line 724 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 30:
-#line 129 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.stmt) = new IfStmt("if", (yystack_[4].value.e), (yystack_[2].value.stmt), (yystack_[0].value.stmt));}
-#line 665 "bison.tab.cxx" // lalr1.cc:859
+#line 154 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.stmt) = new EmptyStmt("empty");}
+#line 730 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 31:
-#line 132 "bison.yxx" // lalr1.cc:859
+#line 158 "bison.yxx" // lalr1.cc:859
     {
-													 (yylhs.value.stmt) = new WhileStmt("while", (yystack_[2].value.e), (yystack_[0].value.stmt));
+												   (yylhs.value.stmt) = new IfStmt("if", (yystack_[2].value.e), (yystack_[0].value.stmt)); 
+												   Gen::genIfStmt((yystack_[4].value.If), (yystack_[2].value.e), (yystack_[0].value.stmt));
+												   (yylhs.value.stmt) = (yystack_[4].value.If);
 												}
-#line 673 "bison.tab.cxx" // lalr1.cc:859
+#line 740 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 32:
-#line 137 "bison.yxx" // lalr1.cc:859
-    {}
-#line 679 "bison.tab.cxx" // lalr1.cc:859
+#line 163 "bison.yxx" // lalr1.cc:859
+    {
+																    (yylhs.value.stmt) = new IfStmt("if", (yystack_[4].value.e), (yystack_[2].value.stmt), (yystack_[0].value.stmt));
+																	Gen::genIfStmt((yystack_[6].value.If), (yystack_[4].value.e), (yystack_[2].value.stmt), (yystack_[0].value.stmt));
+																	(yylhs.value.stmt) = (yystack_[6].value.If);
+																}
+#line 750 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 33:
-#line 138 "bison.yxx" // lalr1.cc:859
-    {}
-#line 685 "bison.tab.cxx" // lalr1.cc:859
+#line 170 "bison.yxx" // lalr1.cc:859
+    {
+													 (yylhs.value.stmt) = new WhileStmt("while", (yystack_[2].value.e), (yystack_[0].value.stmt));
+												}
+#line 758 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 34:
-#line 141 "bison.yxx" // lalr1.cc:859
+#line 175 "bison.yxx" // lalr1.cc:859
+    {}
+#line 764 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 35:
+#line 176 "bison.yxx" // lalr1.cc:859
+    {}
+#line 770 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 36:
+#line 179 "bison.yxx" // lalr1.cc:859
     {
 									  (yystack_[1].value.assign) = new Assign("=", (yystack_[2].value.id), (yystack_[0].value.e));
 								      Gen::genAssign((yystack_[1].value.assign), (yystack_[2].value.id), (yystack_[0].value.e));
 									  (yylhs.value.e) = (yystack_[1].value.assign); 
 									  *root = (yystack_[1].value.assign); }
-#line 695 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 36:
-#line 149 "bison.yxx" // lalr1.cc:859
-    { Gen::genId((yylhs.value.id), (yystack_[0].value.id)); (yylhs.value.id) = (yystack_[0].value.id);}
-#line 701 "bison.tab.cxx" // lalr1.cc:859
+#line 780 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 38:
-#line 153 "bison.yxx" // lalr1.cc:859
-    {
-																	(yystack_[1].value.e)->left = (yystack_[2].value.e); 
-																	(yystack_[1].value.e)->right = (yystack_[0].value.e); 
-																	//Gen::genRelop($2, $1, $3, $2->type);
-																	(yylhs.value.e) = (yystack_[1].value.e);
-																}
-#line 712 "bison.tab.cxx" // lalr1.cc:859
+#line 187 "bison.yxx" // lalr1.cc:859
+    { Gen::genId((yylhs.value.id), (yystack_[0].value.id)); (yylhs.value.id) = (yystack_[0].value.id);}
+#line 786 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 40:
-#line 162 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp(">");}
-#line 718 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 41:
-#line 163 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("<");}
-#line 724 "bison.tab.cxx" // lalr1.cc:859
+#line 191 "bison.yxx" // lalr1.cc:859
+    {
+																	(yystack_[1].value.e)->left = (yystack_[2].value.e); 
+																	(yystack_[1].value.e)->right = (yystack_[0].value.e); 
+																	Gen::genRelop((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
+																	(yylhs.value.e) = (yystack_[1].value.e);
+																}
+#line 797 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 42:
-#line 164 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("<=");}
-#line 730 "bison.tab.cxx" // lalr1.cc:859
+#line 200 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp(">");}
+#line 803 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 43:
-#line 165 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp(">=");}
-#line 736 "bison.tab.cxx" // lalr1.cc:859
+#line 201 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("<");}
+#line 809 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 44:
-#line 166 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("==");}
-#line 742 "bison.tab.cxx" // lalr1.cc:859
+#line 202 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("<=");}
+#line 815 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 45:
-#line 167 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("!=");}
-#line 748 "bison.tab.cxx" // lalr1.cc:859
+#line 203 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp(">=");}
+#line 821 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 46:
-#line 170 "bison.yxx" // lalr1.cc:859
+#line 204 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("==");}
+#line 827 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 47:
+#line 205 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("!=");}
+#line 833 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 48:
+#line 208 "bison.yxx" // lalr1.cc:859
     {
 														(yystack_[1].value.e)->left = (yystack_[2].value.e); 
 														(yystack_[1].value.e)->right = (yystack_[0].value.e); 
 														Gen::genBinary((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 														(yylhs.value.e) = (yystack_[1].value.e);
 													}
-#line 759 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 48:
-#line 179 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("+");}
-#line 765 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 49:
-#line 180 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("-");}
-#line 771 "bison.tab.cxx" // lalr1.cc:859
+#line 844 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 50:
-#line 183 "bison.yxx" // lalr1.cc:859
+#line 217 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("+");}
+#line 850 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 51:
+#line 218 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("_");}
+#line 856 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 52:
+#line 221 "bison.yxx" // lalr1.cc:859
     {
 							(yystack_[1].value.e)->left = (yystack_[2].value.e);
 							(yystack_[1].value.e)->right = (yystack_[0].value.e);
 							Gen::genBinary((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 							(yylhs.value.e) = (yystack_[1].value.e);
 							}
-#line 782 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 52:
-#line 192 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("*");}
-#line 788 "bison.tab.cxx" // lalr1.cc:859
-    break;
-
-  case 53:
-#line 193 "bison.yxx" // lalr1.cc:859
-    { (yylhs.value.e) = new BinOp("/");}
-#line 794 "bison.tab.cxx" // lalr1.cc:859
+#line 867 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 54:
-#line 196 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.e) = (yystack_[1].value.e);}
-#line 800 "bison.tab.cxx" // lalr1.cc:859
+#line 230 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("*");}
+#line 873 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 55:
-#line 197 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.e) = (yystack_[0].value.id);}
-#line 806 "bison.tab.cxx" // lalr1.cc:859
+#line 231 "bison.yxx" // lalr1.cc:859
+    { (yylhs.value.e) = new BinOp("/");}
+#line 879 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 56:
+#line 234 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.e) = (yystack_[1].value.e);}
+#line 885 "bison.tab.cxx" // lalr1.cc:859
     break;
 
   case 57:
-#line 199 "bison.yxx" // lalr1.cc:859
+#line 235 "bison.yxx" // lalr1.cc:859
+    {(yylhs.value.e) = (yystack_[0].value.id);}
+#line 891 "bison.tab.cxx" // lalr1.cc:859
+    break;
+
+  case 59:
+#line 237 "bison.yxx" // lalr1.cc:859
     {Gen::genInt10((yylhs.value.e), (yystack_[0].value.int10)); (yylhs.value.e) = (yystack_[0].value.int10);}
-#line 812 "bison.tab.cxx" // lalr1.cc:859
+#line 897 "bison.tab.cxx" // lalr1.cc:859
     break;
 
 
-#line 816 "bison.tab.cxx" // lalr1.cc:859
+#line 901 "bison.tab.cxx" // lalr1.cc:859
             default:
               break;
             }
@@ -978,126 +1063,126 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -87;
+  const signed char parser::yypact_ninf_ = -50;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-     -18,   -87,    15,   -18,   -87,   -87,   -19,   -87,   -87,   -87,
-      18,    34,    25,   -87,   -87,     7,    37,    14,   -87,    32,
-      39,    43,   -18,    40,    54,   -87,   -87,   -87,   -87,   -87,
-     -18,   -87,    36,    -9,   -14,   -87,    -8,   -87,    60,     0,
-      61,   -87,    28,   -87,   -87,   -87,   -87,   -87,   -87,    46,
-      64,   -87,    30,    55,   -87,   -87,    58,    -8,   -87,    48,
-      -8,    -8,    -8,   -87,    -8,   -87,   -87,   -87,   -87,   -87,
-     -87,   -87,   -87,    -8,    -8,   -87,   -87,    -8,   -87,    65,
-     -87,    66,   -87,    67,    52,    62,   -87,   -87,    59,    55,
-     -87,    17,    17,   -87,    -8,   -87,   -87,    63,   -87,    17,
-     -87
+      43,   -50,   -50,    15,    43,   -50,   -50,     0,   -50,   -50,
+     -50,    -1,   -23,    42,   -50,   -50,    20,    37,    28,   -50,
+      49,    54,    41,    43,    44,    55,   -50,   -50,   -50,   -50,
+     -50,    43,   -50,    36,    -9,    17,   -50,    60,    -8,   -50,
+      61,    18,   -50,     3,   -50,   -50,   -50,   -50,   -50,   -50,
+      47,    65,   -50,    29,    -3,   -50,   -50,    -8,    63,    -8,
+     -50,    50,    -8,    -8,   -50,    -8,   -50,   -50,   -50,   -50,
+     -50,   -50,   -50,   -50,    -8,    -8,   -50,   -50,    -8,    66,
+     -50,    67,   -50,   -50,    68,    56,    70,   -50,   -50,    35,
+      -3,   -50,    16,    16,   -50,    -8,   -50,    58,   -50,   -50,
+      16,   -50
   };
 
   const unsigned char
   parser::yydefact_[] =
   {
-       0,     9,     0,     2,     4,     5,     0,     6,     1,     3,
-       0,     0,     0,     7,    12,     0,     0,    11,    14,     0,
-      15,     0,     0,     0,     0,    19,    10,    13,     8,    16,
-      21,    18,     0,     0,     0,    57,     0,    17,     0,     0,
-       0,    28,    36,    23,    20,    22,    24,    25,    26,     0,
-      55,    35,    39,    47,    51,    56,     0,     0,    32,     0,
-       0,    60,     0,    27,     0,    48,    49,    41,    40,    44,
-      43,    42,    45,     0,     0,    52,    53,     0,    54,     0,
-      33,     0,    62,     0,    59,     0,    34,    55,    38,    46,
-      50,     0,     0,    58,     0,    37,    31,    29,    61,     0,
-      30
+       0,     9,    10,     0,     2,     4,     5,     0,     6,     1,
+       3,     0,    16,     0,     7,    13,     0,     0,    12,    15,
+       0,    17,     0,     0,     0,     0,    21,    11,    14,     8,
+      18,    23,    20,     0,     0,     0,    59,     0,     0,    19,
+       0,     0,    30,    38,    25,    22,    24,    26,    27,    28,
+       0,    57,    37,    41,    49,    53,    58,     0,     0,     0,
+      34,     0,    62,     0,    29,     0,    50,    51,    43,    42,
+      46,    45,    44,    47,     0,     0,    54,    55,     0,     0,
+      56,     0,    35,    64,     0,    61,     0,    36,    57,    40,
+      48,    52,     0,     0,    60,     0,    39,    31,    33,    63,
+       0,    32
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -87,   -87,   -87,    83,    57,     9,   -87,   -87,   -87,    68,
-      70,   -87,   -87,   -86,   -87,   -87,   -87,   -87,   -36,   -21,
-     -87,   -87,    16,   -87,    19,   -87,    20,   -87,   -87,   -87
+     -50,   -50,   -50,    83,    57,    22,   -50,   -50,   -50,    69,
+      71,   -50,   -50,   -49,   -50,   -50,   -50,   -50,   -38,    -7,
+     -50,   -50,    21,   -50,    19,   -50,    13,   -50,   -50,   -50
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-      -1,     2,     3,     4,     5,     6,     7,    16,    17,    18,
-      43,    30,    33,    44,    45,    46,    47,    48,    49,    50,
-      51,    73,    52,    74,    53,    77,    54,    55,    83,    84
+      -1,     3,     4,     5,     6,     7,     8,    17,    18,    19,
+      44,    31,    34,    45,    46,    47,    48,    49,    50,    51,
+      52,    74,    53,    75,    54,    78,    55,    56,    84,    85
   };
 
   const unsigned char
   parser::yytable_[] =
   {
-      56,    35,    35,    59,    12,    96,    97,    36,    36,     1,
-      35,    25,    37,   100,    38,     8,    36,    39,    13,    10,
-      15,    79,    40,    41,    81,    82,    85,    35,    86,    42,
-      42,    15,    58,    36,    11,    19,    12,    25,    42,    32,
-      38,    65,    66,    39,    61,    20,    62,    22,    40,    41,
-      13,    23,    87,    87,    21,    42,    87,    24,    98,    67,
-      68,     1,    14,    25,    69,    70,    71,    72,    75,    76,
-      65,    66,    28,    29,    34,    78,    57,    60,    63,    64,
-      80,    95,    91,    92,    93,    94,     9,    31,    99,    88,
-      27,    26,     0,    89,     0,     0,     0,    90
+      58,    36,    36,    61,     1,    15,     2,    37,    38,    38,
+      76,    77,    26,    39,    40,     9,    12,    41,    13,    79,
+      62,    81,    63,    42,    83,    86,    36,    87,    36,    43,
+      43,    14,    37,    38,    16,    38,    13,    26,    11,    40,
+      66,    67,    41,    97,    98,    16,    66,    67,    42,    14,
+      60,   101,    20,    33,    43,    22,    43,    99,    21,    68,
+      69,    23,    26,    70,    71,    72,    73,    88,    88,    24,
+       1,    88,     2,    25,    35,    30,    29,    57,    59,    64,
+      65,    80,    82,   100,    92,    93,    94,    10,    32,    95,
+      96,    91,    28,    27,    90,    89
   };
 
-  const signed char
+  const unsigned char
   parser::yycheck_[] =
   {
-      36,    10,    10,    39,    18,    91,    92,    16,    16,    27,
-      10,    20,    21,    99,    23,     0,    16,    26,    32,    38,
-      11,    57,    31,    32,    60,    61,    62,    10,    64,    38,
-      38,    22,    32,    16,    16,    10,    18,    20,    38,    30,
-      23,    11,    12,    26,    16,    38,    18,    33,    31,    32,
-      32,    19,    73,    74,    17,    38,    77,    18,    94,    29,
-      30,    27,    28,    20,    34,    35,    36,    37,    13,    14,
-      11,    12,    32,    19,    38,    17,    16,    16,    32,    15,
-      32,    19,    17,    17,    17,    33,     3,    30,    25,    73,
-      22,    21,    -1,    74,    -1,    -1,    -1,    77
+      38,    10,    10,    41,    27,    28,    29,    16,    17,    17,
+      13,    14,    21,    22,    23,     0,    17,    26,    19,    57,
+      17,    59,    19,    32,    62,    63,    10,    65,    10,    38,
+      38,    32,    16,    17,    12,    17,    19,    21,    38,    23,
+      11,    12,    26,    92,    93,    23,    11,    12,    32,    32,
+      32,   100,    10,    31,    38,    18,    38,    95,    38,    30,
+      31,    33,    21,    34,    35,    36,    37,    74,    75,    20,
+      27,    78,    29,    19,    38,    20,    32,    17,    17,    32,
+      15,    18,    32,    25,    18,    18,    18,     4,    31,    33,
+      20,    78,    23,    22,    75,    74
   };
 
   const unsigned char
   parser::yystos_[] =
   {
-       0,    27,    40,    41,    42,    43,    44,    45,     0,    42,
-      38,    16,    18,    32,    28,    44,    46,    47,    48,    10,
-      38,    17,    33,    19,    18,    20,    49,    48,    32,    19,
-      50,    43,    44,    51,    38,    10,    16,    21,    23,    26,
-      31,    32,    38,    49,    52,    53,    54,    55,    56,    57,
-      58,    59,    61,    63,    65,    66,    57,    16,    32,    57,
-      16,    16,    18,    32,    15,    11,    12,    29,    30,    34,
-      35,    36,    37,    60,    62,    13,    14,    64,    17,    57,
-      32,    57,    57,    67,    68,    57,    57,    58,    61,    63,
-      65,    17,    17,    17,    33,    19,    52,    52,    57,    25,
-      52
+       0,    27,    29,    40,    41,    42,    43,    44,    45,     0,
+      42,    38,    17,    19,    32,    28,    44,    46,    47,    48,
+      10,    38,    18,    33,    20,    19,    21,    49,    48,    32,
+      20,    50,    43,    44,    51,    38,    10,    16,    17,    22,
+      23,    26,    32,    38,    49,    52,    53,    54,    55,    56,
+      57,    58,    59,    61,    63,    65,    66,    17,    57,    17,
+      32,    57,    17,    19,    32,    15,    11,    12,    30,    31,
+      34,    35,    36,    37,    60,    62,    13,    14,    64,    57,
+      18,    57,    32,    57,    67,    68,    57,    57,    58,    61,
+      63,    65,    18,    18,    18,    33,    20,    52,    52,    57,
+      25,    52
   };
 
   const unsigned char
   parser::yyr1_[] =
   {
        0,    39,    40,    41,    41,    42,    42,    43,    43,    44,
-      45,    46,    46,    47,    47,    48,    48,    49,    50,    50,
-      51,    51,    52,    52,    52,    52,    52,    53,    53,    54,
-      54,    55,    56,    56,    57,    57,    58,    58,    59,    59,
-      60,    60,    60,    60,    60,    60,    61,    61,    62,    62,
-      63,    63,    64,    64,    65,    65,    65,    65,    66,    67,
-      67,    68,    68
+      44,    45,    46,    46,    47,    47,    47,    48,    48,    49,
+      50,    50,    51,    51,    52,    52,    52,    52,    52,    53,
+      53,    54,    54,    55,    56,    56,    57,    57,    58,    58,
+      59,    59,    60,    60,    60,    60,    60,    60,    61,    61,
+      62,    62,    63,    63,    64,    64,    65,    65,    65,    65,
+      66,    67,    67,    68,    68
   };
 
   const unsigned char
   parser::yyr2_[] =
   {
        0,     2,     1,     2,     1,     1,     1,     3,     6,     1,
-       6,     1,     1,     3,     1,     2,     4,     4,     2,     0,
-       2,     0,     1,     1,     1,     1,     1,     2,     1,     5,
-       7,     5,     2,     3,     3,     1,     1,     4,     3,     1,
-       1,     1,     1,     1,     1,     1,     3,     1,     1,     1,
-       3,     1,     1,     1,     3,     1,     1,     1,     4,     1,
-       0,     3,     1
+       1,     6,     1,     1,     3,     1,     0,     2,     4,     4,
+       2,     0,     2,     0,     1,     1,     1,     1,     1,     2,
+       1,     5,     7,     5,     2,     3,     3,     1,     1,     4,
+       3,     1,     1,     1,     1,     1,     1,     1,     3,     1,
+       1,     1,     3,     1,     1,     1,     3,     1,     1,     1,
+       4,     1,     0,     3,     1
   };
 
 
@@ -1109,28 +1194,28 @@ namespace yy {
   {
   "$end", "error", "$undefined", "END_OF_FILE", "EOL", "REAL8", "REAL16",
   "REAL10", "INT8", "INT16", "INT10", "ADD", "SUB", "MUL", "DIV", "ASSIGN",
-  "LP", "RP", "MLP", "MRP", "LLP", "LRP", "THEN", "WHILE", "DO", "ELSE",
-  "RETURN", "TYPE_INT", "TYPE_VOID", "LT", "GT", "IF", "SEMICOLON",
+  "IF", "LP", "RP", "MLP", "MRP", "LLP", "LRP", "WHILE", "DO", "ELSE",
+  "RETURN", "TYPE_INT", "TYPE_VOID", "TYPE_FLOAT", "LT", "GT", "SEMICOLON",
   "COMMA", "EQ", "GET", "LET", "NEQ", "ID", "$accept", "program",
-  "declearation-list", "declearation", "var-declearation",
-  "type-specifier", "fun-declearation", "params", "param-list", "param",
-  "compound-stmt", "local-declearations", "statement-list", "statement",
-  "expression-stmt", "selection-stmt", "iteration-stmt", "return-stmt",
-  "expression", "var", "simple-expression", "relop", "additive-expression",
-  "addop", "term", "mulop", "factor", "call", "args", "arg-list", YY_NULLPTR
+  "declearation_list", "declearation", "var_declearation",
+  "type_specifier", "fun_declearation", "params", "param_list", "param",
+  "compound_stmt", "local_declearations", "statement_list", "statement",
+  "expression_stmt", "selection_stmt", "iteration_stmt", "return_stmt",
+  "expression", "var", "simple_expression", "relop", "additive_expression",
+  "addop", "term", "mulop", "factor", "call", "args", "arg_list", YY_NULLPTR
   };
 
 
   const unsigned char
   parser::yyrline_[] =
   {
-       0,    67,    67,    69,    70,    73,    74,    77,    78,    80,
-      83,    85,    86,    89,    90,    93,    94,    97,   102,   106,
-     109,   113,   116,   117,   118,   119,   120,   123,   124,   128,
-     129,   132,   137,   138,   141,   146,   149,   150,   153,   159,
-     162,   163,   164,   165,   166,   167,   170,   176,   179,   180,
-     183,   189,   192,   193,   196,   197,   198,   199,   202,   204,
-     205,   207,   208
+       0,    76,    76,    79,    80,    83,    84,    87,    88,    91,
+      92,    95,   103,   104,   110,   114,   115,   118,   119,   122,
+     128,   132,   135,   139,   142,   143,   144,   145,   146,   149,
+     154,   158,   163,   170,   175,   176,   179,   184,   187,   188,
+     191,   197,   200,   201,   202,   203,   204,   205,   208,   214,
+     217,   218,   221,   227,   230,   231,   234,   235,   236,   237,
+     240,   242,   243,   245,   246
   };
 
   // Print the state stack on the debug stream.
@@ -1215,8 +1300,8 @@ namespace yy {
 
 
 } // yy
-#line 1219 "bison.tab.cxx" // lalr1.cc:1167
-#line 211 "bison.yxx" // lalr1.cc:1168
+#line 1304 "bison.tab.cxx" // lalr1.cc:1167
+#line 249 "bison.yxx" // lalr1.cc:1168
 
 
 namespace yy{
