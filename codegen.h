@@ -25,6 +25,8 @@ public:
     static void genId(Identifier*& var, Identifier* Id);
 
     static void genInt10(Expression*& E, Int10* num);
+    
+    static void genReal10(Expression*& E, Real10* num);
 
     static void genIfStmt(Statement*& S, Expression* E, Statement* S1, Statement* S2 = NULL);
 

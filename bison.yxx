@@ -47,7 +47,7 @@
 %token END_OF_FILE
 %token EOL
 %token REAL8 REAL16
-%token REAL10 
+%token <real10> REAL10 
 %token <e> INT8 INT16
 %token <int10> INT10 
 %token <e> ADD SUB MUL DIV 
@@ -258,6 +258,7 @@
 	      | var {$$ = $1;} 
 		  | call {$$ = $1;}
 		  | INT10 {Gen::genInt10($$, $1); $$ = $1;}
+		  | REAL10 {Gen::genReal10($$, $1); $$ = $1;}
 		  ;
 
 	call: ID LP args RP {

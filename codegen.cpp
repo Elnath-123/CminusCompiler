@@ -158,6 +158,12 @@ void Gen::genInt10(Expression*& E, Int10* num){
     E->code = "";
 }
 
+void Gen::genReal10(Expression*& E, Real10* num){
+    /* E->place = num.val */
+    E->place = to_string(num->val);
+    E->code = "";
+}
+
 void Gen::genIfStmt(Statement*& S, Expression* E, Statement* S1, Statement* S2){
     string code = "";
     string place = "";
@@ -223,18 +229,18 @@ void Gen::genWhileStmt(Statement*& S, Expression* E, Statement* S1){
     string l_place = E->left->place;
     string r_place = E->right->place;
     E->True = newlabel();
-    E->False = newlabel();
+    //E->False = newlabel();
     code += l_code + r_code;
     //cout << r_place << endl;
     string bin = genBinaryOperation(l_place, op, r_place);
     code += genIfGotoOperation(bin, E->True);
-    code += genGotoOperation(E->False);
+    code += genGotoOperation(begin_label);
     code += genLabel(E->True);
 
     /* Code of S1 */
     code += S1->code;
     code += genGotoOperation(begin_label);
-    code += genLabel(E->False);
+    //code += genLabel(E->False);
     S->code = code;
 }
 

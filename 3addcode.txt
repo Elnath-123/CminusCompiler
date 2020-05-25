@@ -1,25 +1,26 @@
+fun:
+	a := 21
+	return 37
+
 main:
-L6:
-	t1 := a3 + 15
-	if t1 > 10 goto L7
-	goto L8
-L7:
-	if x2 == 7 goto L4
-	goto L5
-L4:
+	if c > d goto L1
+	goto L2
 L1:
-	if y < z goto L2
+	t1 := b + c
+	t2 := t1 + d
+	a := t2
+	t3 := 3.531250 + 4.546875
+	bb := t3
 	goto L3
 L2:
-	t2 := x * y
-	t3 := t2 / z
-	y := t3
-	goto L1
+	param b
+	param c
+	param d
+	call fun, 3
+	f := 
+	t4 := 9 + 8
+	cc := t4
+	t5 := 6 + 7
+	dd := t5
 L3:
-L5:
-	goto L6
-L8:
-	t4 := b * c
-	t5 := t4 + d
-	c := t5
 

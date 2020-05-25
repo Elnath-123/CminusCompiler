@@ -12,15 +12,15 @@ using namespace std;
 		if(num >= '0' && num <= '9') return num - '0';	
 		else if (num >= 'a' && num <= 'f') return num - 'a' + 10;
 	}
-	double _oct2dec(string oct){
-		double base = 1;
-		int dotpos = 0;
+	float _oct2dec(string oct){
+		float base = 1;
+		int dotpos = oct.size();
 		for(int i = 0; i < oct.size(); i++)
 			if(oct[i] == '.'){
 				dotpos = i;
 				break;
 			}
-		double sum = 0;
+		float sum = 0;
 		for(int i = dotpos - 1; i >= 1; i--){
 			sum += numchar2int(oct[i]) * base;
 			base *= 8;
@@ -34,15 +34,15 @@ using namespace std;
 		}
 		return sum;
 	}
-	double _hex2dec(string hex){
-		double base = 1;
-		int dotpos = 0;
+	float _hex2dec(string hex){
+		float base = 1;
+		int dotpos = hex.size();
 		for(int i = 0; i < hex.size(); i++)
 			if(hex[i] == '.'){
 				dotpos = i;
 				break;
 			}
-		double sum = 0;
+		float sum = 0;
 		for(int i = dotpos - 1; i >= 2; i--){
 			sum += numchar2int(hex[i]) * base;
 			base *= 16;
@@ -66,6 +66,7 @@ using namespace std;
 "do" {return yy::parser::token::DO;}
 "return" {return yy::parser::token::RETURN;}
 "int" {return yy::parser::token::TYPE_INT;}
+"float" {return yy::parser::token::TYPE_FLOAT;}
 "void" {return yy::parser::token::TYPE_VOID;}
 "+" {return yy::parser::token::ADD;}
 "-" {return yy::parser::token::SUB;}
@@ -90,13 +91,14 @@ using namespace std;
 
 [a-zA-Z][a-zA-Z0-9]*|[a-zA-Z][a-zA-Z0-9]*[._][a-zA-Z0-9]+ {yylval->id = new Identifier("ID", yytext); return yy::parser::token::ID;}
 
+
+0x[0-9a-f][0-9a-f]* {yylval->int10 = new Int10(_hex2dec(yytext)); return yy::parser::token::INT10;}
 0|[1-9][0-9]* {yylval->int10 = new Int10(atoi(yytext)); return yy::parser::token::INT10;}
-0[1-7][0-7]* {yylval->n = _oct2dec(yytext); return yy::parser::token::INT8;}
-0x[0-9a-f][0-9a-f]* {yylval->n = _hex2dec(yytext); return yy::parser::token::INT16;}
+0[1-7][0-7]* {yylval->int10 = new Int10(_oct2dec(yytext)); return yy::parser::token::INT10;}
 
 (0|[1-9][0-9]*)[.][0-9]+ {yylval->real10 = new Real10(atof(yytext)); return yy::parser::token::REAL10;}
-0[0-7]+[.][0-7]+ {yylval->d = _oct2dec(yytext); printf("%f", _oct2dec(yytext)); return yy::parser::token::REAL8;}
-0x[0-9a-f]+[.][0-9a-f]+ {yylval->d = _hex2dec(yytext); printf("%f", _hex2dec(yytext)); return yy::parser::token::REAL16;}
+0[0-7]+[.][0-7]+ {yylval->real10 = new Real10(_oct2dec(yytext));  return yy::parser::token::REAL10;}
+0x[0-9a-f]+[.][0-9a-f]+ {yylval->real10 = new Real10(_hex2dec(yytext)); return yy::parser::token::REAL10;}
 
 
 \n { yylloc->lines(1);}

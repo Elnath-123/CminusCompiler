@@ -145,14 +145,13 @@ namespace yy {
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
-	IfStmt* If;
 	PrimitiveType* type;
 	Variable* variable;
 	Function* function;
 	int n;
 	double d;
 
-#line 156 "bison.tab.hxx" // lalr1.cc:377
+#line 155 "bison.tab.hxx" // lalr1.cc:377
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -395,7 +394,7 @@ namespace yy {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const signed char yytable_[];
 
-  static const signed char yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -512,7 +511,7 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 98,     ///< Last index in yytable_.
+      yylast_ = 101,     ///< Last index in yytable_.
       yynnts_ = 30,  ///< Number of nonterminal symbols.
       yyfinal_ = 10, ///< Termination state number.
       yyterror_ = 1,
@@ -529,7 +528,7 @@ namespace yy {
 
 
 } // yy
-#line 533 "bison.tab.hxx" // lalr1.cc:377
+#line 532 "bison.tab.hxx" // lalr1.cc:377
 
 
 
