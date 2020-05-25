@@ -20,7 +20,10 @@ L7:
 	bb := t6
 	goto L9
 L8:
-	call fun, 0
+	param b
+	param c
+	param d
+	call fun, 3
 	f := 
 	t7 := 9 + 8
 	cc := t7

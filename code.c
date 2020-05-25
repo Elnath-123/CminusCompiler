@@ -1,4 +1,4 @@
-int fun(){
+int fun(int n, int m, int c){
     int a;
     int b;
     b = 0;
@@ -14,7 +14,7 @@ int main(){
         a = b + c + d;
         bb = 3 + 4; 
     }else{
-        f = fun();
+        f = fun(b, c, d);
         cc = 9 + 8;
         dd = 6 + 7;
     }

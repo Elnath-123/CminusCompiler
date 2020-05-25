@@ -63,13 +63,21 @@ string Gen::genCode(vector<Statement*>* gloabal_decl_list){
     write2File(code);
     return code;
 }
-
+string genArg(vector<Expression*>* arg_list){
+    string code = "";
+    for(Expression* arg : *arg_list){
+        code += tab + "param " + ((Identifier*)arg)->name + '\n';
+    }
+    return code;
+    
+}
 void Gen::genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list){
     string code = "";
     /* Searching function:id from symbol table
        if function:id has return value , genreate
        a temp value and assign the function to it */
     /* not implement (2020.5.24) */
+    code += genArg(arg_list);
     code += genCall(id->name, arg_list->size());
     E->code = code;
 }
