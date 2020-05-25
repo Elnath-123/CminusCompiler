@@ -28,7 +28,10 @@ public:
 
     static void genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2 = NULL);
 
+    static void genRetStmt(Statement*& S, Expression* E);
+
     static string genCode(vector<Statement*>* gloabal_decl_list);
+
 
     /*  function: genFunction
         parameters:

@@ -6,11 +6,12 @@ int fun(){
     if(a + 1 > b){
         a = 0;
     }
+    return 5;
 }
 
 int main(){
     if(c > d){
-        aa = 5 + 6;
+        a = b + c + d;
         bb = 3 + 4; 
     }else{
         f = fun();

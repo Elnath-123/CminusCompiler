@@ -153,9 +153,9 @@
 
 	statement: expression_stmt {$$ = $1;} 
 			 | compound_stmt {$$ = $1;}
-			 | selection_stmt {*stmt = $1; $$ = $1;}
-			 | iteration_stmt
-			 | return_stmt
+			 | selection_stmt {$$ = $1;}
+			 | iteration_stmt {$$ = $1;}
+			 | return_stmt {$$ = $1;}
 			 ;
 
 	expression_stmt: expression SEMICOLON {
@@ -184,8 +184,11 @@
 													}
 				  ;
 	
-	return_stmt: RETURN SEMICOLON {}
-	           | RETURN expression SEMICOLON {}
+	return_stmt: RETURN SEMICOLON {$$ = new ReturnStmt(NULL, "empty_return");}
+	           | RETURN expression SEMICOLON {
+				   								$$ = new ReturnStmt($2, "return");
+												Gen::genRetStmt($$, $2);
+										   }
 			   ;
 
 	expression: var ASSIGN expression {
@@ -194,7 +197,7 @@
 										$$ = $2; 
 										*root = $2; 
 									  }
-	          | simple_expression
+	          | simple_expression {$$ = $1;}
 			  ;
 
 	var: ID { Gen::genId($$, $1); $$ = $1;}
@@ -207,7 +210,7 @@
 																		Gen::genRelop($2, $1, $3, $2->type);
 																		$$ = $2;
 																	}
-					 | additive_expression
+					 | additive_expression {$$ = $1;}
 					 ;
 
 	relop: GT { $$ = new BinOp(">");}
@@ -224,7 +227,7 @@
 															Gen::genBinary($2, $1, $3, $2->type);
 															$$ = $2;
 														}
-					   | term 
+					   | term {$$ = $1;}
 					   ;
 	
 	addop: ADD { $$ = new BinOp("+");}
@@ -237,7 +240,7 @@
 								Gen::genBinary($2, $1, $3, $2->type);
 								$$ = $2;
 							}
-	    | factor 
+	    | factor {$$ =  $1;}
 		;
 	
 	mulop: MUL { $$ = new BinOp("*");}

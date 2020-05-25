@@ -12,6 +12,16 @@ string genCall(string func_name, int argc){
     return tab + "call " + func_name + ", " + to_string(argc) + '\n';
 }
 
+string genAssignOperation(string lval, string rval){
+    return tab + lval + " := " + rval + '\n';
+}
+
+string genRetCode(Expression* E){
+    string code = "";
+    code += E->code;
+    code += tab + "return " + E->place + "\n\n";
+    return code;
+}
 string genParam(string id_name){
     return tab + "param " + id_name + '\n';
 }
@@ -29,10 +39,6 @@ string genGotoOperation(string label){
 }
 string genBinaryOperation(string lval, string op, string rval){
     return lval + ' ' + op + ' ' + rval;
-}
-
-string genAssignOperation(string lval, string rval){
-    return tab + lval + " := " + rval + '\n';
 }
 
 string Gen::newtemp(){
@@ -77,9 +83,9 @@ void Gen::genBinary(Expression*& E, Expression* E1, Expression* E2, string op){
     */
     place = newtemp();
     if(E1->code != "")
-        code += E1->code + '\n';
+        code += E1->code;
     if(E2->code != "")
-        code += E2->code + '\n';
+        code += E2->code;
 
     string binop = genBinaryOperation(E1->place, op, E2->place);
     code += genAssignOperation(place, binop);
@@ -114,6 +120,13 @@ void Gen::genRelop(Expression*& E, Expression* E1, Expression* E2, string op){
     E->code = code;
     E->place = place;
 }
+
+void Gen::genRetStmt(Statement*& S, Expression* E){
+    string code = "";
+    code = genRetCode(E);
+    S->code = code;
+}
+
 
 void Gen::genParenthesis(Expression*& E, Expression*& E1){
     /* E->place = E1.place 

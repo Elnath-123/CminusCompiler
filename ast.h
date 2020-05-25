@@ -63,7 +63,12 @@ public:
 };
 
 class ReturnStmt : public Statement{
-	
+public:
+	Expression* e;
+	ReturnStmt(Expression* e, string type):
+		Statement(type), e(e){}
+		
+	double accept( Visitor* v) {}
 };
 
 class ExpStmt : public Statement{
