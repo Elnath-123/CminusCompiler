@@ -1,33 +1,25 @@
-fun:
-	b := 0
-	a := 0
-	t1 := a + 1
-	if t1 > b goto L3
-	goto L4
-L3:
-	a := 0
-L4:
-	return 5
-
 main:
-	if c > d goto L7
+L6:
+	t1 := a3 + 15
+	if t1 > 10 goto L7
 	goto L8
 L7:
-	t4 := b + c
-	t5 := t4 + d
-	a := t5
-	t6 := 3 + 4
-	bb := t6
-	goto L9
+	if x2 == 7 goto L4
+	goto L5
+L4:
+L1:
+	if y < z goto L2
+	goto L3
+L2:
+	t2 := x * y
+	t3 := t2 / z
+	y := t3
+	goto L1
+L3:
+L5:
+	goto L6
 L8:
-	param b
-	param c
-	param d
-	call fun, 3
-	f := 
-	t7 := 9 + 8
-	cc := t7
-	t8 := 6 + 7
-	dd := t8
-L9:
+	t4 := b * c
+	t5 := t4 + d
+	c := t5
 

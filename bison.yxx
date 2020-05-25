@@ -34,7 +34,6 @@
 	Int10* int10;
 	Real10* real10;
 	Assign* assign;
-	IfStmt* If;
 	PrimitiveType* type;
 	Variable* variable;
 	Function* function;
@@ -53,7 +52,7 @@
 %token <int10> INT10 
 %token <e> ADD SUB MUL DIV 
 %token <assign> ASSIGN
-%token <If> IF
+%token IF
 %token LP RP MLP MRP LLP LRP 
 %token WHILE DO ELSE RETURN TYPE_INT TYPE_VOID TYPE_FLOAT
 %token LT GT  SEMICOLON COMMA
@@ -169,18 +168,22 @@
 
 	selection_stmt: IF LP expression RP	statement{
 												     $$ = new IfStmt("if", $3, $5); 
-													 Gen::genIfStmt($1, $3, $5);
-													 $$ = $1;
+													 Gen::genIfStmt($$, $3, $5);
 												 }
 				  | IF LP expression RP statement ELSE statement{
 																    $$ = new IfStmt("if", $3, $5, $7);
-																	Gen::genIfStmt($1, $3, $5, $7);
-																	$$ = $1;
+																	Gen::genIfStmt($$, $3, $5, $7);
+																	
 																}
 	
 	
 	iteration_stmt: WHILE LP expression RP statement{
+													   //cout << ((Int10*)$3->right)->val << endl;
+													   //cout << $3->right->place;
 													 	$$ = new WhileStmt("while", $3, $5);
+														//cout << $3->left->type << $3->right->type << endl;
+														
+														Gen::genWhileStmt($$, $3, $5);
 													}
 				  ;
 	
@@ -197,7 +200,7 @@
 										$$ = $2; 
 										*root = $2; 
 									  }
-	          | simple_expression {$$ = $1;}
+	          | simple_expression {$$ = $1; }
 			  ;
 
 	var: ID { Gen::genId($$, $1); $$ = $1;}
@@ -206,9 +209,13 @@
 	
 	simple_expression: additive_expression relop additive_expression{
 																		$2->left = $1; 
-																		$2->right = $3; 
-																		Gen::genRelop($2, $1, $3, $2->type);
+																		$2->right = $3;
+																		//cout << $2->type << endl;
+																		//cout << $2->left->type << endl;
+																		
+																		//Gen::genRelop($2, $1, $3, $2->type);
 																		$$ = $2;
+																		//cout << $$->right->place << endl;
 																	}
 					 | additive_expression {$$ = $1;}
 					 ;

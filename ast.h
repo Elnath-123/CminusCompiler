@@ -89,9 +89,6 @@ public:
 	BlockStmt(string type, vector<Statement*>* local_decl_list, vector<Statement*>* stmt_list):
 		Statement(type), stmt_list(stmt_list), local_decl_list(local_decl_list) {
 			/* Merge(pass) code */
-			for(Statement* local_decl : *local_decl_list)
-				code += local_decl->code;
-			
 			for(Statement* stmt : *stmt_list)
 				code += stmt->code;
 		}
@@ -121,6 +118,7 @@ public:
 	string place;
 	string True;
 	string False;
+	int number;
 
 	Expression* left;
 	Expression* right;

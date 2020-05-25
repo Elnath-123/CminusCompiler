@@ -4,6 +4,12 @@ int Gen::label_num = 1;
 int Gen::temp_num = 1;
 string tab = "\t";
 
+void Gen::write2File(string content){
+    fstream f;
+    f.open(filename, ios::out);
+    f << content << endl;
+}
+
 string genFuncName(string func_name){
     return func_name + ":\n"; 
 }
@@ -47,12 +53,6 @@ string Gen::newtemp(){
 
 string Gen::newlabel(){
     return "L" + to_string(label_num++);
-}
-
-void Gen::write2File(string content){
-    fstream f;
-    f.open(filename, ios::app | ios::out);
-    f << content << endl;
 }
 
 string Gen::genCode(vector<Statement*>* gloabal_decl_list){
@@ -114,7 +114,7 @@ void Gen::genRelop(Expression*& E, Expression* E1, Expression* E2, string op){
         label2:
         E.place = 0
     */
-    string code = "";
+    /*string code = "";
     string place = "";
     place = newtemp();
     string L1 = newlabel();
@@ -126,7 +126,7 @@ void Gen::genRelop(Expression*& E, Expression* E1, Expression* E2, string op){
     code += place + ":=1\n";
     code += L2 + ":\n" + place + ":=0\n";
     E->code = code;
-    E->place = place;
+    E->place = place;*/
 }
 
 void Gen::genRetStmt(Statement*& S, Expression* E){
@@ -158,7 +158,7 @@ void Gen::genInt10(Expression*& E, Int10* num){
     E->code = "";
 }
 
-void Gen::genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2){
+void Gen::genIfStmt(Statement*& S, Expression* E, Statement* S1, Statement* S2){
     string code = "";
     string place = "";
     /* Code of E(relop expression) */
@@ -172,9 +172,7 @@ void Gen::genIfStmt(IfStmt*& S, Expression* E, Statement* S1, Statement* S2){
     string bin = genBinaryOperation(l_place, op, r_place);
     code = l_code + r_code;
     code += genIfGotoOperation(bin, label_1);
-    //code += "if " + l_place + op + r_place + " goto " + label_1 + "\n";
     code += genGotoOperation(label_2);
-    //code += "goto " + label_2 + "\n";
     code += genLabel(label_1);
 
     /* Code of S1(true statement) */
@@ -213,4 +211,31 @@ void Gen::genAssign(Assign*& S, Identifier* id, Expression* E){
     S->code = code;
     
 }
+
+void Gen::genWhileStmt(Statement*& S, Expression* E, Statement* S1){
+    string code = "";
+    string begin_label = newlabel();
+    code += genLabel(begin_label);
+    /* Code of E(relop Expression) */
+    string op = E->type;
+    string l_code = E->left->code;
+    string r_code = E->right->code;
+    string l_place = E->left->place;
+    string r_place = E->right->place;
+    E->True = newlabel();
+    E->False = newlabel();
+    code += l_code + r_code;
+    //cout << r_place << endl;
+    string bin = genBinaryOperation(l_place, op, r_place);
+    code += genIfGotoOperation(bin, E->True);
+    code += genGotoOperation(E->False);
+    code += genLabel(E->True);
+
+    /* Code of S1 */
+    code += S1->code;
+    code += genGotoOperation(begin_label);
+    code += genLabel(E->False);
+    S->code = code;
+}
+
 
