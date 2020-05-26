@@ -173,40 +173,35 @@ namespace yy {
       {
         END_OF_FILE = 258,
         EOL = 259,
-        REAL8 = 260,
-        REAL16 = 261,
-        REAL10 = 262,
-        INT8 = 263,
-        INT16 = 264,
-        INT10 = 265,
-        ADD = 266,
-        SUB = 267,
-        MUL = 268,
-        DIV = 269,
-        ASSIGN = 270,
-        IF = 271,
-        LP = 272,
-        RP = 273,
-        MLP = 274,
-        MRP = 275,
-        LLP = 276,
-        LRP = 277,
-        WHILE = 278,
-        DO = 279,
-        ELSE = 280,
-        RETURN = 281,
-        TYPE_INT = 282,
-        TYPE_VOID = 283,
-        TYPE_FLOAT = 284,
-        LT = 285,
-        GT = 286,
-        SEMICOLON = 287,
-        COMMA = 288,
-        EQ = 289,
-        GET = 290,
-        LET = 291,
-        NEQ = 292,
-        ID = 293
+        REAL10 = 260,
+        INT10 = 261,
+        ADD = 262,
+        SUB = 263,
+        MUL = 264,
+        DIV = 265,
+        ASSIGN = 266,
+        IF = 267,
+        LP = 268,
+        RP = 269,
+        MLP = 270,
+        MRP = 271,
+        LLP = 272,
+        LRP = 273,
+        WHILE = 274,
+        ELSE = 275,
+        RETURN = 276,
+        TYPE_INT = 277,
+        TYPE_VOID = 278,
+        TYPE_FLOAT = 279,
+        LT = 280,
+        GT = 281,
+        SEMICOLON = 282,
+        COMMA = 283,
+        EQ = 284,
+        GET = 285,
+        LET = 286,
+        NEQ = 287,
+        ID = 288
       };
     };
 
@@ -394,7 +389,7 @@ namespace yy {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const signed char yytable_[];
 
-  static const unsigned char yycheck_[];
+  static const signed char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -511,12 +506,12 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 101,     ///< Last index in yytable_.
+      yylast_ = 103,     ///< Last index in yytable_.
       yynnts_ = 30,  ///< Number of nonterminal symbols.
       yyfinal_ = 10, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 39  ///< Number of tokens.
+      yyntokens_ = 34  ///< Number of tokens.
     };
 
 
@@ -528,7 +523,7 @@ namespace yy {
 
 
 } // yy
-#line 532 "bison.tab.hxx" // lalr1.cc:377
+#line 527 "bison.tab.hxx" // lalr1.cc:377
 
 
 

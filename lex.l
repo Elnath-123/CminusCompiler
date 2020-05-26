@@ -63,7 +63,6 @@ using namespace std;
 "if" {return yy::parser::token::IF;}
 "while" {return yy::parser::token::WHILE;}
 "else" {return yy::parser::token::ELSE;}
-"do" {return yy::parser::token::DO;}
 "return" {return yy::parser::token::RETURN;}
 "int" {return yy::parser::token::TYPE_INT;}
 "float" {return yy::parser::token::TYPE_FLOAT;}

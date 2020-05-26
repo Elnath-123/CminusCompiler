@@ -1,5 +1,7 @@
 fun:
 	a := 21
+	b[2] := 3
+	var := b[4]
 	return 37
 
 main:

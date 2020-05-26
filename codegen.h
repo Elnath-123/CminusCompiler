@@ -24,6 +24,8 @@ public:
 
     static void genId(Identifier*& var, Identifier* Id);
 
+    static void genArr(Identifier*& var, Identifier* Id, Expression* E);
+
     static void genInt10(Expression*& E, Int10* num);
     
     static void genReal10(Expression*& E, Real10* num);

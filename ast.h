@@ -102,14 +102,7 @@ public:
 	double accept( Visitor* v) {}
 };
 
-class VariableDecl: public Statement{
-public:
-	string v_type;
-	string v_name;
-	VariableDecl(string type, string v_type, string v_name):
-		Statement(type), v_type(v_type), v_name(v_name) { }
-	double accept( Visitor* v) {}
-};
+
 
 class Expression : public AstNode{
 public:
@@ -178,6 +171,16 @@ public:
 	Identifier* id;
 	Variable(PrimitiveType* v_type, Identifier* id, string type):
 				Statement(type), v_type(v_type), id(id){}
+	double accept( Visitor* v) {}
+};
+
+class ArrayVariable : public Statement{
+public:
+	PrimitiveType* v_type;
+	Identifier* id;
+	Int10* size;
+	ArrayVariable(PrimitiveType* v_type, Identifier* id, Int10* size, string type):
+				Statement(type), v_type(v_type), id(id), size(size){ }
 	double accept( Visitor* v) {}
 };
 

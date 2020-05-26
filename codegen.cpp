@@ -152,6 +152,12 @@ void Gen::genId(Identifier*& var, Identifier* Id){
     var->code = "";
 }
 
+void Gen::genArr(Identifier*& var, Identifier* Id, Expression* E){
+    Id->place = Id->name;
+    var->place = Id->place + '[' + E->place + ']';
+    var->code = "";
+}
+
 void Gen::genInt10(Expression*& E, Int10* num){
     /* E->place = num.val */
     E->place = to_string(num->val);
