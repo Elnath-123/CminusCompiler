@@ -852,7 +852,7 @@ namespace yy {
 
   case 38:
 #line 201 "bison.yxx" // lalr1.cc:859
-    {(yylhs.value.e) = (yystack_[0].value.e); }
+    {(yylhs.value.e) = (yystack_[0].value.e);}
 #line 857 "bison.tab.cxx" // lalr1.cc:859
     break;
 
@@ -876,9 +876,9 @@ namespace yy {
 																		//cout << $2->type << endl;
 																		//cout << $2->left->type << endl;
 																		
-																		//Gen::genRelop($2, $1, $3, $2->type);
+																		Gen::genRelop((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 																		(yylhs.value.e) = (yystack_[1].value.e);
-																		//cout << $$->right->place << endl;
+																		//cout << $$->code << endl;
 																	}
 #line 884 "bison.tab.cxx" // lalr1.cc:859
     break;

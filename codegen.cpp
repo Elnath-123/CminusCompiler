@@ -114,19 +114,22 @@ void Gen::genRelop(Expression*& E, Expression* E1, Expression* E2, string op){
         label2:
         E.place = 0
     */
-    /*string code = "";
+    string code = "";
     string place = "";
     place = newtemp();
     string L1 = newlabel();
     string L2 = newlabel();
-    if(E1->code != "" && E2->code != "")
-        code += "if " + E1->place + op + E2->place + " goto " + L1 + "\n";
-    code += "goto " + L2 + "\n";
-    code += L1 + "\n";
-    code += place + ":=1\n";
-    code += L2 + ":\n" + place + ":=0\n";
+    //if(E1->code != "" && E2->code != "")
+    string bin = genBinaryOperation(E1->place, op, E2->place);
+    code += genIfGotoOperation(bin, L1);
+    code += genGotoOperation(L2);
+    code += genLabel(L1);
+    code += genAssignOperation(place, "1");
+    code += genLabel(L2);
+    code += genAssignOperation(place, "0");
     E->code = code;
-    E->place = place;*/
+    E->place = place;
+    //cout << E->code << endl;
 }
 
 void Gen::genRetStmt(Statement*& S, Expression* E){

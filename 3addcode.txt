@@ -1,28 +1,34 @@
 fun:
-	a := 21
+	if p > q goto L1
+	goto L2
+L1:
+	t1 := 1
+L2:
+	t1 := 0
+	a := t1
 	b[2] := 3
 	var := b[4]
 	return 37
 
 main:
-	if c > d goto L1
-	goto L2
-L1:
-	t1 := b + c
-	t2 := t1 + d
-	a := t2
-	t3 := 3.531250 + 4.546875
-	bb := t3
-	goto L3
-L2:
+	if c > d goto L5
+	goto L6
+L5:
+	t3 := b + c
+	t4 := t3 + d
+	a := t4
+	t5 := 3.531250 + 4.546875
+	bb := t5
+	goto L7
+L6:
 	param b
 	param c
 	param d
 	call fun, 3
 	f := 
-	t4 := 9 + 8
-	cc := t4
-	t5 := 6 + 7
-	dd := t5
-L3:
+	t6 := 9 + 8
+	cc := t6
+	t7 := 6 + 7
+	dd := t7
+L7:
 

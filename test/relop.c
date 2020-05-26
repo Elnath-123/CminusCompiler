@@ -1,11 +1,3 @@
-int fun(int n, int m, int c){
-    float a;
-    int b[15];
-    a = 0x15;
-    b[2] = 3;
-    var = b[4];
-    return 045;
-}
 
 int main(){
     if(c > d){
