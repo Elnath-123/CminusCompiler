@@ -1,22 +1,8 @@
 /*
 * @name ast.h
-* @description Hierachy of AST
-* @date 03/31/2020
-* @author Lrq 
-*                        |---------|
-*                        | AstNode |
-*                        |---------|
-*                             |
-*                             |
-*                      |--------------|
-*                      |  Expression  |
-*                      |--------------|
-*                          |      |
-*                         |        |
-*                        |          |
-*                    |-------|    |-------|
-*                    | BinOp |    |  Num  |
-*                    |-------|    |-------|
+* @description Cminus Language AST(Abstract Syntax tree) Node 
+* @date 05/26/2020 
+* @author Rongqing Li
 */
 #ifndef _AST_H
 #define _AST_H
@@ -102,8 +88,6 @@ public:
 	double accept( Visitor* v) {}
 };
 
-
-
 class Expression : public AstNode{
 public:
 	string type;
@@ -129,6 +113,15 @@ public:
 				Expression(type, left, right){ }
 	BinOp( string type) : 
 				Expression(type){ }
+};
+
+class UnaryOp : public Expression{
+	UnaryOp(string type, Expression* left):
+			Expression(type, left, NULL){}
+	UnaryOp(string type):
+			Expression(type){}
+	double accept( Visitor* v) {return v->visit(this);}
+
 };
 
 class Int10 : public Expression{
@@ -174,13 +167,13 @@ public:
 	double accept( Visitor* v) {}
 };
 
-class ArrayVariable : public Statement{
+class ArrayVariable : public Variable{
 public:
 	PrimitiveType* v_type;
 	Identifier* id;
 	Int10* size;
-	ArrayVariable(PrimitiveType* v_type, Identifier* id, Int10* size, string type):
-				Statement(type), v_type(v_type), id(id), size(size){ }
+	ArrayVariable(PrimitiveType* v_type, Identifier* id, string type, Int10* size = NULL):
+				Variable(v_type, id, type),  size(size){ }
 	double accept( Visitor* v) {}
 };
 

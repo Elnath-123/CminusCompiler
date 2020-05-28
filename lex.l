@@ -86,6 +86,9 @@ using namespace std;
 "{" {return yy::parser::token::LLP;}
 "}" {return yy::parser::token::LRP;}
 "," {return yy::parser::token::COMMA;}
+"&&" {return yy::parser::token::AND;}
+"||" {return yy::parser::token::OR;}
+"!"  {return yy::parser::token::NOT;}
 
 
 [a-zA-Z][a-zA-Z0-9]*|[a-zA-Z][a-zA-Z0-9]*[._][a-zA-Z0-9]+ {yylval->id = new Identifier("ID", yytext); return yy::parser::token::ID;}

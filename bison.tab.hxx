@@ -201,7 +201,11 @@ namespace yy {
         GET = 285,
         LET = 286,
         NEQ = 287,
-        ID = 288
+        AND = 288,
+        OR = 289,
+        NOT = 290,
+        ID = 291,
+        V_ELSE = 292
       };
     };
 
@@ -511,7 +515,7 @@ namespace yy {
       yyfinal_ = 10, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 34  ///< Number of tokens.
+      yyntokens_ = 38  ///< Number of tokens.
     };
 
 
@@ -523,7 +527,7 @@ namespace yy {
 
 
 } // yy
-#line 527 "bison.tab.hxx" // lalr1.cc:377
+#line 531 "bison.tab.hxx" // lalr1.cc:377
 
 
 

@@ -54,7 +54,6 @@ int main(int argc, char** argv)
 	Statement* stmt;
 	yy::parser parser(&root, &stmt);
 	parser.parse();
-	
 	//cout << ((If*)stmt)->s2->type << endl;
 	vector<Statement*>* stmt_list = ((BlockStmt*)((IfStmt*)stmt)->s1)->stmt_list;
 	

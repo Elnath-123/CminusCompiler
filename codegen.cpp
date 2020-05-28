@@ -1,3 +1,9 @@
+/*
+* @name codegen.cpp
+* @description Cminus Language TAC Generation (implementation)
+* @date 05/26/2020 
+* @author Rongqing Li
+*/
 #include "codegen.h"
 string Gen::filename = "3addcode.txt";
 int Gen::label_num = 1;
