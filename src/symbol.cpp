@@ -1,4 +1,4 @@
-#include "symbol.h"
+#include "../header/symbol.h"
 SymbolTable::SymbolTable(){
     
 }

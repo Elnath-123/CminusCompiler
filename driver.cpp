@@ -12,6 +12,7 @@
 #include <fstream>
 using namespace std;
 void usage();
+void dump_to_file(vector<string>, vector<string>);
 extern FILE* yyin;
 using namespace std;
 void preOrder(Expression* root){
@@ -24,77 +25,79 @@ void preOrder(Expression* root){
 int main(int argc, char** argv)
 {	
     /* Get command from shell */
-	int eval = 0;
-	int postfix = 0;
+	int lexical_output = 0;
+	int syntax_output = 0;
 	char opt;
 
-	/*while((opt = getopt(argc, argv, "hep")) != -1){
+	while((opt = getopt(argc, argv, "hls")) != -1){
 		switch (opt){
 			case 'h':
 				usage();
 			break;
-			case 'e':
-				eval = 1;
+			case 'l':
+				lexical_output = 1;
 			break;
-			case 'p':
-				postfix = 1;
+			case 's':
+				syntax_output = 1;
 			break;
 		default:
 				usage();
 		}
 	}
-	*/
+	
 	/* No argument */
-	//if(eval == 0 && postfix == 0) usage();
+	if(!lexical_output && !syntax_output) 
+		printf("No output in command line, please check out output files!\n");
 	
 	/* Parse */
 	vector<string> grammar;
+	vector<string> tokens;
 	if(argc > 1)
-		if(!(yyin = fopen(argv[1], "r"))){
+		if(!(yyin = fopen(argv[argc - 1], "r"))){
+			for(int i = 0; i < argc; i++){
+				printf("%s\n", argv[i]);
+			}
 			std::cerr << "Read file error." << std::endl;
 			return -1;
 		}
-	Expression *root;
-	Statement* stmt;
-	yy::parser parser(&grammar);
+
+	yy::parser parser(&grammar, &tokens);
 	parser.parse();
-	fstream f;
-    f.open("task2.txt", ios::out);
-	for(int i = grammar.size() - 1; i >= 0; i--){
-		f << grammar[i];
-	}
-	//cout << ((If*)stmt)->s2->type << endl;
-	//vector<Statement*>* stmt_list = ((BlockStmt*)((IfStmt*)stmt)->s1)->stmt_list;
-	
-	//cout <<  (*stmt_list->begin())->type << ' ' << ((IfStmt*)stmt)->e->type << endl;
-	//preOrder(root);
-	//std::cout << root->type << ' ' << root->left->type << ' ' << root->right->left->type << std::endl;
-	/*if(root == NULL){
-		std::cerr << "error!!" << std::endl;
-		exit(0);
-	}*/
-	
-	/* Analyse Expression */
-	/*if(eval == 1){
-		EvalVisitor* ev = new EvalVisitor();
-		double v = root->accept(ev);
-		std::cout << "By Visitor Pattern: Value=" << v << std::endl;
-	}
-	if(postfix == 1){
-		PostfixVisitor* pv = new PostfixVisitor();
-		std::cout << "Postfix Expression:";
-		root->accept(pv);
-		std::cout << std::endl;	
-	}*/
+	reverse(grammar.begin(), grammar.end());
+
+	dump_to_file(grammar, tokens);
+
+	if(lexical_output)
+		for(string str : tokens)
+			cout << str;
+		
+	if(syntax_output)
+		for(string str : grammar)
+			cout << str;
 
 	return 0;
 }
 
+void dump_to_file(vector<string> grammar, vector<string> tokens){
+	fstream f;
+	f.open("./output/task1.txt", ios::out);
+	for(string str : tokens){
+		f << str;
+	}
+	f.close();
+	
+	f.open("./output/task2.txt", ios::out);
+	for(string str : grammar){
+		f << str;
+	}
+	f.close();
+}
+
 void usage(){
-	printf("Usage: target [-hei]\n");
+	printf("Usage: target [-hls]\n");
 	printf("   -h   print this message\n");
-	printf("   -e   print evaluation of target expression\n");
-	printf("   -p   print postfix of target expression\n");
+	printf("   -l   print lexical analysis result\n");
+	printf("   -s   print syntax analysis result\n");
 	exit(1);
 }
 

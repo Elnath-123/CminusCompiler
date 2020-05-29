@@ -1,0 +1,200 @@
+int			_
+
+IDN			fun
+
+(			_
+
+int			_
+
+IDN			n
+
+,			_
+
+int			_
+
+IDN			m
+
+,			_
+
+int			_
+
+IDN			c
+
+)			_
+
+{			_
+
+float		_
+
+IDN			a
+
+;			_
+
+int			_
+
+IDN			b
+
+[			_
+
+INT10		15
+
+]			_
+
+;			_
+
+IDN			a
+
+=			_
+
+IDN			p
+
+>			_
+
+IDN			q
+
+;			_
+
+IDN			b
+
+[			_
+
+INT10		2
+
+]			_
+
+=			_
+
+INT10		3
+
+;			_
+
+IDN			var
+
+=			_
+
+IDN			b
+
+[			_
+
+INT10		4
+
+]			_
+
+;			_
+
+return		_
+
+INT8		37
+
+;			_
+
+}			_
+
+int			_
+
+IDN			main
+
+(			_
+
+)			_
+
+{			_
+
+if			_
+
+(			_
+
+IDN			c
+
+>			_
+
+IDN			d
+
+)			_
+
+{			_
+
+IDN			a
+
+=			_
+
+IDN			b
+
++			_
+
+IDN			c
+
++			_
+
+IDN			d
+
+;			_
+
+IDN			bb
+
+=			_
+
+REAL16		3.531250
+
++			_
+
+REAL8		4.546875
+
+;			_
+
+}			_
+
+else		_
+
+{			_
+
+IDN			f
+
+=			_
+
+IDN			fun
+
+(			_
+
+IDN			b
+
+,			_
+
+IDN			c
+
+,			_
+
+IDN			d
+
+)			_
+
+;			_
+
+IDN			cc
+
+=			_
+
+INT10		9
+
++			_
+
+INT10		8
+
+;			_
+
+IDN			dd
+
+=			_
+
+INT10		6
+
++			_
+
+INT10		7
+
+;			_
+
+}			_
+
+}			_
+

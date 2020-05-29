@@ -4,7 +4,7 @@
 * @date 05/26/2020 
 * @author Rongqing Li
 */
-#include "codegen.h"
+#include "../header/codegen.h"
 string Gen::filename = "3addcode.txt";
 int Gen::label_num = 1;
 int Gen::temp_num = 1;

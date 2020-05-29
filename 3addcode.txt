@@ -1,21 +1,22 @@
 ID:
-L12:
-	if ID < ID goto L13
-	goto L12
-L13:
-	if ID < 5 goto L9
-	goto L10
-L9:
-	ID := ID
-	goto L11
-L10:
-L7:
-	if ID > ID goto L8
-	goto L7
-L8:
-	t4 := ID + 1
+	if ID > ID goto L3
+	goto L4
+L3:
+	t2 := ID + ID
+	t3 := t2 + ID
+	ID := t3
+	t4 := 3.531250 + 4.546875
 	ID := t4
-	goto L7
-L11:
-	goto L12
+	goto L5
+L4:
+	param ID
+	param ID
+	param ID
+	call ID, 3
+	ID := 
+	t5 := 9 + 8
+	ID := t5
+	t6 := 6 + 7
+	ID := t6
+L5:
 

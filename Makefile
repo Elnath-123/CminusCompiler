@@ -1,9 +1,11 @@
-target: lex.l bison.yxx ast.h visitor.h \
-		visitor.cpp driver.cpp codegen.cpp symbol.cpp
-	bison bison.yxx -d -v --debug
+
+target: lex.l bison.yxx header/ast.h header/visitor.h \
+		src/visitor.cpp driver.cpp src/codegen.cpp src/symbol.cpp
 	flex lex.l
+	bison bison.yxx -d -v --debug
 	g++ -std=c++11 -o $@ bison.tab.cxx lex.yy.c \
-						 ast.cpp codegen.cpp visitor.cpp driver.cpp symbol.cpp \
+						 src/ast.cpp src/codegen.cpp \
+						 src/visitor.cpp driver.cpp src/symbol.cpp \
 						 -g
 
 flex: lex.l

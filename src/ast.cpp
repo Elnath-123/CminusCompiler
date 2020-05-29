@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "../header/ast.h"
 /*double Plus::eval() {printf("Plus!\n"); return left->eval() + right->eval(); }
 
 double Sub::eval()	{printf("Sub!\n"); return left->eval() - right->eval(); }  

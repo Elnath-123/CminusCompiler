@@ -13,10 +13,10 @@
 
 %code requires{
 	#define YYDEBUG 1
-	#include "ast.h"
-	#include "visitor.h"
-	#include "codegen.h"
-	#include "symbol.h"
+	#include "header/ast.h"
+	#include "header/visitor.h"
+	#include "header/codegen.h"
+	#include "header/symbol.h"
 }
 
 %code{
@@ -47,8 +47,8 @@
 	double d;
 }
 
-%parse-param {vector<string>* grammar}
-
+%parse-param {vector<string>* grammar} {vector<string>* tokens}
+%lex-param { vector<string>* tokens }
 /* declearation */
 %token END_OF_FILE
 %token EOL
@@ -78,7 +78,7 @@
 %nonassoc V_ELSE
 %nonassoc ELSE
 %{
-	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc);
+	extern int yylex(yy::parser::semantic_type *yylval, yy::parser::location_type *yylloc, vector<string>* tokens);
 %}
 
 %%
