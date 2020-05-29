@@ -66,13 +66,13 @@ using namespace std;
 		return sum;
 	}
 	int _vscprintf (const char * format, va_list pargs) { 
-      int retval; 
-      va_list argcopy; 
-      va_copy(argcopy, pargs); 
-      retval = vsnprintf(NULL, 0, format, argcopy); 
-      va_end(argcopy); 
-      return retval; 
-   }
+		int retval; 
+		va_list argcopy; 
+		va_copy(argcopy, pargs); 
+		retval = vsnprintf(NULL, 0, format, argcopy); 
+		va_end(argcopy); 
+		return retval; 
+    }
 	std::string format(const char *pszFmt, ...){
 		std::string str;
 		va_list args;

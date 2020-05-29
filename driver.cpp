@@ -15,12 +15,6 @@ void usage();
 void dump_to_file(vector<string>, vector<string>);
 extern FILE* yyin;
 using namespace std;
-void preOrder(Expression* root){
-	if(root == NULL) return;
-	std::cout << root->place << ' ';
-	preOrder(root->left);
-	preOrder(root->right);
-}
 
 int main(int argc, char** argv)
 {	
