@@ -7,7 +7,10 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <string>
 #include "bison.tab.hxx"
+#include <fstream>
+using namespace std;
 void usage();
 extern FILE* yyin;
 using namespace std;
@@ -45,6 +48,7 @@ int main(int argc, char** argv)
 	//if(eval == 0 && postfix == 0) usage();
 	
 	/* Parse */
+	vector<string> grammar;
 	if(argc > 1)
 		if(!(yyin = fopen(argv[1], "r"))){
 			std::cerr << "Read file error." << std::endl;
@@ -52,8 +56,13 @@ int main(int argc, char** argv)
 		}
 	Expression *root;
 	Statement* stmt;
-	yy::parser parser(&root, &stmt);
+	yy::parser parser(&grammar);
 	parser.parse();
+	fstream f;
+    f.open("task2.txt", ios::out);
+	for(int i = grammar.size() - 1; i >= 0; i--){
+		f << grammar[i];
+	}
 	//cout << ((If*)stmt)->s2->type << endl;
 	//vector<Statement*>* stmt_list = ((BlockStmt*)((IfStmt*)stmt)->s1)->stmt_list;
 	

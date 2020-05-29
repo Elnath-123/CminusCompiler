@@ -134,7 +134,7 @@ namespace yy {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 29 "bison.yxx" // lalr1.cc:377
+    #line 32 "bison.yxx" // lalr1.cc:377
 
 	AstNode* a;
 	Expression* e;
@@ -311,7 +311,7 @@ namespace yy {
 
 
     /// Build a parser object.
-    parser (Expression** root_yyarg, Statement** stmt_yyarg);
+    parser (vector<string>* grammar_yyarg);
     virtual ~parser ();
 
     /// Parse.
@@ -521,14 +521,13 @@ namespace yy {
 
 
     // User arguments.
-    Expression** root;
-    Statement** stmt;
+    vector<string>* grammar;
   };
 
 
 
 } // yy
-#line 532 "bison.tab.hxx" // lalr1.cc:377
+#line 531 "bison.tab.hxx" // lalr1.cc:377
 
 
 
