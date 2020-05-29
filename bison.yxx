@@ -11,18 +11,21 @@
 %skeleton "lalr1.cc"
 %debug 
 
-%code{
-	#include <iostream>
-	#include <unistd.h>
-	int yydebug=1;
-}
-
 %code requires{
 	#define YYDEBUG 1
 	#include "ast.h"
 	#include "visitor.h"
 	#include "codegen.h"
+	#include "symbol.h"
 }
+
+%code{
+	#include <iostream>
+	#include <unistd.h>
+	int yydebug=1;
+	SymbolTable* sym_table = new SymbolTable();
+}
+
 %union{
 	AstNode* a;
 	Expression* e;
@@ -97,8 +100,24 @@
 				| fun_declearation {$$ = $1;}
 				;
 
-	var_declearation: type_specifier ID SEMICOLON {$$ = new Variable($1, $2, "id_var");}
-					| type_specifier ID MLP INT10 MRP SEMICOLON {$$ = new ArrayVariable($1, $2, "arr_var", $4);}
+	var_declearation: type_specifier ID SEMICOLON {
+													//semanticCheck($1, $2);
+													/* name, (type, name, type_specifier) */
+													if(sym_table->insertIdSymbol($2->name, 
+														new IdSymbol("id_var", $2->name, $1->type)) == ERR_DUP_KEY){
+														//semantic_error();
+														YYABORT;
+													}
+													$$ = new Variable($1, $2, "id_var");
+												}
+					| type_specifier ID MLP INT10 MRP SEMICOLON {
+																    /* name, (type, name, type_specifier, size) */
+																	if(sym_table->insertArraySymbol($2->name, 
+																		new ArraySymbol("arr_var", $2->name, $1->type, $4->val)) == ERR_DUP_KEY){
+																		YYABORT;
+																	}
+																	$$ = new ArrayVariable($1, $2, "arr_var", $4);
+																}
 					;
 
 	type_specifier: TYPE_INT {$$ = new PrimitiveType("int");}
@@ -107,7 +126,12 @@
 				  ;
 
 	fun_declearation: type_specifier ID LP params RP compound_stmt{
-																	$$ = new Function($1, $2, $4, $6, "Function");
+																	if(sym_table->insertFuncSymbol($2->name, 
+																		new FuncSymbol("func", $2->name, $1->type, $4)) == ERR_DUP_KEY){
+																		YYABORT;
+																	}
+																	
+																	$$ = new Function($1, $2, $4, $6);
 																	/* As for code generation, we only need
 																	   function name($2) and function body($6) */
 																	Gen::genFunction($$, $2, $6);
@@ -169,6 +193,7 @@
 
 
 	selection_stmt: IF LP expression RP	statement %prec V_ELSE{
+													 sym_table->insertKeywordSymbol("if", new KeyWordSymbol("if"));
 												     $$ = new IfStmt("if", $3, $5); 
 													 Gen::genIfStmt($$, $3, $5);
 												 }
@@ -180,11 +205,7 @@
 	
 	
 	iteration_stmt: WHILE LP expression RP statement{
-													   //cout << ((Int10*)$3->right)->val << endl;
-													   //cout << $3->right->place;
 													 	$$ = new WhileStmt("while", $3, $5);
-														//cout << $3->left->type << $3->right->type << endl;
-														
 														Gen::genWhileStmt($$, $3, $5);
 													}
 				  ;
@@ -250,7 +271,7 @@
 					   ;
 	
 	addop: ADD { $$ = new BinOp("+");}
-	     | SUB { $$ = new BinOp("_");}
+	     | SUB { $$ = new BinOp("-");}
 		 ;
 
 	term: term mulop factor {
@@ -290,7 +311,6 @@
 							$$->push_back($1);
 						}
 			;
-
 %%
 
 namespace yy{

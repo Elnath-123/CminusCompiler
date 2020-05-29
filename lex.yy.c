@@ -541,10 +541,17 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "lex.l"
-#line 3 "lex.l"
+/*
+* @name lex.l
+* @description Cminus Language Lexical Analysis
+* @date 05/24/2020 
+* @author Rongqing Li
+*/
+#line 10 "lex.l"
 #include "bison.tab.hxx"
 #include "ast.h"
 #include <iostream>
+#include <cstdio>
 using namespace std;
 #define YY_DECL int yylex(yy::parser::semantic_type *yylval, \
 		yy::parser::location_type *yylloc)
@@ -598,8 +605,13 @@ using namespace std;
 		}
 		return sum;
 	}
-#line 602 "lex.yy.c"
-#line 603 "lex.yy.c"
+FILE* fp = fopen("task1.txt", "w");
+
+/*fp = fopen("task1.output", "w") == NULL){
+	printf("open task1.output error!\n\n");
+}*/
+#line 614 "lex.yy.c"
+#line 615 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -816,10 +828,10 @@ YY_DECL
 		}
 
 	{
-#line 61 "lex.l"
+#line 74 "lex.l"
 
 
-#line 823 "lex.yy.c"
+#line 835 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -888,206 +900,206 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 63 "lex.l"
-{return yy::parser::token::IF;}
+#line 76 "lex.l"
+{fprintf(fp, "if\t\t\t_\n\n");return yy::parser::token::IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 64 "lex.l"
-{return yy::parser::token::WHILE;}
+#line 77 "lex.l"
+{fprintf(fp, "while\t\t_\n\n");return yy::parser::token::WHILE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 65 "lex.l"
-{return yy::parser::token::ELSE;}
+#line 78 "lex.l"
+{fprintf(fp, "else\t\t_\n\n");return yy::parser::token::ELSE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 66 "lex.l"
-{return yy::parser::token::RETURN;}
+#line 79 "lex.l"
+{fprintf(fp, "return\t\t_\n\n");return yy::parser::token::RETURN;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 67 "lex.l"
-{return yy::parser::token::TYPE_INT;}
+#line 80 "lex.l"
+{fprintf(fp, "int\t\t\t_\n\n");return yy::parser::token::TYPE_INT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 68 "lex.l"
-{return yy::parser::token::TYPE_FLOAT;}
+#line 81 "lex.l"
+{fprintf(fp, "float\t\t_\n\n");return yy::parser::token::TYPE_FLOAT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 69 "lex.l"
-{return yy::parser::token::TYPE_VOID;}
+#line 82 "lex.l"
+{fprintf(fp, "void\t\t\t_\n\n");return yy::parser::token::TYPE_VOID;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 70 "lex.l"
-{return yy::parser::token::ADD;}
+#line 83 "lex.l"
+{fprintf(fp, "+\t\t\t_\n\n");return yy::parser::token::ADD;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 71 "lex.l"
-{return yy::parser::token::SUB;}
+#line 84 "lex.l"
+{fprintf(fp, "-\t\t\t_\n\n");return yy::parser::token::SUB;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 72 "lex.l"
-{return yy::parser::token::MUL;}
+#line 85 "lex.l"
+{fprintf(fp, "*\t\t\t_\n\n");return yy::parser::token::MUL;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 73 "lex.l"
-{return yy::parser::token::DIV;}
+#line 86 "lex.l"
+{fprintf(fp, "/\t\t\t_\n\n");return yy::parser::token::DIV;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 74 "lex.l"
-{return yy::parser::token::GT;}
+#line 87 "lex.l"
+{fprintf(fp, ">\t\t\t_\n\n");return yy::parser::token::GT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 75 "lex.l"
-{return yy::parser::token::LT;}
+#line 88 "lex.l"
+{fprintf(fp, "<\t\t\t_\n\n");return yy::parser::token::LT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 76 "lex.l"
-{return yy::parser::token::SEMICOLON;}
+#line 89 "lex.l"
+{fprintf(fp, ";\t\t\t_\n\n");return yy::parser::token::SEMICOLON;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 77 "lex.l"
-{return yy::parser::token::ASSIGN;}
+#line 90 "lex.l"
+{fprintf(fp, "=\t\t\t_\n\n");return yy::parser::token::ASSIGN;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 78 "lex.l"
-{return yy::parser::token::LET;}
+#line 91 "lex.l"
+{fprintf(fp, "<=\t\t\t_\n\n");return yy::parser::token::LET;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 79 "lex.l"
-{return yy::parser::token::GET;}
+#line 92 "lex.l"
+{fprintf(fp, ">=\t\t\t_\n\n");return yy::parser::token::GET;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 80 "lex.l"
-{return yy::parser::token::EQ;}
+#line 93 "lex.l"
+{fprintf(fp, "==\t\t\t_\n\n");return yy::parser::token::EQ;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 81 "lex.l"
-{return yy::parser::token::NEQ;}
+#line 94 "lex.l"
+{fprintf(fp, "!=\t\t\t_\n\n");return yy::parser::token::NEQ;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 82 "lex.l"
-{return yy::parser::token::LP;}
+#line 95 "lex.l"
+{fprintf(fp, "(\t\t\t_\n\n");return yy::parser::token::LP;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 83 "lex.l"
-{return yy::parser::token::RP;}
+#line 96 "lex.l"
+{fprintf(fp, ")\t\t\t_\n\n");return yy::parser::token::RP;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 84 "lex.l"
-{return yy::parser::token::MLP;}
+#line 97 "lex.l"
+{fprintf(fp, "[\t\t\t_\n\n");return yy::parser::token::MLP;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 85 "lex.l"
-{return yy::parser::token::MRP;}
+#line 98 "lex.l"
+{fprintf(fp, "]\t\t\t_\n\n");return yy::parser::token::MRP;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 86 "lex.l"
-{return yy::parser::token::LLP;}
+#line 99 "lex.l"
+{fprintf(fp, "{\t\t\t_\n\n");return yy::parser::token::LLP;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 87 "lex.l"
-{return yy::parser::token::LRP;}
+#line 100 "lex.l"
+{fprintf(fp, "}\t\t\t_\n\n");return yy::parser::token::LRP;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 88 "lex.l"
-{return yy::parser::token::COMMA;}
+#line 101 "lex.l"
+{fprintf(fp, ",\t\t\t_\n\n");return yy::parser::token::COMMA;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 89 "lex.l"
+#line 102 "lex.l"
 {return yy::parser::token::AND;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 90 "lex.l"
+#line 103 "lex.l"
 {return yy::parser::token::OR;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 91 "lex.l"
+#line 104 "lex.l"
 {return yy::parser::token::NOT;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 94 "lex.l"
-{yylval->id = new Identifier("ID", yytext); return yy::parser::token::ID;}
+#line 107 "lex.l"
+{fprintf(fp, "IDN\t\t\t%s\n\n", yytext);yylval->id = new Identifier("ID", yytext); return yy::parser::token::ID;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 97 "lex.l"
-{yylval->int10 = new Int10(_hex2dec(yytext)); return yy::parser::token::INT10;}
+#line 110 "lex.l"
+{fprintf(fp, "INT16\t\t%d\n\n", (int)_hex2dec(yytext));yylval->int10 = new Int10(_hex2dec(yytext)); return yy::parser::token::INT10;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 98 "lex.l"
-{yylval->int10 = new Int10(atoi(yytext)); return yy::parser::token::INT10;}
+#line 111 "lex.l"
+{fprintf(fp, "INT10\t\t%d\n\n", atoi(yytext));yylval->int10 = new Int10(atoi(yytext)); return yy::parser::token::INT10;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 99 "lex.l"
-{yylval->int10 = new Int10(_oct2dec(yytext)); return yy::parser::token::INT10;}
+#line 112 "lex.l"
+{fprintf(fp, "INT8\t\t%d\n\n", (int)_oct2dec(yytext));yylval->int10 = new Int10(_oct2dec(yytext)); return yy::parser::token::INT10;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 101 "lex.l"
-{yylval->real10 = new Real10(atof(yytext)); return yy::parser::token::REAL10;}
+#line 114 "lex.l"
+{fprintf(fp, "REAL10\t\t%f\n\n", atof(yytext));yylval->real10 = new Real10(atof(yytext)); return yy::parser::token::REAL10;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 102 "lex.l"
-{yylval->real10 = new Real10(_oct2dec(yytext));  return yy::parser::token::REAL10;}
+#line 115 "lex.l"
+{fprintf(fp, "REAL8\t\t%f\n\n", _oct2dec(yytext));yylval->real10 = new Real10(_oct2dec(yytext));  return yy::parser::token::REAL10;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 103 "lex.l"
-{yylval->real10 = new Real10(_hex2dec(yytext)); return yy::parser::token::REAL10;}
+#line 116 "lex.l"
+{fprintf(fp, "REAL16\t\t%f\n\n", _hex2dec(yytext));yylval->real10 = new Real10(_hex2dec(yytext)); return yy::parser::token::REAL10;}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 106 "lex.l"
+#line 119 "lex.l"
 { yylloc->lines(1);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 107 "lex.l"
+#line 120 "lex.l"
 { yylloc->step(); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 108 "lex.l"
-{printf("Invalid character %c\n", *yytext);}
+#line 121 "lex.l"
+{printf("Invalid character %c\n\n", *yytext);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 109 "lex.l"
+#line 122 "lex.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1091 "lex.yy.c"
+#line 1103 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2104,6 +2116,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 109 "lex.l"
+#line 122 "lex.l"
 
 

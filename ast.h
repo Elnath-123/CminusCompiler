@@ -147,7 +147,7 @@ public:
 	string name;
 	bool hasRetVal;
 	double accept( Visitor* v){ return v->visit(this); }
-	Identifier(string type, string name, bool hasRetVal=false) :
+	Identifier(string name, bool hasRetVal=false, string type="id") :
 			Expression(type), name(name), hasRetVal(hasRetVal) { }
 };
 
@@ -162,7 +162,7 @@ class Variable : public Statement{
 public:
 	PrimitiveType* v_type;
 	Identifier* id;
-	Variable(PrimitiveType* v_type, Identifier* id, string type):
+	Variable(PrimitiveType* v_type, Identifier* id, string type="id_var"):
 				Statement(type), v_type(v_type), id(id){}
 	double accept( Visitor* v) {}
 };
@@ -172,7 +172,7 @@ public:
 	PrimitiveType* v_type;
 	Identifier* id;
 	Int10* size;
-	ArrayVariable(PrimitiveType* v_type, Identifier* id, string type, Int10* size = NULL):
+	ArrayVariable(PrimitiveType* v_type, Identifier* id, string type="arr_var", Int10* size = NULL):
 				Variable(v_type, id, type),  size(size){ }
 	double accept( Visitor* v) {}
 };
@@ -181,7 +181,7 @@ class FunctionInvocation : public Expression{
 public:
 	Identifier* id;
 	vector<Expression*>* arg_list;
-	FunctionInvocation(Identifier* id, vector<Expression*>* arg_list, string type):
+	FunctionInvocation(Identifier* id, vector<Expression*>* arg_list, string type="func_invoke"):
 			Expression(type), id(id), arg_list(arg_list){}
 	double accept( Visitor* v){ return v->visit(this); }
 };
@@ -192,7 +192,7 @@ public:
 	Identifier* id;
 	vector<Variable*>* param_list;
 	Statement* block;
-	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block, string type):
+	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block, string type="func"):
 			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){}
 	double accept( Visitor* v) {}
 };

@@ -1,34 +1,21 @@
-fun:
-	if p > q goto L1
-	goto L2
-L1:
-	t1 := 1
-L2:
-	t1 := 0
-	a := t1
-	b[2] := 3
-	var := b[4]
-	return 37
-
-main:
-	if c > d goto L5
-	goto L6
-L5:
-	t3 := b + c
-	t4 := t3 + d
-	a := t4
-	t5 := 3.531250 + 4.546875
-	bb := t5
-	goto L7
-L6:
-	param b
-	param c
-	param d
-	call fun, 3
-	f := 
-	t6 := 9 + 8
-	cc := t6
-	t7 := 6 + 7
-	dd := t7
+ID:
+L12:
+	if ID < ID goto L13
+	goto L12
+L13:
+	if ID < 5 goto L9
+	goto L10
+L9:
+	ID := ID
+	goto L11
+L10:
 L7:
+	if ID > ID goto L8
+	goto L7
+L8:
+	t4 := ID + 1
+	ID := t4
+	goto L7
+L11:
+	goto L12
 

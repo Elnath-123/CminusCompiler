@@ -21,10 +21,6 @@ class PostfixVisitor : public Visitor{
 public:
 	virtual double visit ( Expression* n );
 	virtual double visit ( Int10* n );
-};
+};	
 
-class CodeGenVisitor : public Visitor{
-	virtual double visit ( Expression* n );
-	virtual double visit ( Int10 * n );
-};
 #endif

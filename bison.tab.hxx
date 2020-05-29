@@ -40,14 +40,15 @@
 #ifndef YY_YY_BISON_TAB_HXX_INCLUDED
 # define YY_YY_BISON_TAB_HXX_INCLUDED
 // //                    "%code requires" blocks.
-#line 20 "bison.yxx" // lalr1.cc:377
+#line 14 "bison.yxx" // lalr1.cc:377
 
 	#define YYDEBUG 1
 	#include "ast.h"
 	#include "visitor.h"
 	#include "codegen.h"
+	#include "symbol.h"
 
-#line 51 "bison.tab.hxx" // lalr1.cc:377
+#line 52 "bison.tab.hxx" // lalr1.cc:377
 
 
 # include <cstdlib> // std::abort
@@ -119,7 +120,7 @@
 
 
 namespace yy {
-#line 123 "bison.tab.hxx" // lalr1.cc:377
+#line 124 "bison.tab.hxx" // lalr1.cc:377
 
 
 
@@ -133,7 +134,7 @@ namespace yy {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 26 "bison.yxx" // lalr1.cc:377
+    #line 29 "bison.yxx" // lalr1.cc:377
 
 	AstNode* a;
 	Expression* e;
@@ -151,7 +152,7 @@ namespace yy {
 	int n;
 	double d;
 
-#line 155 "bison.tab.hxx" // lalr1.cc:377
+#line 156 "bison.tab.hxx" // lalr1.cc:377
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -527,7 +528,7 @@ namespace yy {
 
 
 } // yy
-#line 531 "bison.tab.hxx" // lalr1.cc:377
+#line 532 "bison.tab.hxx" // lalr1.cc:377
 
 
 

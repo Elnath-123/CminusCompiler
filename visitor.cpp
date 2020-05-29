@@ -15,6 +15,7 @@ double EvalVisitor::visit ( Expression* n ){
 		v = n->left->accept(this) / n->right->accept(this);
 	return v;
 }
+
 double EvalVisitor::visit(Int10* n){
 	return n->val;
 }

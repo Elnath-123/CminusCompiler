@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "ast.h"
 #define ERR_DUP_KEY -1
 #define VALID_KEY 1
 using namespace std;
@@ -19,22 +20,23 @@ public:
 class KeyWordSymbol : Symbol{
 public:
     string keyword_type;
-    KeyWordSymbol(string type, string name, string keyword_type):
-        Symbol(type, name), keyword_type(keyword_type){ }
+    KeyWordSymbol(string keyword_type):
+         keyword_type(keyword_type){ }
 };
 
 class IdSymbol : Symbol{
 public:
-    string type_specifier;
-    IdSymbol(string type, string name, string type_specifier):
-        Symbol(type, name), type_specifier(type_specifier){ }
+    string type_specifier; 
+    Int10* num;
+    IdSymbol(string type, string name, string type_specifier, Int10* num=NULL):
+        Symbol(type, name), type_specifier(type_specifier), num(num){ }
 };
 
 class FuncSymbol : Symbol{
 public:
     string ret_type;
-    vector<IdSymbol*>* param_list;
-    FuncSymbol(string type, string name, string ret_type, vector<IdSymbol*>* param_list):
+    vector<Variable*>* param_list;
+    FuncSymbol(string type, string name, string ret_type, vector<Variable*>* param_list):
         Symbol(type, name), ret_type(ret_type), param_list(param_list){ }
 };
 
