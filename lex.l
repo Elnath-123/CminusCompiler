@@ -7,7 +7,7 @@
 
 %option noyywrap nodefault yylineno
 %{
-#include "bison.tab.hxx"
+#include "bison.tab.hh"
 #include "header/ast.h"
 #include <cstdarg>
 #include <iostream>

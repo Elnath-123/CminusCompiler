@@ -1,9 +1,9 @@
 
-target: lex.l bison.yxx header/ast.h header/visitor.h \
+target: lex.l bison.y header/ast.h header/visitor.h \
 		src/visitor.cpp driver.cpp src/codegen.cpp src/symbol.cpp
 	flex -d lex.l
-	bison bison.yxx -d -v --debug
-	g++ -std=c++11 -o $@ bison.tab.cxx lex.yy.c \
+	bison bison.y -d -v --debug
+	g++ -std=c++11 -o $@ bison.tab.cc lex.yy.c \
 						 src/ast.cpp src/codegen.cpp \
 						 src/visitor.cpp driver.cpp src/symbol.cpp \
 						 -g
@@ -14,8 +14,8 @@ flex: lex.l
 
 .PYHONY: clean
 clean:
-	rm bison.tab.cxx \
-	bison.tab.hxx \
+	rm bison.tab.cc \
+	bison.tab.hh \
 	lex.yy.c \
 	location.hh \
 	position.hh \

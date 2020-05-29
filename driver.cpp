@@ -8,7 +8,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <string>
-#include "bison.tab.hxx"
+#include "bison.tab.hh"
 #include <fstream>
 using namespace std;
 void usage();

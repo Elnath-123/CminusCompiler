@@ -1,6 +1,7 @@
 bison.output
 bison.tab.cxx
 bison.tab.hxx
+debug/*
 *.hh
 target
 .vscode/*
