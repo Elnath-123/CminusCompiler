@@ -4,13 +4,25 @@ IDN			main
 
 (			_
 
-int			_
-
-IDN			a
-
 )			_
 
 {			_
 
-}			_
+int			_
+
+IDN			a
+
+;			_
+
+int			_
+
+IDN			b
+
+;			_
+
+int			_
+
+IDN			a
+
+;			_
 

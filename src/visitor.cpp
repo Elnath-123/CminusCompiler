@@ -31,29 +31,32 @@ bool redeclCheck(string name, SymbolTable* sym_table){
 	return false;	
 }
 /* Semantic check */
-int SemanticCheckVisitor::visit(Compose* compose, string type){
-	SymbolTable* sym_table = compose->sym_table;
-	string name = compose->name;
-
-	if(type == "func"){
-		Function* func = compose->func;
-		if(redeclCheck(name, sym_table)){
-			RaiseError(FUNC_REDECL);
-			return ERROR;
-		}	
+int SemanticCheckVisitor::visit(Variable* v){
+	SymbolTable* sym_table = this->sym_table;
+	string name = v->id->name;
+	if(redeclCheck(name, sym_table)){
+		RaiseError(ID_REDECL);
+		return ERROR;
 	}
-	else if(type == "id_var"){
-		Variable* id_var = compose->id_var;
-		if(redeclCheck(name, sym_table)){
-			RaiseError(ID_REDECL);
-			return ERROR;
-		}
-	}else if(type == "arr_var"){
-		ArrayVariable* arr_var = compose->arr_var;
-		if(redeclCheck(name, sym_table)){
-			RaiseError(ARR_REDECL);
-			return ERROR;
-		}
+}
+
+int SemanticCheckVisitor::visit(Function* func){
+	SymbolTable* sym_table = this->sym_table;
+	string name = func->id->name;
+
+	if(redeclCheck(name, sym_table)){
+		RaiseError(FUNC_REDECL);
+		return ERROR;
+	}	
+}
+
+int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
+	SymbolTable* sym_table = this->sym_table;
+	string name = arr_var->id->name;
+
+	if(redeclCheck(name, sym_table)){
+		RaiseError(ARR_REDECL);
+		return ERROR;
 	}
 }
 

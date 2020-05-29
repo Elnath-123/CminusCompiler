@@ -1,12 +1,12 @@
-program: declearation_list
-declearation_list: declearation
-declearation: fun_declearation
-fun_declearation: type_specifier ID LP params RP compound_stmt
-compound_stmt: LLP local_declearations statement_list LRP
-statement_list: ε
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
+local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
+local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
 local_declearations: ε
 params: param_list
-param_list: param
-param: type_specifier ID
-type_specifier: TYPE_INT
+param_list: ε
 type_specifier: TYPE_INT

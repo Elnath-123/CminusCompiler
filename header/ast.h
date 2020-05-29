@@ -145,10 +145,9 @@ public:
 class Identifier : public Expression{
 public:
 	string name;
-	bool hasRetVal;
 	double accept( Visitor* v){ return v->visit(this); }
-	Identifier(string name, bool hasRetVal=false, string type="id") :
-			Expression(type), name(name), hasRetVal(hasRetVal) { }
+	Identifier(string name,  string type="id") :
+			Expression(type), name(name) { }
 };
 
 class PrimitiveType : AstNode{
@@ -164,7 +163,7 @@ public:
 	Identifier* id;
 	Variable(PrimitiveType* v_type, Identifier* id, string type="id_var"):
 				Statement(type), v_type(v_type), id(id){}
-	double accept( Visitor* v) {}
+	double accept( Visitor* v) {v->visit(this);}
 };
 
 class ArrayVariable : public Variable{

@@ -47,6 +47,7 @@ public:
         IdSymbol(type, name, type_specifier), size(size){ }
 };
 
+
 class SymbolTable{
 public:
     SymbolTable();
@@ -60,13 +61,5 @@ public:
     int insertArraySymbol(string name, ArraySymbol*);
 };
 
-struct Compose{
-    string name;
-    Variable* id_var;
-    ArrayVariable* arr_var;
-    Function* func;
-    SymbolTable* sym_table;
-    Compose(string name, SymbolTable* sym_table):
-        name(name), sym_table(sym_table){ }
-};
+
 #endif

@@ -135,7 +135,7 @@ OtherCharacter .
 
 {IDN}   {
 			tokens->push_back(format("IDN\t\t\t%s\n\n", yytext));
-			yylval->id = new Identifier("ID", yytext);
+			yylval->id = new Identifier(yytext);
 			return yy::parser::token::ID;
 	    }
   
