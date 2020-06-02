@@ -26,17 +26,39 @@ IDN			d
 
 ;			_
 
-}			_
-
 int			_
 
-IDN			main
+IDN			c
 
-(			_
+;			_
 
-)			_
+IDN			d
 
-{			_
+=			_
+
+INT10		2
+
+;			_
+
+IDN			c
+
+=			_
+
+INT10		4
+
+;			_
+
+IDN			e
+
+=			_
+
+INT10		4
+
++			_
+
+INT10		2
+
+;			_
 
 }			_
 

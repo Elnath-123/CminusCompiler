@@ -13,7 +13,7 @@ using namespace std;
 class AstNode{
 public:
 	AstNode(){ }
-	virtual double accept( Visitor* v ) = 0;
+	virtual float accept( Visitor* v ) = 0;
 };
 
 class Statement : public AstNode{
@@ -35,7 +35,7 @@ public:
 	IfStmt(string type, Expression* e, Statement* s1, Statement* s2 = nullptr):
 		Statement(type), s1(s1), s2(s2), e(e) {}
 
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class WhileStmt : public Statement{
@@ -45,7 +45,7 @@ public:
 	WhileStmt(string type, Expression* e, Statement* s):
 		Statement(type), s(s), e(e) {}
 	
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class ReturnStmt : public Statement{
@@ -54,7 +54,7 @@ public:
 	ReturnStmt(Expression* e, string type):
 		Statement(type), e(e){}
 		
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class ExpStmt : public Statement{
@@ -65,7 +65,7 @@ public:
 			/* Pass code */
 			
 		}
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class BlockStmt : public Statement{
@@ -78,14 +78,14 @@ public:
 			for(Statement* stmt : *stmt_list)
 				code += stmt->code;
 		}
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class EmptyStmt : public Statement{
 public:
 	EmptyStmt(string type):
 		Statement(type){ }
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class Expression : public AstNode{
@@ -107,7 +107,7 @@ public:
 
 class BinOp : public Expression{
 public:
-	virtual double accept( Visitor* v) {return v->visit(this);}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 	
 	BinOp( string type, Expression* left, Expression* right ) : 
 				Expression(type, left, right){ }
@@ -120,20 +120,20 @@ class UnaryOp : public Expression{
 			Expression(type, left, NULL){}
 	UnaryOp(string type):
 			Expression(type){}
-	virtual double accept( Visitor* v) {return v->visit(this);}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 
 };
 
 class Int10 : public Expression{
 public:		
 	int val;
-	virtual double accept( Visitor* v){ return v->visit(this); }
-	Int10( double val ): Expression("Int10"), val(val){}	
+	virtual float accept( Visitor* v){ return v->visit(this); }
+	Int10( float val ): Expression("Int10"), val(val){}	
 };
 
 class Assign : public Expression{
 public:
-	virtual double accept(Visitor * v){return v->visit(this);}
+	virtual float accept(Visitor * v){return v->visit(this);}
 	Assign( string type, Expression* left, Expression* right ) : 
 			Expression(type, left, right){ }
 	Assign(string type):
@@ -145,7 +145,7 @@ public:
 class Identifier : public Expression{
 public:
 	string name;
-	virtual double accept( Visitor* v){ return v->visit(this); }
+	virtual float accept( Visitor* v){ return v->visit(this); }
 	Identifier(string name,  string type="id") :
 			Expression(type), name(name) { }
 };
@@ -154,7 +154,7 @@ class PrimitiveType : AstNode{
 public:
 	string type;
 	PrimitiveType(string type) : type(type){}
-	virtual double accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {}
 };
 
 class Variable : public Statement{
@@ -163,7 +163,7 @@ public:
 	Identifier* id;
 	Variable(PrimitiveType* v_type, Identifier* id, string type="id_var"):
 				Statement(type), v_type(v_type), id(id){}
-	virtual double accept( Visitor* v) {return v->visit(this);}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class ArrayVariable : public Variable{
@@ -171,7 +171,7 @@ public:
 	Int10* size;
 	ArrayVariable(PrimitiveType* v_type, Identifier* id, string type="arr_var", Int10* size = NULL):
 				Variable(v_type, id, type),  size(size){ }
-	virtual double accept( Visitor* v) {return v->visit(this);}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class FunctionInvocation : public Expression{
@@ -180,7 +180,7 @@ public:
 	vector<Expression*>* arg_list;
 	FunctionInvocation(Identifier* id, vector<Expression*>* arg_list, string type="func_invoke"):
 			Expression(type), id(id), arg_list(arg_list){}
-	virtual double accept( Visitor* v){return v->visit(this); }
+	virtual float accept( Visitor* v){return v->visit(this); }
 };
 
 class Function : public Statement{
@@ -191,15 +191,26 @@ public:
 	Statement* block;
 	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block, string type="func"):
 			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){}
-	virtual double accept( Visitor* v) {return v->visit(this);}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 
 class Real10 : public Expression{
 public:
-	double val;
-	virtual double accept(Visitor* v){return v->visit(this);}
-	Real10(double val): Expression("Real10"), val(val){}
+	float val;
+	virtual float accept(Visitor* v){return v->visit(this);}
+	Real10(float val): Expression("Real10"), val(val){}
+};
+
+class AccessVar : public AstNode{
+public:
+	string type;
+	Identifier* id;
+	Expression* index;
+	AccessVar(){}
+	AccessVar(Identifier* id, Expression* index = NULL, string type="access_var"):
+		id(id), index(index){ }
+	virtual float accept(Visitor *v){return v->visit(this);}
 };
 
 #endif

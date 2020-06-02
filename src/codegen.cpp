@@ -100,7 +100,7 @@ void Gen::genBinary(Expression*& E, Expression* E1, Expression* E2, string op){
         code += E1->code;
     if(E2->code != "")
         code += E2->code;
-
+    
     string binop = genBinaryOperation(E1->place, op, E2->place);
     code += genAssignOperation(place, binop);
 

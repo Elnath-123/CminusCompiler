@@ -1,6 +1,6 @@
 bison.output
-bison.tab.cxx
-bison.tab.hxx
+bison.tab.cc
+bison.tab.hh
 debug/*
 *.hh
 target

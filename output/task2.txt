@@ -1,15 +1,43 @@
-fun_declearation: type_specifier ID LP params RP compound_stmt
-compound_stmt: LLP local_declearations statement_list LRP
-statement_list: ε
-local_declearations: ε
-params: param_list
-param_list: ε
-type_specifier: TYPE_INT
+program: declearation_list
 declearation_list: declearation
 declearation: fun_declearation
 fun_declearation: type_specifier ID LP params RP compound_stmt
 compound_stmt: LLP local_declearations statement_list LRP
+statement_list: statement_list statement
+statement: expression_stmt
+expression_stmt: expression SEMICOLON
+expression: var ASSIGN expression
+expression: simple_expression
+simple_expression: additive_expression
+additive_expression: additive_expression addop term
+term: factor
+factor: INT10
+addop: ADD
+term: factor
+factor: INT10
+var: ID
+statement_list: statement_list statement
+statement: expression_stmt
+expression_stmt: expression SEMICOLON
+expression: var ASSIGN expression
+expression: simple_expression
+simple_expression: additive_expression
+term: factor
+factor: INT10
+var: ID
+statement_list: statement_list statement
+statement: expression_stmt
+expression_stmt: expression SEMICOLON
+expression: var ASSIGN expression
+expression: simple_expression
+simple_expression: additive_expression
+term: factor
+factor: INT10
+var: ID
 statement_list: ε
+local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
 local_declearations: local_declearations var_declearation
 var_declearation: type_specifier ID SEMICOLON
 type_specifier: TYPE_INT

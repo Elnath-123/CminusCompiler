@@ -33,6 +33,7 @@
 	AstNode* a;
 	Expression* e;
 	Identifier* id;
+	AccessVar* acv;
 	Statement* stmt;
 	vector<Statement*>* stmt_decl_list;
 	vector<Variable*>* variable_list;
@@ -44,7 +45,7 @@
 	Variable* variable;
 	Function* function;
 	int n;
-	double d;
+	float d;
 }
 
 %parse-param {vector<string>* grammar} {vector<string>* tokens}
@@ -74,7 +75,7 @@
 %type <variable_list> param_list params 
 %type <arg_list> arg_list args
 %type <stmt_decl_list> local_declearations statement_list declearation_list program
-%type <id> var
+%type <acv> var
 %nonassoc V_ELSE
 %nonassoc ELSE
 %{
@@ -123,8 +124,6 @@
 		grammar->push_back("var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON\n");
 		/* name, (type, name, type_specifier, size) */
 		ArrayVariable* v = new ArrayVariable($1, $2, "arr_var", $4);
-		cout << $2 << endl;
-		//cout << $2 << endl;
 		$$ = v;
 		
 
@@ -156,6 +155,7 @@
 		/* As for code generation, we only need
 			function name($2) and function body($6) */
 		Gen::genFunction($$, $2, $6);
+		delete scv;
 	}
 					;
 
@@ -176,8 +176,14 @@
 			  | {grammar->push_back("param_list: ε\n");$$ = new vector<Variable*>();}
 			  ;
 
-	param: type_specifier ID {grammar->push_back("param: type_specifier ID\n");$$ = new Variable($1, $2, "param_id_var");}
-		 | type_specifier ID MLP MRP {grammar->push_back("param: type_specifier ID MLP MRP\n");$$ = new ArrayVariable($1, $2, "param_arr_var");} 
+	param: type_specifier ID {
+		grammar->push_back("param: type_specifier ID\n");
+		$$ = new Variable($1, $2, "param_id_var");
+	}
+		 | type_specifier ID MLP MRP {
+		grammar->push_back("param: type_specifier ID MLP MRP\n");
+		$$ = new ArrayVariable($1, $2, "param_arr_var");
+	} 
 		 ; 
 
 	compound_stmt: LLP local_declearations statement_list LRP {
@@ -241,7 +247,6 @@
 		Gen::genIfStmt($$, $3, $5, $7);
 	}
 	
-	
 	iteration_stmt: WHILE LP expression RP statement{
 		grammar->push_back("iteration_stmt: WHILE LP expression RP statement\n");
 		$$ = new WhileStmt("while", $3, $5);
@@ -259,21 +264,32 @@
 
 	expression: var ASSIGN expression {
 		grammar->push_back("expression: var ASSIGN expression\n");
-		$2 = new Assign("=", $1, $3);
-		Gen::genAssign($2, $1, $3);
+		$2 = new Assign("=", $1->id, $3);
+		$2->number = $3->number;
+		cout << $3->number << endl;
+		Gen::genAssign($2, $1->id, $3);
 		$$ = $2; 
 	}
-	          | simple_expression {grammar->push_back("expression: simple_expression\n");$$ = $1;}
+	          | simple_expression {grammar->push_back("expression: simple_expression\n"); $$ = $1;}
 			  ;
 
 	var: ID { 
 		grammar->push_back("var: ID\n");
-		Gen::genId($$, $1);
-		$$ = $1;
+		$$ = new AccessVar($1);
+		Gen::genId($$->id, $1);
 	}
 	   | ID MLP expression MRP {
 		   grammar->push_back("var: ID MLP expression MRP\n");
-		   Gen::genArr($$, $1, $3); $$ = $1;
+		   AccessVar* v = new AccessVar($1, $3);
+		   cout << $3->number << endl;
+		   SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		   if(-1 == v->accept(scv)){
+		       printf("abort\n");
+			   YYABORT;
+		   }
+		   Gen::genArr(v->id, $1, $3);
+		   $$ = v;
+		   
 		}
 	   ;
 	
@@ -284,7 +300,7 @@
 		Gen::genRelop($2, $1, $3, $2->type);
 		$$ = $2;
 	}
-					 | additive_expression {grammar->push_back("simple_expression: additive_expression\n");$$ = $1;}
+					 | additive_expression {grammar->push_back("simple_expression: additive_expression\n"); $$ = $1;}
 					 /*| simple_expression binary_logic simple_expression {
 						 													$2->left = $1;
 																			$2->right = $3;
@@ -313,20 +329,28 @@
 		grammar->push_back("additive_expression: additive_expression addop term\n");
 		$2->left = $1; 
 		$2->right = $3; 
+		
+		
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		$2->number = $2->accept(scv);
+
 		Gen::genBinary($2, $1, $3, $2->type);
 		$$ = $2;
 	}
 					   | term {$$ = $1;}
 					   ;
 	
-	addop: ADD { grammar->push_back("addop: ADD\n");$$ = new BinOp("+");}
-	     | SUB { grammar->push_back("addop: SUB\n");$$ = new BinOp("-");}
+	addop: ADD { grammar->push_back("addop: ADD\n"); $$ = new BinOp("+");}
+	     | SUB { grammar->push_back("addop: SUB\n"); $$ = new BinOp("-");}
 		 ;
 
 	term: term mulop factor {
 		grammar->push_back("term: term mulop factor\n");
 		$2->left = $1;
 		$2->right = $3;
+		
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		$2->number = $2->accept(scv);
 		Gen::genBinary($2, $1, $3, $2->type);
 		$$ = $2;
 	}
@@ -336,14 +360,14 @@
 	}
 		;
 	
-	mulop: MUL { grammar->push_back("mulop: MUL\n");$$ = new BinOp("*");}
-	     | DIV { grammar->push_back("mulop: DIV\n");$$ = new BinOp("/");}
+	mulop: MUL { grammar->push_back("mulop: MUL\n"); $$ = new BinOp("*");}
+	     | DIV { grammar->push_back("mulop: DIV\n"); $$ = new BinOp("/");}
 		 ;
 
 	factor: LP expression RP {grammar->push_back("factor: LP expression RP\n");$$ = $2;}
-	      | var {grammar->push_back("factor: var\n");$$ = $1;} 
+	      | var {grammar->push_back("factor: var\n"); $$ = $1->id;} 
 		  | call {grammar->push_back("factor: call\n");$$ = $1;}
-		  | INT10 {grammar->push_back("factor: INT10\n");Gen::genInt10($$, $1); $$ = $1;}
+		  | INT10 {grammar->push_back("factor: INT10\n");Gen::genInt10($$, $1); $$ = $1; $$->number = $1->val;}
 		  | REAL10 {grammar->push_back("factor: REAL10\n");Gen::genReal10($$, $1); $$ = $1;}
 		  ;
 
