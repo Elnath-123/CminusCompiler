@@ -1,5 +1,8 @@
 int main(){
-    int a;
-    int b;
-    int a;
+    int a[5];
+    int d;  
+}
+
+int main(){
+
 }

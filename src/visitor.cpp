@@ -53,7 +53,6 @@ int SemanticCheckVisitor::visit(Function* func){
 int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
 	SymbolTable* sym_table = this->sym_table;
 	string name = arr_var->id->name;
-
 	if(redeclCheck(name, sym_table)){
 		RaiseError(ARR_REDECL);
 		return ERROR;
@@ -63,15 +62,15 @@ int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
 void RaiseError(Error error_type){
 	switch(error_type){
 		case FUNC_REDECL:
-		printf("Error type %d: function re-declaration\n", error_type);
+		printf("Error type %d: Function re-declaration\n", error_type);
 		break;
 
 		case ID_REDECL:
-		printf("Error type %d: identifier re-declaration\n", error_type);
+		printf("Error type %d: Identifier re-declaration\n", error_type);
 		break;
 
 		case ARR_REDECL:
-		printf("Error type %d: identifier re-declaration\n", error_type);
+		printf("Error type %d: Array identifier re-declaration\n", error_type);
 		break;
 	}
 }

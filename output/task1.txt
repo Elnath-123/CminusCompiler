@@ -12,17 +12,31 @@ int			_
 
 IDN			a
 
+[			_
+
+INT10		5
+
+]			_
+
 ;			_
 
 int			_
 
-IDN			b
+IDN			d
 
 ;			_
+
+}			_
 
 int			_
 
-IDN			a
+IDN			main
 
-;			_
+(			_
+
+)			_
+
+{			_
+
+}			_
 

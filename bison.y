@@ -111,22 +111,29 @@
 		/* name, (type, name, type_specifier) */
 		Variable* v = new Variable($1, $2, "id_var");
 		$$ = v;
-		if(sym_table->insertIdSymbol($2->name, 
-			new IdSymbol("id_var", $2->name, $1->type)) == ERR_DUP_KEY){
-			printf("abort!\n");
-			SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
-			v->accept(scv);
+		
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		if(-1 == v->accept(scv)){
+			printf("Abort!\n");
 			YYABORT;
 		}
+		sym_table->insertIdSymbol($2->name, new IdSymbol("id_var", $2->name, $1->type));
 	}
 					| type_specifier ID MLP INT10 MRP SEMICOLON {
 		grammar->push_back("var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON\n");
 		/* name, (type, name, type_specifier, size) */
-		if(sym_table->insertArraySymbol($2->name, 
-			new ArraySymbol("arr_var", $2->name, $1->type, $4->val)) == ERR_DUP_KEY){
+		ArrayVariable* v = new ArrayVariable($1, $2, "arr_var", $4);
+		cout << $2 << endl;
+		//cout << $2 << endl;
+		$$ = v;
+		
+
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		if(-1 == v->accept(scv)){
+			printf("Abort!\n");
 			YYABORT;
 		}
-		$$ = new ArrayVariable($1, $2, "arr_var", $4);
+		sym_table->insertArraySymbol($2->name, new ArraySymbol("arr_var", $2->name, $1->type, $4->val));
 	}
 					;
 
@@ -137,12 +144,15 @@
 
 	fun_declearation: type_specifier ID LP params RP compound_stmt{
 		grammar->push_back("fun_declearation: type_specifier ID LP params RP compound_stmt\n");
-		if(sym_table->insertFuncSymbol($2->name, 
-			new FuncSymbol("func", $2->name, $1->type, $4)) == ERR_DUP_KEY){
+		Function* func = new Function($1, $2, $4, $6);
+		$$ = func;
+		
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		if(-1 == func->accept(scv)){
+			printf("Abort!\n");
 			YYABORT;
 		}
-		
-		$$ = new Function($1, $2, $4, $6);
+		sym_table->insertFuncSymbol($2->name, new FuncSymbol("func", $2->name, $1->type, $4));
 		/* As for code generation, we only need
 			function name($2) and function body($6) */
 		Gen::genFunction($$, $2, $6);
