@@ -6,6 +6,9 @@ enum Error{
 	FUNC_REDECL,
 	ID_REDECL,
 	ARR_REDECL,
+	FUNC_NOT_DEFINE,
+	ID_NOT_DEFINE,
+	ARR_NOT_DEFINE,
 	ARR_INDEX_OUT_OF_BOUND,
 	ARR_INDEX_ACCESS_TYPE_IMCOMPATIBLE,
 	RET_TYPE_IMCOMPATIBLE
@@ -22,6 +25,7 @@ class Variable;
 class ArrayVariable;
 class Function;
 class AccessVar;
+class FunctionInvocation;
 
 class Visitor{
 public:
@@ -32,6 +36,7 @@ public:
 	virtual int    visit (ArrayVariable*) = 0;
 	virtual int    visit (Function*) = 0;
 	virtual int    visit (AccessVar*) = 0;
+	virtual int    visit (FunctionInvocation*) = 0;
 	Visitor(SymbolTable* sym_table):
 		sym_table(sym_table) {}
 };
@@ -44,6 +49,7 @@ public:
 	virtual int    visit (ArrayVariable*);
 	virtual int    visit (Function*);
 	virtual int    visit (AccessVar*);
+	virtual int    visit (FunctionInvocation*);
 	SemanticCheckVisitor(SymbolTable* sym_table):
 		Visitor(sym_table) {}
 };

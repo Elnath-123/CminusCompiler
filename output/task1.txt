@@ -12,17 +12,11 @@ int			_
 
 IDN			a
 
-[			_
-
-INT10		5
-
-]			_
-
 ;			_
 
 int			_
 
-IDN			d
+IDN			b
 
 ;			_
 
@@ -32,7 +26,15 @@ IDN			c
 
 ;			_
 
-IDN			d
+IDN			a
+
+=			_
+
+INT10		1
+
+;			_
+
+IDN			b
 
 =			_
 
@@ -44,19 +46,43 @@ IDN			c
 
 =			_
 
-INT10		4
-
-;			_
-
-IDN			e
-
-=			_
-
-INT10		4
+IDN			a
 
 +			_
 
-INT10		2
+IDN			b
+
+;			_
+
+}			_
+
+int			_
+
+IDN			add
+
+(			_
+
+int			_
+
+IDN			a
+
+,			_
+
+int			_
+
+IDN			b
+
+)			_
+
+{			_
+
+return		_
+
+IDN			a
+
++			_
+
+IDN			b
 
 ;			_
 

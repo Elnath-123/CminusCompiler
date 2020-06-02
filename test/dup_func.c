@@ -1,13 +1,12 @@
 int main(){
     int a;
     int b;
-    int c;
     a = 1;
     b = 2;
-    
+    int c;
     c = a + b;
 }
 
-int add(int a, int b){
-    return a + b;
+int main(){
+    
 }

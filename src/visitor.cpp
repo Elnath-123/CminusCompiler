@@ -66,15 +66,43 @@ int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
 int SemanticCheckVisitor::visit(AccessVar* acv){
 	SymbolTable* sym_table = this->sym_table;
 	string name = acv->id->name;
-	ArraySymbol* v = sym_table->s_arr[name];
-	if(acv->index < 0 || acv->index->number >= v->size){
-		RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
+	
+	/* acv->index != NULL represents to access an Array */
+	if(acv->index){
+		ArraySymbol* v;
+		if(sym_table->s_arr.count(name)){
+			v = sym_table->s_arr[name];
+		}else{
+			RaiseError(ARR_NOT_DEFINE, name);
+			return ERROR;
+		}
+		if(acv->index < 0 || acv->index->number >= v->size){
+			RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
+			return ERROR;
+		}
+	}else{
+		IdSymbol* v;
+		if(sym_table->s_id.count(name)){
+			v = sym_table->s_id[name];
+		}else{
+			RaiseError(ID_NOT_DEFINE, name);
+			return ERROR;
+		}
+	}
+	
+	return SUCCESS;
+}
+
+int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
+	SymbolTable* sym_table = this->sym_table;
+	string name = func_invoke->id->name;
+	if(!sym_table->s_func.count(name)){
+		RaiseError(FUNC_NOT_DEFINE, name);
 		return ERROR;
 	}
 	return SUCCESS;
 }
-
-void RaiseError(Error error_type, string name){
+void RaiseError(Error error_type, string name=""){
 	switch(error_type){
 		case FUNC_REDECL:
 		printf("Error type %d: Function named '%s' re-declaration\n",  error_type, name.c_str());
@@ -88,12 +116,25 @@ void RaiseError(Error error_type, string name){
 		printf("Error type %d: Array identifier named '%s' re-declaration\n", error_type, name.c_str());
 		break;
 
+		case ID_NOT_DEFINE:
+		printf("Error type %d: ID identifier named '%s' is not defined\n", error_type, name.c_str());
+		break;
+
+		case ARR_NOT_DEFINE:
+		printf("Error type %d: Array identifier named '%s' is not defined\n", error_type, name.c_str());
+		break;
+
+		case FUNC_NOT_DEFINE:
+		printf("Error type %d: Function named '%s' is not defined\n", error_type, name.c_str());
+		break;
+
 		case ARR_INDEX_OUT_OF_BOUND:
 		printf("Error type %d: Array identifier named '%s',  index out of bound\n", error_type, name.c_str());
 		break;
 
 		case ARR_INDEX_ACCESS_TYPE_IMCOMPATIBLE:
 		printf("Error type %d: Array identifier named '%s', array index type only support 'int' type", error_type, name.c_str());
+		break;
 	}
 }
 

@@ -1,5 +1,4 @@
 int main(){
-    int a[5];
-    int a;
+    func(a);
     return 0;
 }

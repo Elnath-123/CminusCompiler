@@ -275,8 +275,14 @@
 
 	var: ID { 
 		grammar->push_back("var: ID\n");
-		$$ = new AccessVar($1);
-		Gen::genId($$->id, $1);
+		AccessVar* v = new AccessVar($1);
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		if(-1 == v->accept(scv)){
+			printf("abort!\n");
+			YYABORT;
+		}
+		Gen::genId(v->id, $1);
+		$$ = v;
 	}
 	   | ID MLP expression MRP {
 		   grammar->push_back("var: ID MLP expression MRP\n");
@@ -330,7 +336,6 @@
 		$2->left = $1; 
 		$2->right = $3; 
 		
-		
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
 		$2->number = $2->accept(scv);
 
@@ -364,7 +369,7 @@
 	     | DIV { grammar->push_back("mulop: DIV\n"); $$ = new BinOp("/");}
 		 ;
 
-	factor: LP expression RP {grammar->push_back("factor: LP expression RP\n");$$ = $2;}
+	factor: LP expression RP {grammar->push_back("factor: LP expression RP\n"); $$ = $2;}
 	      | var {grammar->push_back("factor: var\n"); $$ = $1->id;} 
 		  | call {grammar->push_back("factor: call\n");$$ = $1;}
 		  | INT10 {grammar->push_back("factor: INT10\n");Gen::genInt10($$, $1); $$ = $1; $$->number = $1->val;}
@@ -373,8 +378,15 @@
 
 	call: ID LP args RP {
 		grammar->push_back("call: ID LP args RP\n");
-		$$ = new FunctionInvocation($1, $3, "invoke");
+		FunctionInvocation* func_invoke = new FunctionInvocation($1, $3, "invoke");
+		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
+		if(-1 == func_invoke->accept(scv)){
+			printf("Abort!\n");
+			YYABORT;
+		}
+		$$ = func_invoke;
 		Gen::genFunctionInvoke($$, $1, $3);
+		
 	}
 		;
 
