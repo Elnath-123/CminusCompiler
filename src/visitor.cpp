@@ -116,6 +116,11 @@ int SemanticCheckVisitor::visit(AccessVar* acv){
 			RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
 			return ERROR;
 		}
+		cout << "type:" << acv->index->number_type << endl;
+		if(acv->index->number_type != "int"){
+			RaiseError(ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE, name);
+			return ERROR;
+		}
 	}else{
 		IdSymbol* v;
 		if(sym_table->s_id.count(name)){
@@ -138,6 +143,7 @@ int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 	}
 	return SUCCESS;
 }
+
 void RaiseError(Error error_type, string name=""){
 	switch(error_type){
 		case FUNC_REDECL:

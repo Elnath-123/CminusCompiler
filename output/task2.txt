@@ -1,15 +1,9 @@
-program: declearation_list
-declearation_list: declearation
-declearation: fun_declearation
-fun_declearation: type_specifier ID LP params RP compound_stmt
-compound_stmt: LLP local_declearations statement_list LRP
-statement_list: statement_list statement
-statement: return_stmt
-return_stmt: RETURN expression SEMICOLON
+var: ID MLP expression MRP
 expression: simple_expression
 simple_expression: additive_expression
 term: factor
-factor: INT10
+factor: var
+var: ID
 statement_list: statement_list statement
 statement: expression_stmt
 expression_stmt: expression SEMICOLON
@@ -45,8 +39,11 @@ factor: INT10
 var: ID
 statement_list: ε
 local_declearations: local_declearations var_declearation
-var_declearation: type_specifier ID SEMICOLON
+var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON
 type_specifier: TYPE_INT
+local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_FLOAT
 local_declearations: local_declearations var_declearation
 var_declearation: type_specifier ID SEMICOLON
 type_specifier: TYPE_FLOAT

@@ -277,20 +277,22 @@
 	expression: var ASSIGN expression {
 		grammar->push_back("expression: var ASSIGN expression\n");
 		$2 = new Assign("=", $1->id, $3);
-		IdSymbol* var =  sym_table->s_id[$1->id->name];
-		string var_type = var->type_specifier;
-		string exp_type = $3->number_type;
-		if(var_type == "int"){
-			if(exp_type == "int"){
-				var->num->val = $3->num.number;
-			}else if(exp_type == "float"){
-				var->num->val = (int)$3->num.f_number;
-			}
-		}else if(var_type == "float"){
-			if(exp_type == "float"){
-				var->f_num->val = $3->num.f_number;
-			}else if(exp_type == "int"){
-				var->f_num->val = (float)$3->num.number;
+		if(!$1->index){
+			IdSymbol* var =  sym_table->s_id[$1->id->name];
+			string var_type = var->type_specifier;
+			string exp_type = $3->number_type;
+			if(var_type == "int"){
+				if(exp_type == "int"){
+					var->num->val = $3->num.number;
+				}else if(exp_type == "float"){
+					var->num->val = (int)$3->num.f_number;
+				}
+			}else if(var_type == "float"){
+				if(exp_type == "float"){
+					var->f_num->val = $3->num.f_number;
+				}else if(exp_type == "int"){
+					var->f_num->val = (float)$3->num.number;
+				}
 			}
 		}
 		SemanticCheckVisitor* scv = new SemanticCheckVisitor(sym_table);
