@@ -1,10 +1,9 @@
 int main(){
-    if(c > d){
-        a = b + c + d;
-        bb = 0x3.44 + 04.43; 
-    }else{
-        f = fun(b, c, d);
-        cc = 9 + 8;
-        dd = 6 + 7;
-    }
+    int a[10];
+    int b;
+    int c;
+    b = 5;
+    c = 6;
+    a[b + c] = 5;
+    return 0;
 }

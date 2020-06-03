@@ -1,15 +1,6 @@
 var: ID MLP expression MRP
 expression: simple_expression
 simple_expression: additive_expression
-term: factor
-factor: var
-var: ID
-statement_list: statement_list statement
-statement: expression_stmt
-expression_stmt: expression SEMICOLON
-expression: var ASSIGN expression
-expression: simple_expression
-simple_expression: additive_expression
 additive_expression: additive_expression addop term
 term: factor
 factor: var
@@ -18,7 +9,6 @@ addop: ADD
 term: factor
 factor: var
 var: ID
-var: ID
 statement_list: statement_list statement
 statement: expression_stmt
 expression_stmt: expression SEMICOLON
@@ -26,7 +16,7 @@ expression: var ASSIGN expression
 expression: simple_expression
 simple_expression: additive_expression
 term: factor
-factor: REAL10
+factor: INT10
 var: ID
 statement_list: statement_list statement
 statement: expression_stmt
@@ -39,18 +29,14 @@ factor: INT10
 var: ID
 statement_list: ε
 local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
+local_declearations: local_declearations var_declearation
+var_declearation: type_specifier ID SEMICOLON
+type_specifier: TYPE_INT
+local_declearations: local_declearations var_declearation
 var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON
 type_specifier: TYPE_INT
-local_declearations: local_declearations var_declearation
-var_declearation: type_specifier ID SEMICOLON
-type_specifier: TYPE_FLOAT
-local_declearations: local_declearations var_declearation
-var_declearation: type_specifier ID SEMICOLON
-type_specifier: TYPE_FLOAT
-local_declearations: local_declearations var_declearation
-var_declearation: type_specifier ID SEMICOLON
-type_specifier: TYPE_INT
 local_declearations: ε
-params: param_list
-param_list: ε
+params: ε
 type_specifier: TYPE_INT

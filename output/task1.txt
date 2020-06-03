@@ -12,37 +12,23 @@ int			_
 
 IDN			a
 
-;			_
-
-float		_
-
-IDN			b
-
-;			_
-
-float		_
-
-IDN			c
-
-;			_
-
-int			_
-
-IDN			d
-
 [			_
 
-INT10		5
+INT10		10
 
 ]			_
 
 ;			_
 
-IDN			a
+int			_
 
-=			_
+IDN			b
 
-INT10		1
+;			_
+
+int			_
+
+IDN			c
 
 ;			_
 
@@ -50,7 +36,7 @@ IDN			b
 
 =			_
 
-REAL10		5.900000
+INT10		5
 
 ;			_
 
@@ -58,17 +44,17 @@ IDN			c
 
 =			_
 
-IDN			a
-
-+			_
-
-IDN			b
+INT10		6
 
 ;			_
 
-IDN			d
+IDN			a
 
 [			_
+
+IDN			b
+
++			_
 
 IDN			c
 

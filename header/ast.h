@@ -35,7 +35,7 @@ public:
 	IfStmt(string type, Expression* e, Statement* s1, Statement* s2 = nullptr):
 		Statement(type), s1(s1), s2(s2), e(e) {}
 
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class WhileStmt : public Statement{
@@ -45,7 +45,7 @@ public:
 	WhileStmt(string type, Expression* e, Statement* s):
 		Statement(type), s(s), e(e) {}
 	
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class ReturnStmt : public Statement{
@@ -54,7 +54,7 @@ public:
 	ReturnStmt(Expression* e, string type="return_stmt"):
 		Statement(type), e(e){}
 		
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class ExpStmt : public Statement{
@@ -65,7 +65,7 @@ public:
 			/* Pass code */
 			
 		}
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class BlockStmt : public Statement{
@@ -84,14 +84,14 @@ public:
 				}
 			}
 		}
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class EmptyStmt : public Statement{
 public:
 	EmptyStmt(string type):
 		Statement(type){ }
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class Expression : public AstNode{
@@ -164,7 +164,7 @@ class PrimitiveType : AstNode{
 public:
 	string type;
 	PrimitiveType(string type) : type(type){}
-	virtual float accept( Visitor* v) {}
+	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
 class Variable : public Statement{
@@ -200,7 +200,7 @@ public:
 	vector<Variable*>* param_list;
 	BlockStmt* block;
 	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, BlockStmt* block, string type="func"):
-			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){}
+			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){cout << param_list->size()<< endl;}
 	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 

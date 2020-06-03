@@ -4,7 +4,75 @@
 #define RET_FROM_BINOP 114514.1919810
 #define ERROR -1
 #define SUCCESS 1
-void RaiseError(Error, string);
+
+void RaiseError(Error error_type, string name="", int arg_num=0, int param_num=0, string arg_type="", string param_type=""){
+	switch(error_type){
+		case FUNC_REDECL:
+		printf("Error type %d: Function named '%s' re-declaration\n",  
+				error_type, name.c_str());
+		break;
+
+		case ID_REDECL:
+		printf("Error type %d: Identifier named '%s' re-declaration\n", 
+				error_type, name.c_str());
+		break;
+
+		case ARR_REDECL:
+		printf("Error type %d: Array identifier named '%s' re-declaration\n", 
+				error_type, name.c_str());
+		break;
+
+		case ID_NOT_DEFINE:
+		printf("Error type %d: ID identifier named '%s' is not defined\n", 
+				error_type, name.c_str());
+		break;
+
+		case ARR_NOT_DEFINE:
+		printf("Error type %d: Array identifier named '%s' is not defined\n", 
+				error_type, name.c_str());
+		break;
+
+		case FUNC_NOT_DEFINE:
+		printf("Error type %d: Function named '%s' is not defined\n", 
+				error_type, name.c_str());
+		break;
+
+		case ARR_INDEX_OUT_OF_BOUND:
+		printf("Error type %d: Array identifier named '%s',  index out of bound\n",
+				error_type, name.c_str());
+		break;
+
+		case ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE:
+		printf("Error type %d: Array identifier named '%s', array index type only support 'int' type\n",
+				error_type, name.c_str());
+		break;
+
+		case RET_IN_VOID_FUNC_INCOMPATIBLE:
+		printf("Error type %d: A function named '%s' with 'void' return value has return value\n",
+				error_type, name.c_str());
+		break;
+
+		case RET_IN_NONVOID_FUNC_INCOMPATIBLE:
+		printf("Error type %d: A function named '%s' with 'non-void' return value doesn't has return value\n",
+				error_type, name.c_str());
+		break;
+		
+		case FUNC_PARAMETER_INCOMPATIBLE:
+		printf("Error type %d: Function named '%s' invocation args number is incompatibale with Function params number, has %d, expect %d\n",
+				error_type, name.c_str(), arg_num, param_num);
+		break;
+
+		case FUNC_PARAMETER_TYPE_INCOMPATIBLE:
+		printf("Error type %d: Function named '%s' invocation args type is incompatibale with Function params type, has '%s', expect '%s'\n",
+				error_type, name.c_str(), arg_type.c_str(), param_type.c_str());
+		break;
+
+		default:
+		printf("No such Error type\n");
+		break;
+	}
+}
+
 /* SemanticCheckVisitor */
 float SemanticCheckVisitor::visit ( Expression* n ){
 	float v;
@@ -44,7 +112,7 @@ bool redeclCheck(string name, SymbolTable* sym_table){
 			return true;
 	return false;	
 }
-/* Semantic check */
+
 int SemanticCheckVisitor::visit(Variable* v){
 	SymbolTable* sym_table = this->sym_table;
 	string name = v->id->name;
@@ -112,15 +180,16 @@ int SemanticCheckVisitor::visit(AccessVar* acv){
 			RaiseError(ARR_NOT_DEFINE, name);
 			return ERROR;
 		}
-		if(acv->index < 0 || acv->index->num.number >= v->size){
-			RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
-			return ERROR;
-		}
 		cout << "type:" << acv->index->number_type << endl;
 		if(acv->index->number_type != "int"){
 			RaiseError(ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE, name);
 			return ERROR;
 		}
+		if(acv->index->num.number < 0 || acv->index->num.number >= v->size){
+			RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
+			return ERROR;
+		}
+		
 	}else{
 		IdSymbol* v;
 		if(sym_table->s_id.count(name)){
@@ -141,74 +210,25 @@ int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 		RaiseError(FUNC_NOT_DEFINE, name);
 		return ERROR;
 	}
+
+	FuncSymbol* func = sym_table->s_func[name];
+	vector<Expression*>* arg_list = func_invoke->arg_list;
+	vector<Variable*>* param_list = func->param_list;
+	cout << param_list->size() << endl;
+	if(arg_list->size() != param_list->size()){
+		RaiseError(FUNC_PARAMETER_INCOMPATIBLE, name, arg_list->size(), func->param_list->size());
+		return ERROR;
+	}
+	for(int i = 0; i < (*arg_list).size(); i++){
+		Expression* arg = (*arg_list)[i];
+		Variable* var = (*param_list)[i];
+		if(arg->number_type != var->v_type->type){
+			RaiseError(FUNC_PARAMETER_TYPE_INCOMPATIBLE, name, 0, 0, arg->number_type, var->v_type->type);
+		}
+	}
+
 	return SUCCESS;
 }
 
-void RaiseError(Error error_type, string name=""){
-	switch(error_type){
-		case FUNC_REDECL:
-		printf("Error type %d: Function named '%s' re-declaration\n",  error_type, name.c_str());
-		break;
-
-		case ID_REDECL:
-		printf("Error type %d: Identifier named '%s' re-declaration\n", error_type, name.c_str());
-		break;
-
-		case ARR_REDECL:
-		printf("Error type %d: Array identifier named '%s' re-declaration\n", error_type, name.c_str());
-		break;
-
-		case ID_NOT_DEFINE:
-		printf("Error type %d: ID identifier named '%s' is not defined\n", error_type, name.c_str());
-		break;
-
-		case ARR_NOT_DEFINE:
-		printf("Error type %d: Array identifier named '%s' is not defined\n", error_type, name.c_str());
-		break;
-
-		case FUNC_NOT_DEFINE:
-		printf("Error type %d: Function named '%s' is not defined\n", error_type, name.c_str());
-		break;
-
-		case ARR_INDEX_OUT_OF_BOUND:
-		printf("Error type %d: Array identifier named '%s',  index out of bound\n", error_type, name.c_str());
-		break;
-
-		case ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE:
-		printf("Error type %d: Array identifier named '%s', array index type only support 'int' type\n", error_type, name.c_str());
-		break;
-
-		case RET_IN_VOID_FUNC_INCOMPATIBLE:
-		printf("Error type %d: A function named '%s' with 'void' return value has return value\n", error_type, name.c_str());
-		break;
-
-		case RET_IN_NONVOID_FUNC_INCOMPATIBLE:
-		printf("Error type %d: A function named '%s' with 'non-void' return value doesn't has return value\n", error_type, name.c_str());
-		break;
-
-	}
-}
 
 
-/* PostfixVisitor 
-float PostfixVisitor::visit( Expression* n ){
-	float vLeft  = n->left->accept(this);
-	if(vLeft != RET_FROM_BINOP) std::cout << vLeft << ' ';
-	float vRight = n->right->accept(this);	
-	if(vRight != RET_FROM_BINOP) std::cout << vRight << ' ';
-	if (n->type == "Plus")
-		std::cout << '+' << ' ';		
-	else if (n->type == "Sub")
-		std::cout << '-' << ' ';
-	else if (n->type == "Mul")
-		std::cout << '*' << ' ';
-	else if (n->type == "Div")
-		std::cout << '/' << ' ';
-	return RET_FROM_BINOP;
-}
-
-float PostfixVisitor::visit( Int10* n){
-	return n->val;
-}
-
-*/

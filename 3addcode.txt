@@ -1,9 +1,12 @@
+func:
+	t1 := m + n
+	return t1
+
 main:
-	a := 1
-	b := 5.900000
-	t1 := a + b
-	c := t1
-	d[c] := 3
-	return 0.500000
+	param a
+	param b
+	t2 := call func, 2
+	d := t2
+	return 0
 
 

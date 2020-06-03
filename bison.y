@@ -171,12 +171,13 @@
 	}
 					;
 
-	params: param_list {grammar->push_back("params: param_list\n");$$ = $1;}
+	params: param_list {grammar->push_back("params: param_list\n");$$ = $1; cout << $$->size() << endl;}
 		  | TYPE_VOID  {
 		grammar->push_back("params: TYPE_VOID\n");
 		/* Empty param list */
 		$$ = new vector<Variable*>();
 	}
+		  | {grammar->push_back("params: ε\n");$$ = new vector<Variable*>();}
 		  ;
 
 	param_list: param_list COMMA param{
@@ -184,8 +185,11 @@
 		$1->push_back($3);
 		$$ = $1;
 	}
-			  | param {grammar->push_back("param_list: param\n");$$->push_back($1);}
-			  | {grammar->push_back("param_list: ε\n");$$ = new vector<Variable*>();}
+			  | param {
+		$$ = new vector<Variable*>();
+		$$->push_back($1);
+		grammar->push_back("param_list: param\n");
+	}
 			  ;
 
 	param: type_specifier ID {
