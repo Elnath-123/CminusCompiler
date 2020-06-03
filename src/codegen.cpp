@@ -20,12 +20,19 @@ string genFuncName(string func_name){
     return func_name + ":\n"; 
 }
 
+string genAssignOperation(string lval, string rval){
+    return tab + lval + " := " + rval + '\n';
+}
+
 string genCall(string func_name, int argc){
     return tab + "call " + func_name + ", " + to_string(argc) + '\n';
 }
 
-string genAssignOperation(string lval, string rval){
-    return tab + lval + " := " + rval + '\n';
+string genCallWithRet(string func_name, int argc, string temp){
+    string code = "";
+    string func_code = "call " + func_name + ", " + to_string(argc);
+    code = genAssignOperation(temp, func_code);
+    return code;
 }
 
 string genRetCode(Expression* E){
@@ -73,18 +80,27 @@ string genArg(vector<Expression*>* arg_list){
     string code = "";
     for(Expression* arg : *arg_list){
         code += tab + "param " + ((Identifier*)arg)->name + '\n';
+        cout << ((Identifier*)arg)->name << endl;
     }
     return code;
     
 }
-void Gen::genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list){
+void Gen::genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list, SymbolTable* sym_table){
     string code = "";
     /* Searching function:id from symbol table
        if function:id has return value , genreate
        a temp value and assign the function to it */
     /* not implement (2020.5.24) */
     code += genArg(arg_list);
-    code += genCall(id->name, arg_list->size());
+    string func_name = id->name;
+    //cout << func_name << endl;
+    if(sym_table->s_func[func_name]->ret_type == "void")
+        code += genCall(func_name, arg_list->size());
+    else{
+        string temp = newtemp();
+        code += genCallWithRet(func_name, arg_list->size(), temp);
+        E->place = temp;
+    }
     E->code = code;
 }
 

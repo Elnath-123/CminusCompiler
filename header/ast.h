@@ -51,7 +51,7 @@ public:
 class ReturnStmt : public Statement{
 public:
 	Expression* e;
-	ReturnStmt(Expression* e, string type):
+	ReturnStmt(Expression* e, string type="return_stmt"):
 		Statement(type), e(e){}
 		
 	virtual float accept( Visitor* v) {}
@@ -72,11 +72,17 @@ class BlockStmt : public Statement{
 public:
 	vector<Statement*>* stmt_list;
 	vector<Statement*>* local_decl_list;
+	vector<ReturnStmt*>* ret_decl_list;
 	BlockStmt(string type, vector<Statement*>* local_decl_list, vector<Statement*>* stmt_list):
 		Statement(type), stmt_list(stmt_list), local_decl_list(local_decl_list) {
+			ret_decl_list = new vector<ReturnStmt*>();
 			/* Merge(pass) code */
-			for(Statement* stmt : *stmt_list)
+			for(Statement* stmt : *stmt_list){
 				code += stmt->code;
+				if(ReturnStmt* ret_stmt = dynamic_cast<ReturnStmt*>(stmt)){
+					ret_decl_list->push_back(ret_stmt);
+				}
+			}
 		}
 	virtual float accept( Visitor* v) {}
 };
@@ -188,8 +194,8 @@ public:
 	PrimitiveType* f_type;
 	Identifier* id;
 	vector<Variable*>* param_list;
-	Statement* block;
-	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, Statement* block, string type="func"):
+	BlockStmt* block;
+	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, BlockStmt* block, string type="func"):
 			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){}
 	virtual float accept( Visitor* v) {return v->visit(this);}
 };

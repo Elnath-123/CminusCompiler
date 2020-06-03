@@ -1,10 +1,12 @@
+add:
 main:
 	a := 1
 	b := 2
-	t1 := a + b
-	c := t1
-add:
-	t2 := a + b
-	return t2
-
+	param a
+	param b
+	t1 := call add, 2
+	param a
+	param b
+	t2 := call add, 2
+	e := t2
 

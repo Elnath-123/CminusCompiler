@@ -35,6 +35,7 @@
 	Identifier* id;
 	AccessVar* acv;
 	Statement* stmt;
+	BlockStmt* comp_stmt;
 	vector<Statement*>* stmt_decl_list;
 	vector<Variable*>* variable_list;
 	vector<Expression*>* arg_list;
@@ -67,9 +68,10 @@
 
 %type <e> expression simple_expression relop additive_expression addop term mulop factor call
 		  //binary_logic unary_logic
-%type <stmt> expression_stmt statement compound_stmt selection_stmt 
+%type <stmt> expression_stmt statement selection_stmt 
 			 iteration_stmt return_stmt var_declearation fun_declearation 
 			 declearation
+%type <comp_stmt> compound_stmt 
 %type <type> type_specifier
 %type <variable> param
 %type <variable_list> param_list params 
@@ -266,7 +268,6 @@
 		grammar->push_back("expression: var ASSIGN expression\n");
 		$2 = new Assign("=", $1->id, $3);
 		$2->number = $3->number;
-		cout << $3->number << endl;
 		Gen::genAssign($2, $1->id, $3);
 		$$ = $2; 
 	}
@@ -287,7 +288,6 @@
 	   | ID MLP expression MRP {
 		   grammar->push_back("var: ID MLP expression MRP\n");
 		   AccessVar* v = new AccessVar($1, $3);
-		   cout << $3->number << endl;
 		   SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
 		   if(-1 == v->accept(scv)){
 		       printf("abort\n");
@@ -385,7 +385,7 @@
 			YYABORT;
 		}
 		$$ = func_invoke;
-		Gen::genFunctionInvoke($$, $1, $3);
+		Gen::genFunctionInvoke($$, $1, $3, sym_table);
 		
 	}
 		;

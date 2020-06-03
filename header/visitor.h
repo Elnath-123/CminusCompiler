@@ -10,8 +10,10 @@ enum Error{
 	ID_NOT_DEFINE,
 	ARR_NOT_DEFINE,
 	ARR_INDEX_OUT_OF_BOUND,
-	ARR_INDEX_ACCESS_TYPE_IMCOMPATIBLE,
-	RET_TYPE_IMCOMPATIBLE
+	ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE,
+	RET_TYPE_INCOMPATIBLE,
+	RET_IN_VOID_FUNC_INCOMPATIBLE,
+	RET_IN_NONVOID_FUNC_INCOMPATIBLE
 };
 
 class AstNode;
@@ -26,6 +28,7 @@ class ArrayVariable;
 class Function;
 class AccessVar;
 class FunctionInvocation;
+class ReturnStmt;
 
 class Visitor{
 public:

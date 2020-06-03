@@ -7,6 +7,7 @@
 #ifndef CODEGEN_H
 #define CODEGEN_H
 #include "ast.h"
+#include "symbol.h"
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -54,7 +55,7 @@ public:
     */
     static void genFunction(Statement*& F, Identifier* id, Statement* block);
 
-    static void genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list);
+    static void genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list, SymbolTable* sym_table);
 
     /* Assign node is root (need to write S->code to file) */
     static void genAssign(Assign*& S, Identifier* id, Expression* E);

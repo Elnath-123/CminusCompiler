@@ -45,7 +45,22 @@ int SemanticCheckVisitor::visit(Variable* v){
 int SemanticCheckVisitor::visit(Function* func){
 	SymbolTable* sym_table = this->sym_table;
 	string name = func->id->name;
+	vector<ReturnStmt*>* ret_decl_list = func->block->ret_decl_list;
+	if(func->f_type->type != "void" && !ret_decl_list->size()){
+		RaiseError(RET_IN_NONVOID_FUNC_INCOMPATIBLE, name);
+		return ERROR;
+	}
 
+	for(ReturnStmt* ret_decl : *ret_decl_list){
+		if(func->f_type->type == "void" && ret_decl->e){
+			RaiseError(RET_IN_VOID_FUNC_INCOMPATIBLE, name);
+			return ERROR;
+		}
+		if(func->f_type->type != "void" && !ret_decl->e){
+			RaiseError(RET_IN_NONVOID_FUNC_INCOMPATIBLE, name);
+			return ERROR;
+		}
+	}
 	if(redeclCheck(name, sym_table)){
 		RaiseError(FUNC_REDECL, name);
 		return ERROR;
@@ -132,9 +147,18 @@ void RaiseError(Error error_type, string name=""){
 		printf("Error type %d: Array identifier named '%s',  index out of bound\n", error_type, name.c_str());
 		break;
 
-		case ARR_INDEX_ACCESS_TYPE_IMCOMPATIBLE:
-		printf("Error type %d: Array identifier named '%s', array index type only support 'int' type", error_type, name.c_str());
+		case ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE:
+		printf("Error type %d: Array identifier named '%s', array index type only support 'int' type\n", error_type, name.c_str());
 		break;
+
+		case RET_IN_VOID_FUNC_INCOMPATIBLE:
+		printf("Error type %d: A function named '%s' with 'void' return value has return value\n", error_type, name.c_str());
+		break;
+
+		case RET_IN_NONVOID_FUNC_INCOMPATIBLE:
+		printf("Error type %d: A function named '%s' with 'non-void' return value doesn't has return value\n", error_type, name.c_str());
+		break;
+
 	}
 }
 
