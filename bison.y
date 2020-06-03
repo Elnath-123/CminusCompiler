@@ -88,6 +88,15 @@
 	program: declearation_list {
 		grammar->push_back("program: declearation_list\n");
 		$$ = $1;
+		map<string, IdSymbol*> id_map = sym_table->s_id;
+		for(auto it = id_map.begin(); it != id_map.end(); it++){
+			IdSymbol* ids = it->second;
+			cout << "Variable name=" << it->first << ", type=" << ids->type_specifier;
+			if(ids->type_specifier == "int")
+				cout << ", value=" << ids->num->val << endl; 
+			else
+				cout << ", value=" << ids->f_num->val << endl; 
+		}
 		Gen::genCode($1);
 	}
 	       ;
@@ -112,6 +121,7 @@
 		grammar->push_back("var_declearation: type_specifier ID SEMICOLON\n");
 		//semanticCheck($1, $2);
 		/* name, (type, name, type_specifier) */
+		
 		Variable* v = new Variable($1, $2, "id_var");
 		$$ = v;
 		
@@ -267,7 +277,24 @@
 	expression: var ASSIGN expression {
 		grammar->push_back("expression: var ASSIGN expression\n");
 		$2 = new Assign("=", $1->id, $3);
-		$2->number = $3->number;
+		IdSymbol* var =  sym_table->s_id[$1->id->name];
+		string var_type = var->type_specifier;
+		string exp_type = $3->number_type;
+		if(var_type == "int"){
+			if(exp_type == "int"){
+				var->num->val = $3->num.number;
+			}else if(exp_type == "float"){
+				var->num->val = (int)$3->num.f_number;
+			}
+		}else if(var_type == "float"){
+			if(exp_type == "float"){
+				var->f_num->val = $3->num.f_number;
+			}else if(exp_type == "int"){
+				var->f_num->val = (float)$3->num.number;
+			}
+		}
+		SemanticCheckVisitor* scv = new SemanticCheckVisitor(sym_table);
+		
 		Gen::genAssign($2, $1->id, $3);
 		$$ = $2; 
 	}
@@ -307,21 +334,6 @@
 		$$ = $2;
 	}
 					 | additive_expression {grammar->push_back("simple_expression: additive_expression\n"); $$ = $1;}
-					 /*| simple_expression binary_logic simple_expression {
-						 													$2->left = $1;
-																			$2->right = $3;
-																			Gen::genLogic($$, $1, $3, $2->type);
-					 													}
-					 | unary_logic simple_expression{
-						 								$1->left = $2;
-														Gen::genLogic($$, $2, $1, NULL, $2->type)
-					 								}*/
-					 ;
-
-	/*binary_logic: AND {$$ = new BinOp("&&");}
-		 		| OR {$$ = new BinOp("||";)}
-
-	unary_logic: NOT {$$ = new UnaryOp("!");}*/
 
 	relop: GT { grammar->push_back("relop: GT\n");$$ = new BinOp(">");}
 		 | LT { grammar->push_back("relop: LT\n");$$ = new BinOp("<");}
@@ -337,25 +349,51 @@
 		$2->right = $3; 
 		
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
-		$2->number = $2->accept(scv);
-
+		if($1->number_type == "int" && $3->number_type == "int"){
+			$2->number_type = "int";
+		}else{
+			$2->number_type = "float";
+		}
+		
+		if($2->number_type == "int"){
+			$2->num.number = $2->accept(scv);
+		}
+		else{
+			$2->num.f_number = $2->accept(scv);
+		}
 		Gen::genBinary($2, $1, $3, $2->type);
 		$$ = $2;
 	}
 					   | term {$$ = $1;}
 					   ;
 	
-	addop: ADD { grammar->push_back("addop: ADD\n"); $$ = new BinOp("+");}
-	     | SUB { grammar->push_back("addop: SUB\n"); $$ = new BinOp("-");}
+	addop: ADD {
+		grammar->push_back("addop: ADD\n");
+		$$ = new BinOp("+");
+	}
+	     | SUB {
+		grammar->push_back("addop: SUB\n");
+		$$ = new BinOp("-");
+	}
 		 ;
 
 	term: term mulop factor {
 		grammar->push_back("term: term mulop factor\n");
 		$2->left = $1;
 		$2->right = $3;
-		
+
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
-		$2->number = $2->accept(scv);
+
+		if($1->number_type == "float" && $3->number_type == "float" ||
+		   $1->number_type != $3->number_type)
+			$2->number_type = "float";
+		else
+			$2->number_type = "int";
+
+		if($2->number_type == "int")
+			$2->num.number = $2->accept(scv);
+		else
+			$2->num.f_number = $2->accept(scv);
 		Gen::genBinary($2, $1, $3, $2->type);
 		$$ = $2;
 	}
@@ -365,15 +403,43 @@
 	}
 		;
 	
-	mulop: MUL { grammar->push_back("mulop: MUL\n"); $$ = new BinOp("*");}
-	     | DIV { grammar->push_back("mulop: DIV\n"); $$ = new BinOp("/");}
+	mulop: MUL {
+		grammar->push_back("mulop: MUL\n");
+		$$ = new BinOp("*");
+	}
+	     | DIV {
+		grammar->push_back("mulop: DIV\n");
+		$$ = new BinOp("/");
+	}
 		 ;
 
-	factor: LP expression RP {grammar->push_back("factor: LP expression RP\n"); $$ = $2;}
-	      | var {grammar->push_back("factor: var\n"); $$ = $1->id;} 
-		  | call {grammar->push_back("factor: call\n");$$ = $1;}
-		  | INT10 {grammar->push_back("factor: INT10\n");Gen::genInt10($$, $1); $$ = $1; $$->number = $1->val;}
-		  | REAL10 {grammar->push_back("factor: REAL10\n");Gen::genReal10($$, $1); $$ = $1;}
+	factor: LP expression RP {
+		grammar->push_back("factor: LP expression RP\n");
+		$$ = $2;
+	}
+	      | var {
+		grammar->push_back("factor: var\n");
+		$1->id->number_type = sym_table->s_id[$1->id->name]->type_specifier;
+		$$ = $1->id;
+	} 
+		  | call {
+		grammar->push_back("factor: call\n");
+		$$ = $1;
+	}
+		  | INT10 {
+		grammar->push_back("factor: INT10\n");
+		Gen::genInt10($$, $1); 
+		$1->number_type = "int";
+		$1->num.number = $1->val;
+		$$ = $1;
+	}
+		  | REAL10 {
+		grammar->push_back("factor: REAL10\n");
+		Gen::genReal10($$, $1); 
+		$1->number_type = "float";
+		$1->num.f_number = $1->val;
+		$$ = $1;
+	}
 		  ;
 
 	call: ID LP args RP {

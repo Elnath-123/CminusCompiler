@@ -1,18 +1,8 @@
 int			_
 
-IDN			add
+IDN			main
 
 (			_
-
-int			_
-
-IDN			c
-
-,			_
-
-int			_
-
-IDN			d
 
 )			_
 
@@ -20,13 +10,53 @@ IDN			d
 
 int			_
 
-IDN			c
+IDN			a
+
+;			_
+
+float		_
+
+IDN			b
 
 ;			_
 
 int			_
 
-IDN			d
+IDN			c
+
+;			_
+
+IDN			a
+
+=			_
+
+INT10		1
+
+;			_
+
+IDN			b
+
+=			_
+
+REAL10		5.900000
+
+;			_
+
+IDN			c
+
+=			_
+
+IDN			a
+
++			_
+
+IDN			b
+
+;			_
+
+return		_
+
+INT10		0
 
 ;			_
 

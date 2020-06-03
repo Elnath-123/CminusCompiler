@@ -593,49 +593,59 @@ namespace yy {
     {
 		grammar->push_back("program: declearation_list\n");
 		(yylhs.value.stmt_decl_list) = (yystack_[0].value.stmt_decl_list);
+		map<string, IdSymbol*> id_map = sym_table->s_id;
+		for(auto it = id_map.begin(); it != id_map.end(); it++){
+			IdSymbol* ids = it->second;
+			cout << "Variable name=" << it->first << ", type=" << ids->type_specifier;
+			if(ids->type_specifier == "int")
+				cout << ", value=" << ids->num->val << endl; 
+			else
+				cout << ", value=" << ids->f_num->val << endl; 
+		}
 		Gen::genCode((yystack_[0].value.stmt_decl_list));
 	}
-#line 599 "bison.tab.cc" // lalr1.cc:859
+#line 608 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 3:
-#line 95 "bison.y" // lalr1.cc:859
+#line 104 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("declearation_list: declearation_list declearation\n");
 		(yystack_[1].value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
 		(yylhs.value.stmt_decl_list) = (yystack_[1].value.stmt_decl_list);
 	}
-#line 609 "bison.tab.cc" // lalr1.cc:859
+#line 618 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 4:
-#line 100 "bison.y" // lalr1.cc:859
+#line 109 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("declearation_list: declearation\n");
 		(yylhs.value.stmt_decl_list) = new vector<Statement*>();
 		(yylhs.value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
 	}
-#line 619 "bison.tab.cc" // lalr1.cc:859
+#line 628 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 5:
-#line 107 "bison.y" // lalr1.cc:859
+#line 116 "bison.y" // lalr1.cc:859
     {grammar->push_back("declearation: var_declearation\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 625 "bison.tab.cc" // lalr1.cc:859
+#line 634 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 6:
-#line 108 "bison.y" // lalr1.cc:859
+#line 117 "bison.y" // lalr1.cc:859
     {grammar->push_back("declearation: fun_declearation\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 631 "bison.tab.cc" // lalr1.cc:859
+#line 640 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 7:
-#line 111 "bison.y" // lalr1.cc:859
+#line 120 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("var_declearation: type_specifier ID SEMICOLON\n");
 		//semanticCheck($1, $2);
 		/* name, (type, name, type_specifier) */
+		
 		Variable* v = new Variable((yystack_[2].value.type), (yystack_[1].value.id), "id_var");
 		(yylhs.value.stmt) = v;
 		
@@ -646,11 +656,11 @@ namespace yy {
 		}
 		sym_table->insertIdSymbol((yystack_[1].value.id)->name, new IdSymbol("id_var", (yystack_[1].value.id)->name, (yystack_[2].value.type)->type));
 	}
-#line 650 "bison.tab.cc" // lalr1.cc:859
+#line 660 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 8:
-#line 125 "bison.y" // lalr1.cc:859
+#line 135 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("var_declearation: type_specifier ID MLP INT10 MRP SEMICOLON\n");
 		/* name, (type, name, type_specifier, size) */
@@ -665,29 +675,29 @@ namespace yy {
 		}
 		sym_table->insertArraySymbol((yystack_[4].value.id)->name, new ArraySymbol("arr_var", (yystack_[4].value.id)->name, (yystack_[5].value.type)->type, (yystack_[2].value.int10)->val));
 	}
-#line 669 "bison.tab.cc" // lalr1.cc:859
+#line 679 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 9:
-#line 141 "bison.y" // lalr1.cc:859
+#line 151 "bison.y" // lalr1.cc:859
     {grammar->push_back("type_specifier: TYPE_INT\n");(yylhs.value.type) = new PrimitiveType("int");}
-#line 675 "bison.tab.cc" // lalr1.cc:859
+#line 685 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 10:
-#line 142 "bison.y" // lalr1.cc:859
+#line 152 "bison.y" // lalr1.cc:859
     {grammar->push_back("type_specifier: TYPE_FLOAT\n");(yylhs.value.type) = new PrimitiveType("float");}
-#line 681 "bison.tab.cc" // lalr1.cc:859
+#line 691 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 11:
-#line 143 "bison.y" // lalr1.cc:859
+#line 153 "bison.y" // lalr1.cc:859
     {grammar->push_back("type_specifier: TYPE_VOID\n");(yylhs.value.type) = new PrimitiveType("void");}
-#line 687 "bison.tab.cc" // lalr1.cc:859
+#line 697 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 12:
-#line 146 "bison.y" // lalr1.cc:859
+#line 156 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("fun_declearation: type_specifier ID LP params RP compound_stmt\n");
 		Function* func = new Function((yystack_[5].value.type), (yystack_[4].value.id), (yystack_[2].value.variable_list), (yystack_[0].value.comp_stmt));
@@ -704,230 +714,247 @@ namespace yy {
 		Gen::genFunction((yylhs.value.stmt), (yystack_[4].value.id), (yystack_[0].value.comp_stmt));
 		delete scv;
 	}
-#line 708 "bison.tab.cc" // lalr1.cc:859
+#line 718 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 13:
-#line 164 "bison.y" // lalr1.cc:859
+#line 174 "bison.y" // lalr1.cc:859
     {grammar->push_back("params: param_list\n");(yylhs.value.variable_list) = (yystack_[0].value.variable_list);}
-#line 714 "bison.tab.cc" // lalr1.cc:859
+#line 724 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 14:
-#line 165 "bison.y" // lalr1.cc:859
+#line 175 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("params: TYPE_VOID\n");
 		/* Empty param list */
 		(yylhs.value.variable_list) = new vector<Variable*>();
 	}
-#line 724 "bison.tab.cc" // lalr1.cc:859
+#line 734 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 15:
-#line 172 "bison.y" // lalr1.cc:859
+#line 182 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("param_list: param_list COMMA param\n");
 		(yystack_[2].value.variable_list)->push_back((yystack_[0].value.variable));
 		(yylhs.value.variable_list) = (yystack_[2].value.variable_list);
 	}
-#line 734 "bison.tab.cc" // lalr1.cc:859
+#line 744 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 16:
-#line 177 "bison.y" // lalr1.cc:859
+#line 187 "bison.y" // lalr1.cc:859
     {grammar->push_back("param_list: param\n");(yylhs.value.variable_list)->push_back((yystack_[0].value.variable));}
-#line 740 "bison.tab.cc" // lalr1.cc:859
+#line 750 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 17:
-#line 178 "bison.y" // lalr1.cc:859
+#line 188 "bison.y" // lalr1.cc:859
     {grammar->push_back("param_list: ε\n");(yylhs.value.variable_list) = new vector<Variable*>();}
-#line 746 "bison.tab.cc" // lalr1.cc:859
+#line 756 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 18:
-#line 181 "bison.y" // lalr1.cc:859
+#line 191 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("param: type_specifier ID\n");
 		(yylhs.value.variable) = new Variable((yystack_[1].value.type), (yystack_[0].value.id), "param_id_var");
 	}
-#line 755 "bison.tab.cc" // lalr1.cc:859
+#line 765 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 19:
-#line 185 "bison.y" // lalr1.cc:859
+#line 195 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("param: type_specifier ID MLP MRP\n");
 		(yylhs.value.variable) = new ArrayVariable((yystack_[3].value.type), (yystack_[2].value.id), "param_arr_var");
 	}
-#line 764 "bison.tab.cc" // lalr1.cc:859
+#line 774 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 20:
-#line 191 "bison.y" // lalr1.cc:859
+#line 201 "bison.y" // lalr1.cc:859
     {
 		/* Need to pass ($2, $3)->code to $$->code (implemented in construct function) */
 		grammar->push_back("compound_stmt: LLP local_declearations statement_list LRP\n");
 		(yylhs.value.comp_stmt) = new BlockStmt("block", (yystack_[2].value.stmt_decl_list), (yystack_[1].value.stmt_decl_list));
 	}
-#line 774 "bison.tab.cc" // lalr1.cc:859
+#line 784 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 21:
-#line 198 "bison.y" // lalr1.cc:859
+#line 208 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("local_declearations: local_declearations var_declearation\n");
 		(yystack_[1].value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
 		(yylhs.value.stmt_decl_list) = (yystack_[1].value.stmt_decl_list);		
 	}
-#line 784 "bison.tab.cc" // lalr1.cc:859
+#line 794 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 22:
-#line 203 "bison.y" // lalr1.cc:859
+#line 213 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("local_declearations: ε\n");
 		(yylhs.value.stmt_decl_list) = new vector<Statement*>();
 	}
-#line 793 "bison.tab.cc" // lalr1.cc:859
+#line 803 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 23:
-#line 209 "bison.y" // lalr1.cc:859
+#line 219 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("statement_list: statement_list statement\n");
 		(yystack_[1].value.stmt_decl_list)->push_back((yystack_[0].value.stmt));
 		(yylhs.value.stmt_decl_list) = (yystack_[1].value.stmt_decl_list);
 	}
-#line 803 "bison.tab.cc" // lalr1.cc:859
+#line 813 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 24:
-#line 214 "bison.y" // lalr1.cc:859
+#line 224 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("statement_list: ε\n");
 		(yylhs.value.stmt_decl_list) = new vector<Statement*>();
 	}
-#line 812 "bison.tab.cc" // lalr1.cc:859
+#line 822 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 25:
-#line 220 "bison.y" // lalr1.cc:859
+#line 230 "bison.y" // lalr1.cc:859
     {grammar->push_back("statement: expression_stmt\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 818 "bison.tab.cc" // lalr1.cc:859
+#line 828 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 26:
-#line 221 "bison.y" // lalr1.cc:859
+#line 231 "bison.y" // lalr1.cc:859
     {grammar->push_back("statement: compound_stmt\n");(yylhs.value.stmt) = (yystack_[0].value.comp_stmt);}
-#line 824 "bison.tab.cc" // lalr1.cc:859
+#line 834 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 27:
-#line 222 "bison.y" // lalr1.cc:859
+#line 232 "bison.y" // lalr1.cc:859
     {grammar->push_back("statement: selection_stmt\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 830 "bison.tab.cc" // lalr1.cc:859
+#line 840 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 28:
-#line 223 "bison.y" // lalr1.cc:859
+#line 233 "bison.y" // lalr1.cc:859
     {grammar->push_back("statement: iteration_stmt\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 836 "bison.tab.cc" // lalr1.cc:859
+#line 846 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 29:
-#line 224 "bison.y" // lalr1.cc:859
+#line 234 "bison.y" // lalr1.cc:859
     {grammar->push_back("statement: return_stmt\n");(yylhs.value.stmt) = (yystack_[0].value.stmt);}
-#line 842 "bison.tab.cc" // lalr1.cc:859
+#line 852 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 30:
-#line 227 "bison.y" // lalr1.cc:859
+#line 237 "bison.y" // lalr1.cc:859
     {
 		/* Need to pass $1->code to $$->code (implemented in construct function) */
 		grammar->push_back("expression_stmt: expression SEMICOLON\n");
 		(yylhs.value.stmt) = new ExpStmt("exp", (yystack_[1].value.e));
 		(yylhs.value.stmt)->code = (yystack_[1].value.e)->code;
 	}
-#line 853 "bison.tab.cc" // lalr1.cc:859
+#line 863 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 31:
-#line 233 "bison.y" // lalr1.cc:859
+#line 243 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("expression_stmt: SEMICOLON\n");
 		(yylhs.value.stmt) = new EmptyStmt("empty");
 	}
-#line 862 "bison.tab.cc" // lalr1.cc:859
+#line 872 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 32:
-#line 240 "bison.y" // lalr1.cc:859
+#line 250 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("selection_stmt: IF LP expression RP statement \%prec V_ELSE\n");
 		sym_table->insertKeywordSymbol("if", new KeyWordSymbol("if"));
 		(yylhs.value.stmt) = new IfStmt("if", (yystack_[2].value.e), (yystack_[0].value.stmt)); 
 		Gen::genIfStmt((yylhs.value.stmt), (yystack_[2].value.e), (yystack_[0].value.stmt));
 	}
-#line 873 "bison.tab.cc" // lalr1.cc:859
+#line 883 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 33:
-#line 246 "bison.y" // lalr1.cc:859
+#line 256 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("selection_stmt: IF LP expression RP statement ELSE statement\n");
 		(yylhs.value.stmt) = new IfStmt("if", (yystack_[4].value.e), (yystack_[2].value.stmt), (yystack_[0].value.stmt));
 		Gen::genIfStmt((yylhs.value.stmt), (yystack_[4].value.e), (yystack_[2].value.stmt), (yystack_[0].value.stmt));
 	}
-#line 883 "bison.tab.cc" // lalr1.cc:859
+#line 893 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 34:
-#line 252 "bison.y" // lalr1.cc:859
+#line 262 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("iteration_stmt: WHILE LP expression RP statement\n");
 		(yylhs.value.stmt) = new WhileStmt("while", (yystack_[2].value.e), (yystack_[0].value.stmt));
 		Gen::genWhileStmt((yylhs.value.stmt), (yystack_[2].value.e), (yystack_[0].value.stmt));
 	}
-#line 893 "bison.tab.cc" // lalr1.cc:859
+#line 903 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 35:
-#line 259 "bison.y" // lalr1.cc:859
+#line 269 "bison.y" // lalr1.cc:859
     {grammar->push_back("return_stmt: RETURN SEMICOLON\n");(yylhs.value.stmt) = new ReturnStmt(NULL, "empty_return");}
-#line 899 "bison.tab.cc" // lalr1.cc:859
+#line 909 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 36:
-#line 260 "bison.y" // lalr1.cc:859
+#line 270 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("return_stmt: RETURN expression SEMICOLON\n");
 		(yylhs.value.stmt) = new ReturnStmt((yystack_[1].value.e), "return");
 		Gen::genRetStmt((yylhs.value.stmt), (yystack_[1].value.e));
 	}
-#line 909 "bison.tab.cc" // lalr1.cc:859
+#line 919 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 37:
-#line 267 "bison.y" // lalr1.cc:859
+#line 277 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("expression: var ASSIGN expression\n");
 		(yystack_[1].value.assign) = new Assign("=", (yystack_[2].value.acv)->id, (yystack_[0].value.e));
-		(yystack_[1].value.assign)->number = (yystack_[0].value.e)->number;
+		IdSymbol* var =  sym_table->s_id[(yystack_[2].value.acv)->id->name];
+		string var_type = var->type_specifier;
+		string exp_type = (yystack_[0].value.e)->number_type;
+		if(var_type == "int"){
+			if(exp_type == "int"){
+				var->num->val = (yystack_[0].value.e)->num.number;
+			}else if(exp_type == "float"){
+				var->num->val = (int)(yystack_[0].value.e)->num.f_number;
+			}
+		}else if(var_type == "float"){
+			if(exp_type == "float"){
+				var->f_num->val = (yystack_[0].value.e)->num.f_number;
+			}else if(exp_type == "int"){
+				var->f_num->val = (float)(yystack_[0].value.e)->num.number;
+			}
+		}
+		SemanticCheckVisitor* scv = new SemanticCheckVisitor(sym_table);
+		
 		Gen::genAssign((yystack_[1].value.assign), (yystack_[2].value.acv)->id, (yystack_[0].value.e));
 		(yylhs.value.e) = (yystack_[1].value.assign); 
 	}
-#line 921 "bison.tab.cc" // lalr1.cc:859
+#line 948 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 38:
-#line 274 "bison.y" // lalr1.cc:859
+#line 301 "bison.y" // lalr1.cc:859
     {grammar->push_back("expression: simple_expression\n"); (yylhs.value.e) = (yystack_[0].value.e);}
-#line 927 "bison.tab.cc" // lalr1.cc:859
+#line 954 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 39:
-#line 277 "bison.y" // lalr1.cc:859
+#line 304 "bison.y" // lalr1.cc:859
     { 
 		grammar->push_back("var: ID\n");
 		AccessVar* v = new AccessVar((yystack_[0].value.id));
@@ -939,11 +966,11 @@ namespace yy {
 		Gen::genId(v->id, (yystack_[0].value.id));
 		(yylhs.value.acv) = v;
 	}
-#line 943 "bison.tab.cc" // lalr1.cc:859
+#line 970 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 40:
-#line 288 "bison.y" // lalr1.cc:859
+#line 315 "bison.y" // lalr1.cc:859
     {
 		   grammar->push_back("var: ID MLP expression MRP\n");
 		   AccessVar* v = new AccessVar((yystack_[3].value.id), (yystack_[1].value.e));
@@ -956,11 +983,11 @@ namespace yy {
 		   (yylhs.value.acv) = v;
 		   
 		}
-#line 960 "bison.tab.cc" // lalr1.cc:859
+#line 987 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 41:
-#line 302 "bison.y" // lalr1.cc:859
+#line 329 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("simple_expression: additive_expression relop additive_expression\n");
 		(yystack_[1].value.e)->left = (yystack_[2].value.e); 
@@ -968,153 +995,207 @@ namespace yy {
 		Gen::genRelop((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 		(yylhs.value.e) = (yystack_[1].value.e);
 	}
-#line 972 "bison.tab.cc" // lalr1.cc:859
+#line 999 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 42:
-#line 309 "bison.y" // lalr1.cc:859
+#line 336 "bison.y" // lalr1.cc:859
     {grammar->push_back("simple_expression: additive_expression\n"); (yylhs.value.e) = (yystack_[0].value.e);}
-#line 978 "bison.tab.cc" // lalr1.cc:859
+#line 1005 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 43:
-#line 326 "bison.y" // lalr1.cc:859
+#line 338 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: GT\n");(yylhs.value.e) = new BinOp(">");}
-#line 984 "bison.tab.cc" // lalr1.cc:859
+#line 1011 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 44:
-#line 327 "bison.y" // lalr1.cc:859
+#line 339 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: LT\n");(yylhs.value.e) = new BinOp("<");}
-#line 990 "bison.tab.cc" // lalr1.cc:859
+#line 1017 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 45:
-#line 328 "bison.y" // lalr1.cc:859
+#line 340 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: LET\n");(yylhs.value.e) = new BinOp("<=");}
-#line 996 "bison.tab.cc" // lalr1.cc:859
+#line 1023 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 46:
-#line 329 "bison.y" // lalr1.cc:859
+#line 341 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: GET\n");(yylhs.value.e) = new BinOp(">=");}
-#line 1002 "bison.tab.cc" // lalr1.cc:859
+#line 1029 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 47:
-#line 330 "bison.y" // lalr1.cc:859
+#line 342 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: EQ\n");(yylhs.value.e) = new BinOp("==");}
-#line 1008 "bison.tab.cc" // lalr1.cc:859
+#line 1035 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 48:
-#line 331 "bison.y" // lalr1.cc:859
+#line 343 "bison.y" // lalr1.cc:859
     { grammar->push_back("relop: NEQ\n");(yylhs.value.e) = new BinOp("!=");}
-#line 1014 "bison.tab.cc" // lalr1.cc:859
+#line 1041 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 49:
-#line 334 "bison.y" // lalr1.cc:859
+#line 346 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("additive_expression: additive_expression addop term\n");
 		(yystack_[1].value.e)->left = (yystack_[2].value.e); 
 		(yystack_[1].value.e)->right = (yystack_[0].value.e); 
 		
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
-		(yystack_[1].value.e)->number = (yystack_[1].value.e)->accept(scv);
-
+		if((yystack_[2].value.e)->number_type == "int" && (yystack_[0].value.e)->number_type == "int"){
+			(yystack_[1].value.e)->number_type = "int";
+		}else{
+			(yystack_[1].value.e)->number_type = "float";
+		}
+		
+		if((yystack_[1].value.e)->number_type == "int"){
+			(yystack_[1].value.e)->num.number = (yystack_[1].value.e)->accept(scv);
+		}
+		else{
+			(yystack_[1].value.e)->num.f_number = (yystack_[1].value.e)->accept(scv);
+		}
 		Gen::genBinary((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 		(yylhs.value.e) = (yystack_[1].value.e);
 	}
-#line 1030 "bison.tab.cc" // lalr1.cc:859
+#line 1067 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 50:
-#line 345 "bison.y" // lalr1.cc:859
+#line 367 "bison.y" // lalr1.cc:859
     {(yylhs.value.e) = (yystack_[0].value.e);}
-#line 1036 "bison.tab.cc" // lalr1.cc:859
+#line 1073 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 51:
-#line 348 "bison.y" // lalr1.cc:859
-    { grammar->push_back("addop: ADD\n"); (yylhs.value.e) = new BinOp("+");}
-#line 1042 "bison.tab.cc" // lalr1.cc:859
+#line 370 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("addop: ADD\n");
+		(yylhs.value.e) = new BinOp("+");
+	}
+#line 1082 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 52:
-#line 349 "bison.y" // lalr1.cc:859
-    { grammar->push_back("addop: SUB\n"); (yylhs.value.e) = new BinOp("-");}
-#line 1048 "bison.tab.cc" // lalr1.cc:859
+#line 374 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("addop: SUB\n");
+		(yylhs.value.e) = new BinOp("-");
+	}
+#line 1091 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 53:
-#line 352 "bison.y" // lalr1.cc:859
+#line 380 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("term: term mulop factor\n");
 		(yystack_[1].value.e)->left = (yystack_[2].value.e);
 		(yystack_[1].value.e)->right = (yystack_[0].value.e);
-		
+
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
-		(yystack_[1].value.e)->number = (yystack_[1].value.e)->accept(scv);
+
+		if((yystack_[2].value.e)->number_type == "float" && (yystack_[0].value.e)->number_type == "float" ||
+		   (yystack_[2].value.e)->number_type != (yystack_[0].value.e)->number_type)
+			(yystack_[1].value.e)->number_type = "float";
+		else
+			(yystack_[1].value.e)->number_type = "int";
+
+		if((yystack_[1].value.e)->number_type == "int")
+			(yystack_[1].value.e)->num.number = (yystack_[1].value.e)->accept(scv);
+		else
+			(yystack_[1].value.e)->num.f_number = (yystack_[1].value.e)->accept(scv);
 		Gen::genBinary((yystack_[1].value.e), (yystack_[2].value.e), (yystack_[0].value.e), (yystack_[1].value.e)->type);
 		(yylhs.value.e) = (yystack_[1].value.e);
 	}
-#line 1063 "bison.tab.cc" // lalr1.cc:859
+#line 1116 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 54:
-#line 362 "bison.y" // lalr1.cc:859
+#line 400 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("term: factor\n");
 		(yylhs.value.e) =  (yystack_[0].value.e);
 	}
-#line 1072 "bison.tab.cc" // lalr1.cc:859
+#line 1125 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 55:
-#line 368 "bison.y" // lalr1.cc:859
-    { grammar->push_back("mulop: MUL\n"); (yylhs.value.e) = new BinOp("*");}
-#line 1078 "bison.tab.cc" // lalr1.cc:859
+#line 406 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("mulop: MUL\n");
+		(yylhs.value.e) = new BinOp("*");
+	}
+#line 1134 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 56:
-#line 369 "bison.y" // lalr1.cc:859
-    { grammar->push_back("mulop: DIV\n"); (yylhs.value.e) = new BinOp("/");}
-#line 1084 "bison.tab.cc" // lalr1.cc:859
+#line 410 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("mulop: DIV\n");
+		(yylhs.value.e) = new BinOp("/");
+	}
+#line 1143 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 57:
-#line 372 "bison.y" // lalr1.cc:859
-    {grammar->push_back("factor: LP expression RP\n"); (yylhs.value.e) = (yystack_[1].value.e);}
-#line 1090 "bison.tab.cc" // lalr1.cc:859
+#line 416 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("factor: LP expression RP\n");
+		(yylhs.value.e) = (yystack_[1].value.e);
+	}
+#line 1152 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 58:
-#line 373 "bison.y" // lalr1.cc:859
-    {grammar->push_back("factor: var\n"); (yylhs.value.e) = (yystack_[0].value.acv)->id;}
-#line 1096 "bison.tab.cc" // lalr1.cc:859
+#line 420 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("factor: var\n");
+		(yystack_[0].value.acv)->id->number_type = sym_table->s_id[(yystack_[0].value.acv)->id->name]->type_specifier;
+		(yylhs.value.e) = (yystack_[0].value.acv)->id;
+	}
+#line 1162 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 59:
-#line 374 "bison.y" // lalr1.cc:859
-    {grammar->push_back("factor: call\n");(yylhs.value.e) = (yystack_[0].value.e);}
-#line 1102 "bison.tab.cc" // lalr1.cc:859
+#line 425 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("factor: call\n");
+		(yylhs.value.e) = (yystack_[0].value.e);
+	}
+#line 1171 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 60:
-#line 375 "bison.y" // lalr1.cc:859
-    {grammar->push_back("factor: INT10\n");Gen::genInt10((yylhs.value.e), (yystack_[0].value.int10)); (yylhs.value.e) = (yystack_[0].value.int10); (yylhs.value.e)->number = (yystack_[0].value.int10)->val;}
-#line 1108 "bison.tab.cc" // lalr1.cc:859
+#line 429 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("factor: INT10\n");
+		Gen::genInt10((yylhs.value.e), (yystack_[0].value.int10)); 
+		(yystack_[0].value.int10)->number_type = "int";
+		(yystack_[0].value.int10)->num.number = (yystack_[0].value.int10)->val;
+		(yylhs.value.e) = (yystack_[0].value.int10);
+	}
+#line 1183 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 61:
-#line 376 "bison.y" // lalr1.cc:859
-    {grammar->push_back("factor: REAL10\n");Gen::genReal10((yylhs.value.e), (yystack_[0].value.real10)); (yylhs.value.e) = (yystack_[0].value.real10);}
-#line 1114 "bison.tab.cc" // lalr1.cc:859
+#line 436 "bison.y" // lalr1.cc:859
+    {
+		grammar->push_back("factor: REAL10\n");
+		Gen::genReal10((yylhs.value.e), (yystack_[0].value.real10)); 
+		(yystack_[0].value.real10)->number_type = "float";
+		(yystack_[0].value.real10)->num.f_number = (yystack_[0].value.real10)->val;
+		(yylhs.value.e) = (yystack_[0].value.real10);
+	}
+#line 1195 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 62:
-#line 379 "bison.y" // lalr1.cc:859
+#line 445 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("call: ID LP args RP\n");
 		FunctionInvocation* func_invoke = new FunctionInvocation((yystack_[3].value.id), (yystack_[1].value.arg_list), "invoke");
@@ -1127,42 +1208,42 @@ namespace yy {
 		Gen::genFunctionInvoke((yylhs.value.e), (yystack_[3].value.id), (yystack_[1].value.arg_list), sym_table);
 		
 	}
-#line 1131 "bison.tab.cc" // lalr1.cc:859
+#line 1212 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 63:
-#line 393 "bison.y" // lalr1.cc:859
+#line 459 "bison.y" // lalr1.cc:859
     {grammar->push_back("args: arg_list\n");(yylhs.value.arg_list) = (yystack_[0].value.arg_list);}
-#line 1137 "bison.tab.cc" // lalr1.cc:859
+#line 1218 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 64:
-#line 394 "bison.y" // lalr1.cc:859
+#line 460 "bison.y" // lalr1.cc:859
     {grammar->push_back("args: ε\n");(yylhs.value.arg_list) = new vector<Expression*>();}
-#line 1143 "bison.tab.cc" // lalr1.cc:859
+#line 1224 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 65:
-#line 396 "bison.y" // lalr1.cc:859
+#line 462 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("arg_list: arg_list COMMA expression\n");
 		(yystack_[2].value.arg_list)->push_back((yystack_[0].value.e));
 	}
-#line 1152 "bison.tab.cc" // lalr1.cc:859
+#line 1233 "bison.tab.cc" // lalr1.cc:859
     break;
 
   case 66:
-#line 400 "bison.y" // lalr1.cc:859
+#line 466 "bison.y" // lalr1.cc:859
     {
 		grammar->push_back("arg_list: expression\n");
 		(yylhs.value.arg_list) = new vector<Expression*>();
 		(yylhs.value.arg_list)->push_back((yystack_[0].value.e));
 	}
-#line 1162 "bison.tab.cc" // lalr1.cc:859
+#line 1243 "bison.tab.cc" // lalr1.cc:859
     break;
 
 
-#line 1166 "bison.tab.cc" // lalr1.cc:859
+#line 1247 "bison.tab.cc" // lalr1.cc:859
             default:
               break;
             }
@@ -1476,13 +1557,13 @@ namespace yy {
   const unsigned short int
   parser::yyrline_[] =
   {
-       0,    88,    88,    95,   100,   107,   108,   111,   125,   141,
-     142,   143,   146,   164,   165,   172,   177,   178,   181,   185,
-     191,   198,   203,   209,   214,   220,   221,   222,   223,   224,
-     227,   233,   240,   246,   252,   259,   260,   267,   274,   277,
-     288,   302,   309,   326,   327,   328,   329,   330,   331,   334,
-     345,   348,   349,   352,   362,   368,   369,   372,   373,   374,
-     375,   376,   379,   393,   394,   396,   400
+       0,    88,    88,   104,   109,   116,   117,   120,   135,   151,
+     152,   153,   156,   174,   175,   182,   187,   188,   191,   195,
+     201,   208,   213,   219,   224,   230,   231,   232,   233,   234,
+     237,   243,   250,   256,   262,   269,   270,   277,   301,   304,
+     315,   329,   336,   338,   339,   340,   341,   342,   343,   346,
+     367,   370,   374,   380,   400,   406,   410,   416,   420,   425,
+     429,   436,   445,   459,   460,   462,   466
   };
 
   // Print the state stack on the debug stream.
@@ -1567,8 +1648,8 @@ namespace yy {
 
 
 } // yy
-#line 1571 "bison.tab.cc" // lalr1.cc:1167
-#line 406 "bison.y" // lalr1.cc:1168
+#line 1652 "bison.tab.cc" // lalr1.cc:1167
+#line 472 "bison.y" // lalr1.cc:1168
 
 
 namespace yy{

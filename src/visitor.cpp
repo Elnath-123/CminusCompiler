@@ -23,6 +23,19 @@ float SemanticCheckVisitor::visit(Int10* n){
 	return n->val;
 }
 
+float SemanticCheckVisitor::visit(Real10* n){
+	return n->val;
+}
+
+float SemanticCheckVisitor::visit(Identifier* id){
+	SymbolTable* sym_table = this->sym_table;
+	string type = sym_table->s_id[id->name]->type_specifier;
+	if(type == "int"){
+		return sym_table->s_id[id->name]->num->val;
+	}
+	return sym_table->s_id[id->name]->f_num->val;
+}
+
 bool redeclCheck(string name, SymbolTable* sym_table){
 	if(sym_table->s_arr.count(name) > 0 ||
 		   sym_table->s_func.count(name) > 0 ||
@@ -46,21 +59,29 @@ int SemanticCheckVisitor::visit(Function* func){
 	SymbolTable* sym_table = this->sym_table;
 	string name = func->id->name;
 	vector<ReturnStmt*>* ret_decl_list = func->block->ret_decl_list;
+	
+	/* No return statement but function is 'void' */
 	if(func->f_type->type != "void" && !ret_decl_list->size()){
 		RaiseError(RET_IN_NONVOID_FUNC_INCOMPATIBLE, name);
 		return ERROR;
 	}
-
 	for(ReturnStmt* ret_decl : *ret_decl_list){
+		/* Has return statement and expression but function is 'void' */
 		if(func->f_type->type == "void" && ret_decl->e){
 			RaiseError(RET_IN_VOID_FUNC_INCOMPATIBLE, name);
 			return ERROR;
 		}
+		/* Has return statement and no expression but function isn't void */
 		if(func->f_type->type != "void" && !ret_decl->e){
 			RaiseError(RET_IN_NONVOID_FUNC_INCOMPATIBLE, name);
 			return ERROR;
 		}
 	}
+
+	/*for(ReturnStmt* ret_decl : *ret_decl_list){
+		if(ret_decl->e->)
+	}*/
+
 	if(redeclCheck(name, sym_table)){
 		RaiseError(FUNC_REDECL, name);
 		return ERROR;
@@ -91,7 +112,7 @@ int SemanticCheckVisitor::visit(AccessVar* acv){
 			RaiseError(ARR_NOT_DEFINE, name);
 			return ERROR;
 		}
-		if(acv->index < 0 || acv->index->number >= v->size){
+		if(acv->index < 0 || acv->index->num.number >= v->size){
 			RaiseError(ARR_INDEX_OUT_OF_BOUND, name);
 			return ERROR;
 		}

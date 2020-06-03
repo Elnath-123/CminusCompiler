@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 #include "ast.h"
+#define INIT_INT 0x3f3f3f3f
+#define INIT_FLOAT 0
 #define ERR_DUP_KEY -1
 #define VALID_KEY 1
 using namespace std;
@@ -28,8 +30,16 @@ class IdSymbol : Symbol{
 public:
     string type_specifier; 
     Int10* num;
-    IdSymbol(string type, string name, string type_specifier, Int10* num=NULL):
-        Symbol(type, name), type_specifier(type_specifier), num(num){ }
+    Real10* f_num;
+    IdSymbol(string type, string name, string type_specifier, Int10* num=NULL, Real10* f_num=NULL):
+        Symbol(type, name), type_specifier(type_specifier), num(num), f_num(f_num){
+            if(this->num == NULL){
+                this->num = new Int10(INIT_INT);
+            }
+            if(this->f_num == NULL){
+                this->f_num = new Real10(INIT_FLOAT);
+            }
+        }
 };
 
 class FuncSymbol : Symbol{

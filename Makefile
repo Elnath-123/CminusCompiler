@@ -1,7 +1,7 @@
 
 target: lex.l bison.y header/ast.h header/visitor.h \
-		src/visitor.cpp driver.cpp src/codegen.cpp src/symbol.cpp
-	flex -d lex.l
+		src/visitor.cpp driver.cpp src/codegen.cpp src/symbol.cpp header/symbol.h
+	flex lex.l
 	bison bison.y -d -v --debug
 	g++ -std=c++11 -o $@ bison.tab.cc lex.yy.c \
 						 src/ast.cpp src/codegen.cpp \

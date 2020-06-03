@@ -1,12 +1,8 @@
-add:
 main:
 	a := 1
-	b := 2
-	param a
-	param b
-	t1 := call add, 2
-	param a
-	param b
-	t2 := call add, 2
-	e := t2
+	b := 5.900000
+	t1 := a + b
+	c := t1
+	return 0
+
 

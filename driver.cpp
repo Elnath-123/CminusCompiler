@@ -10,6 +10,8 @@
 #include <string>
 #include "bison.tab.hh"
 #include <fstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 void usage();
 void dump_to_file(vector<string>, vector<string>);

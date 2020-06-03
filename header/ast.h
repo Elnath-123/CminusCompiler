@@ -101,7 +101,11 @@ public:
 	string place;
 	string True;
 	string False;
-	int number;
+	union{
+		int number;
+		float f_number;
+	}num;
+	string number_type;
 
 	Expression* left;
 	Expression* right;

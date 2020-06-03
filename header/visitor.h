@@ -20,6 +20,8 @@ class AstNode;
 class BinOp;
 class Expression;
 class Int10;
+class Real10;
+class Identifier;
 
 class Compose;
 class SymbolTable;
@@ -35,6 +37,8 @@ public:
 	SymbolTable* sym_table;
 	virtual float  visit (Expression* n) = 0;
 	virtual float  visit (Int10* n) = 0;
+	virtual float  visit (Real10* n) = 0;
+	virtual float  visit (Identifier* id) = 0;
 	virtual int    visit (Variable*) = 0;
 	virtual int    visit (ArrayVariable*) = 0;
 	virtual int    visit (Function*) = 0;
@@ -48,6 +52,8 @@ class SemanticCheckVisitor : public Visitor{
 public:
 	virtual float  visit (Expression* n);
 	virtual float  visit (Int10* n);
+	virtual float  visit (Real10* n);
+	virtual float  visit (Identifier* id);
 	virtual int    visit (Variable*);
 	virtual int    visit (ArrayVariable*);
 	virtual int    visit (Function*);
