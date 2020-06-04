@@ -14,7 +14,7 @@
 #include <algorithm>
 using namespace std;
 void usage();
-void dump_to_file(vector<string>, vector<string>);
+void dump_to_file(vector<string>*, vector<string>);
 extern FILE* yyin;
 using namespace std;
 
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 		printf("No output in command line, please check out output files!\n");
 	
 	/* Parse */
-	vector<string> grammar;
+	vector<string>* grammar;
 	vector<string> tokens;
 	if(argc > 1)
 		if(!(yyin = fopen(argv[argc - 1], "r"))){
@@ -59,8 +59,6 @@ int main(int argc, char** argv)
 
 	yy::parser parser(&grammar, &tokens);
 	parser.parse();
-	reverse(grammar.begin(), grammar.end());
-
 	dump_to_file(grammar, tokens);
 
 	if(lexical_output)
@@ -68,13 +66,13 @@ int main(int argc, char** argv)
 			cout << str;
 		
 	if(syntax_output)
-		for(string str : grammar)
+		for(string str : *grammar)
 			cout << str;
 
 	return 0;
 }
 
-void dump_to_file(vector<string> grammar, vector<string> tokens){
+void dump_to_file(vector<string> *grammar, vector<string> tokens){
 	fstream f;
 	f.open("./output/task1.txt", ios::out);
 	for(string str : tokens){
@@ -83,7 +81,7 @@ void dump_to_file(vector<string> grammar, vector<string> tokens){
 	f.close();
 	
 	f.open("./output/task2.txt", ios::out);
-	for(string str : grammar){
+	for(string str : *grammar){
 		f << str;
 	}
 	f.close();

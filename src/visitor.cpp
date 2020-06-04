@@ -73,6 +73,15 @@ void RaiseError(Error error_type, string name="", int arg_num=0, int param_num=0
 	}
 }
 
+bool redeclCheck(string name, SymbolTable* sym_table){
+	if(sym_table->s_arr.count(name) > 0 ||
+		   sym_table->s_func.count(name) > 0 ||
+		   sym_table->s_id.count(name) > 0 ||
+		   sym_table->s_keyword.count(name) > 0)
+			return true;
+	return false;	
+}
+
 /* SemanticCheckVisitor */
 float SemanticCheckVisitor::visit ( Expression* n ){
 	float v;
@@ -102,15 +111,6 @@ float SemanticCheckVisitor::visit(Identifier* id){
 		return sym_table->s_id[id->name]->num->val;
 	}
 	return sym_table->s_id[id->name]->f_num->val;
-}
-
-bool redeclCheck(string name, SymbolTable* sym_table){
-	if(sym_table->s_arr.count(name) > 0 ||
-		   sym_table->s_func.count(name) > 0 ||
-		   sym_table->s_id.count(name) > 0 ||
-		   sym_table->s_keyword.count(name) > 0)
-			return true;
-	return false;	
 }
 
 int SemanticCheckVisitor::visit(Variable* v){
@@ -180,7 +180,6 @@ int SemanticCheckVisitor::visit(AccessVar* acv){
 			RaiseError(ARR_NOT_DEFINE, name);
 			return ERROR;
 		}
-		cout << "type:" << acv->index->number_type << endl;
 		if(acv->index->number_type != "int"){
 			RaiseError(ARR_INDEX_ACCESS_TYPE_INCOMPATIBLE, name);
 			return ERROR;
@@ -230,5 +229,314 @@ int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 	return SUCCESS;
 }
 
+int SemanticCheckVisitor::visit (IfStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (WhileStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (BlockStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (EmptyStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (ReturnStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (ExpStmt* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (PrimitiveType* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (BinOp* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (UnaryOp* n){
+	return 0;
+}
+
+int SemanticCheckVisitor::visit (SyntaxRoot* n){
+	return 0;
+}
+
+
+void SyntaxTreeVisitor::printTab(){
+	for(int i = 0; i < this->depth; i++){
+		cout << '\t';
+	}
+}
+
+float  SyntaxTreeVisitor::visit (Expression* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->left->accept(this);
+	
+	n->right->accept(this);
+	this->depth--;
+	return 0.0f;
+}
+
+float  SyntaxTreeVisitor::visit (Int10* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0.0f;
+}
+
+float  SyntaxTreeVisitor::visit (Real10* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0.0f;
+}
+
+float  SyntaxTreeVisitor::visit (Identifier* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0.0f;
+}
+
+int SyntaxTreeVisitor::visit (Variable* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->id->accept(this);
+	
+	n->v_type->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (ArrayVariable* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->id->accept(this);
+	
+	n->v_type->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (Function* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->f_type->accept(this);
+	
+	n->id->accept(this);
+	vector<Variable*>* param_list = n->param_list;
+	for(Variable* var : *param_list){
+		var->id->accept(this);
+		var->v_type->accept(this);
+	}
+	
+	n->block->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (AccessVar* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->id->accept(this);
+	
+	n->index->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (FunctionInvocation* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->id->accept(this);
+	vector<Expression*>* arg_list = n->arg_list;
+	for(Expression* arg : *arg_list){
+		
+		arg->left->accept(this);
+		
+		arg->right->accept(this);
+	}
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (IfStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->e->accept(this);
+	
+	n->s1->accept(this);
+	
+	n->s2->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (WhileStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->e->accept(this);
+	
+	n->s->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (BlockStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	vector<Statement*>* stmt_list = n->stmt_list;
+	vector<Statement*>* local_decl_list = n->local_decl_list;
+
+	for(Statement* stmt : *stmt_list){
+		
+		stmt->accept(this);
+	}
+	for(Statement* local_decl : *local_decl_list){
+		
+		local_decl->accept(this);
+	}
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (EmptyStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (ReturnStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->e->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (ExpStmt* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->e->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (PrimitiveType* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (BinOp* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	
+	n->left->accept(this);
+	
+	n->right->accept(this);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (UnaryOp* n){
+	
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	this->depth--;
+	return 0;
+}
+
+int SyntaxTreeVisitor::visit (SyntaxRoot* n){
+	string str;
+	str += string(this->depth, '\t');
+	this->depth++;
+	str += n->type;
+	this->grammar_tree->push_back(str);
+	vector<Statement*>* stmt_list;
+	stmt_list = n->stmt_list;
+	for(Statement* stmt : *stmt_list){
+		
+		stmt->accept(this);
+	}
+	this->depth--;
+	return 0;
+}
 
 

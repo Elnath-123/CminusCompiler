@@ -1,12 +1,7 @@
-func:
-	t1 := m + n
-	return t1
-
 main:
-	param a
-	param b
-	t2 := call func, 2
-	d := t2
+	b := 5
+	c := 6
+	a[t1] := 5
 	return 0
 
 

@@ -80,7 +80,6 @@ string genArg(vector<Expression*>* arg_list){
     string code = "";
     for(Expression* arg : *arg_list){
         code += tab + "param " + ((Identifier*)arg)->name + '\n';
-        cout << ((Identifier*)arg)->name << endl;
     }
     return code;
     

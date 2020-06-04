@@ -1,6 +1,7 @@
 #ifndef _VISITOR_H
 #define _VISITOR_H
 #include <string>
+#include <vector>
 using namespace std;
 enum Error{
 	DIVIDE_BY_ZERO,
@@ -22,22 +23,44 @@ enum Error{
 enum Warning{
 	RET_TYPE_CONVERTION
 };
+/* Symbol table */
+class Compose;
+class SymbolTable;
 
+
+/* AstNode (root) */
 class AstNode;
-class BinOp;
+
+/* SyntaxTree root */
+class SyntaxRoot;
+
+/* Expression */
 class Expression;
+class BinOp;
 class Int10;
 class Real10;
 class Identifier;
+class UnaryOp;
+class FunctionInvocation;
 
-class Compose;
-class SymbolTable;
+/* Statement */
+class Statement;
 class Variable;
 class ArrayVariable;
 class Function;
-class AccessVar;
-class FunctionInvocation;
 class ReturnStmt;
+class IfStmt;
+class WhileStmt;
+class BlockStmt;
+class EmptyStmt;
+class ExpStmt;
+
+/* PrimitiveType */
+class PrimitiveType;
+
+/* AccessVar */
+class AccessVar;
+
 
 class Visitor{
 public:
@@ -60,8 +83,10 @@ public:
 	virtual int    visit (PrimitiveType*) = 0;
 	virtual int    visit (BinOp*) = 0;
 	virtual int    visit (UnaryOp*) = 0;
+	virtual int    visit (SyntaxRoot*) = 0;
 	Visitor(SymbolTable* sym_table):
 		sym_table(sym_table) {}
+	Visitor(){}
 };
 
 class SemanticCheckVisitor : public Visitor{	
@@ -84,11 +109,15 @@ public:
 	virtual int    visit (PrimitiveType*);
 	virtual int    visit (BinOp*);
 	virtual int    visit (UnaryOp*);
+	virtual int    visit (SyntaxRoot*);
 	SemanticCheckVisitor(SymbolTable* sym_table):
 		Visitor(sym_table) {}
 };
 
 class SyntaxTreeVisitor : public Visitor{
+	private:
+		int depth;
+		vector<string>* grammar_tree;
 	public:
 		virtual float  visit (Expression* n);
 		virtual float  visit (Int10* n);
@@ -108,7 +137,11 @@ class SyntaxTreeVisitor : public Visitor{
 		virtual int    visit (PrimitiveType*);
 		virtual int    visit (BinOp*);
 		virtual int    visit (UnaryOp*);
-}
+		virtual int    visit (SyntaxRoot*);
+		vector<string>* getGrammarTree(){return this->grammar_tree;}
+		void printTab();
+		SyntaxTreeVisitor(): depth(0) {grammar_tree = new vector<string>();}
+};
 
 
 

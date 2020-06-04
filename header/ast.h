@@ -200,7 +200,7 @@ public:
 	vector<Variable*>* param_list;
 	BlockStmt* block;
 	Function(PrimitiveType* f_type, Identifier* id, vector<Variable*>* param_list, BlockStmt* block, string type="func"):
-			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){cout << param_list->size()<< endl;}
+			Statement(type), f_type(f_type), id(id), param_list(param_list), block(block){ }
 	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
@@ -223,4 +223,13 @@ public:
 	virtual float accept(Visitor *v){return v->visit(this);}
 };
 
+class SyntaxRoot : public AstNode{
+public:
+	string type;
+	vector<Statement*>* stmt_list;
+	SyntaxRoot();
+	SyntaxRoot(vector<Statement*>* stmt_list, string type="syntax_root"):
+		stmt_list(stmt_list), type(type) {}
+	virtual float accept(Visitor* v){return v->visit(this);}
+};
 #endif

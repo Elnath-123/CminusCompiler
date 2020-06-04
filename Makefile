@@ -20,5 +20,6 @@ clean:
 	location.hh \
 	position.hh \
 	stack.hh \
-	target
+	target \
+	bison.output
 
