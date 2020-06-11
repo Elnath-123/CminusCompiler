@@ -22,6 +22,29 @@ private:
     static string newtemp();
     static string newlabel();
     static void write2File(string content);
+
+    static string genFuncName(string func_name);
+
+    static string genAssignOperation(string lval, string rval);
+
+    static string genCall(string func_name, int argc);
+
+    static string genCallWithRet(string func_name, int argc, string temp);
+
+    static string genRetCode(Expression* E);
+
+    static string genParam(string id_name);
+
+    static string genLabel(string label);
+
+    static string genIfGotoOperation(string exp, string label);
+
+    static string genGotoOperation(string label);
+
+    static string genBinaryOperation(string lval, string op, string rval);
+
+    static string genArg(vector<Expression*>* arg_list);
+    
 public:
     static void genBinary(Expression*& E, Expression* E1, Expression* E2, string op);
 

@@ -1,3 +1,11 @@
+/*
+* @name visitor.h
+* @description Visitor to operate abstract syntax tree
+*              including traverse, semantic checking...
+* @date 06/04/2020 
+* @author Rongqing Li
+*/
+
 #ifndef _VISITOR_H
 #define _VISITOR_H
 #include <string>
@@ -61,6 +69,7 @@ class PrimitiveType;
 /* AccessVar */
 class AccessVar;
 
+class Gen;
 
 class Visitor{
 public:
@@ -81,7 +90,7 @@ public:
 	virtual int    visit (ReturnStmt*) = 0;
 	virtual int    visit (ExpStmt*) = 0;
 	virtual int    visit (PrimitiveType*) = 0;
-	virtual int    visit (BinOp*) = 0;
+	virtual float  visit (BinOp*) = 0;
 	virtual int    visit (UnaryOp*) = 0;
 	virtual int    visit (SyntaxRoot*) = 0;
 	Visitor(SymbolTable* sym_table):
@@ -107,7 +116,7 @@ public:
 	virtual int    visit (ReturnStmt*);
 	virtual int    visit (ExpStmt*);
 	virtual int    visit (PrimitiveType*);
-	virtual int    visit (BinOp*);
+	virtual float  visit (BinOp*);
 	virtual int    visit (UnaryOp*);
 	virtual int    visit (SyntaxRoot*);
 	SemanticCheckVisitor(SymbolTable* sym_table):
@@ -115,41 +124,56 @@ public:
 };
 
 class SyntaxTreeVisitor : public Visitor{
-	private:
-		int depth;
-		vector<string>* grammar_tree;
-	public:
-		virtual float  visit (Expression* n);
-		virtual float  visit (Int10* n);
-		virtual float  visit (Real10* n);
-		virtual float  visit (Identifier* );
-		virtual int    visit (Variable*);
-		virtual int    visit (ArrayVariable*);
-		virtual int    visit (Function*);
-		virtual int    visit (AccessVar*);
-		virtual int    visit (FunctionInvocation*);
-		virtual int    visit (IfStmt*);
-		virtual int    visit (WhileStmt*);
-		virtual int    visit (BlockStmt*);
-		virtual int    visit (EmptyStmt*);
-		virtual int    visit (ReturnStmt*);
-		virtual int    visit (ExpStmt*);
-		virtual int    visit (PrimitiveType*);
-		virtual int    visit (BinOp*);
-		virtual int    visit (UnaryOp*);
-		virtual int    visit (SyntaxRoot*);
-		vector<string>* getGrammarTree(){return this->grammar_tree;}
-		void printTab();
-		SyntaxTreeVisitor(): depth(0) {grammar_tree = new vector<string>();}
+private:
+	int depth;
+	vector<string>* grammar_tree;
+public:
+	virtual float  visit (Expression* n);
+	virtual float  visit (Int10* n);
+	virtual float  visit (Real10* n);
+	virtual float  visit (Identifier* );
+	virtual int    visit (Variable*);
+	virtual int    visit (ArrayVariable*);
+	virtual int    visit (Function*);
+	virtual int    visit (AccessVar*);
+	virtual int    visit (FunctionInvocation*);
+	virtual int    visit (IfStmt*);
+	virtual int    visit (WhileStmt*);
+	virtual int    visit (BlockStmt*);
+	virtual int    visit (EmptyStmt*);
+	virtual int    visit (ReturnStmt*);
+	virtual int    visit (ExpStmt*);
+	virtual int    visit (PrimitiveType*);
+	virtual float  visit (BinOp*);
+	virtual int    visit (UnaryOp*);
+	virtual int    visit (SyntaxRoot*);
+	vector<string>* getGrammarTree(){return this->grammar_tree;}
+	void printTab();
+	SyntaxTreeVisitor(): depth(0) {grammar_tree = new vector<string>();}
 };
 
-
-
-
-/*class PostfixVisitor : public Visitor{
+class TACVisitor : public Visitor{
 public:
-	virtual float visit ( Expression* n );
-	virtual float visit ( Int10* n );
-};	
-*/
+	virtual float  visit (Expression* n);
+	virtual float  visit (Int10* n);
+	virtual float  visit (Real10* n);
+	virtual float  visit (Identifier* );
+	virtual int    visit (Variable*);
+	virtual int    visit (ArrayVariable*);
+	virtual int    visit (Function*);
+	virtual int    visit (AccessVar*);
+	virtual int    visit (FunctionInvocation*);
+	virtual int    visit (IfStmt*);
+	virtual int    visit (WhileStmt*);
+	virtual int    visit (BlockStmt*);
+	virtual int    visit (EmptyStmt*);
+	virtual int    visit (ReturnStmt*);
+	virtual int    visit (ExpStmt*);
+	virtual int    visit (PrimitiveType*);
+	virtual float  visit (BinOp*);
+	virtual int    visit (UnaryOp*);
+	virtual int    visit (SyntaxRoot*);
+
+	TACVisitor(){}
+};
 #endif

@@ -5,7 +5,7 @@
 * @author Rongqing Li
 */
 #include "../header/codegen.h"
-string Gen::filename = "3addcode.txt";
+string Gen::filename = "output/TAC.txt";
 int Gen::label_num = 1;
 int Gen::temp_num = 1;
 string tab = "\t";
@@ -16,48 +16,59 @@ void Gen::write2File(string content){
     f << content << endl;
 }
 
-string genFuncName(string func_name){
+string Gen::genFuncName(string func_name){
     return func_name + ":\n"; 
 }
 
-string genAssignOperation(string lval, string rval){
+string Gen::genAssignOperation(string lval, string rval){
     return tab + lval + " := " + rval + '\n';
 }
 
-string genCall(string func_name, int argc){
+string Gen::genCall(string func_name, int argc){
     return tab + "call " + func_name + ", " + to_string(argc) + '\n';
 }
 
-string genCallWithRet(string func_name, int argc, string temp){
+string Gen::genCallWithRet(string func_name, int argc, string temp){
     string code = "";
     string func_code = "call " + func_name + ", " + to_string(argc);
     code = genAssignOperation(temp, func_code);
     return code;
 }
 
-string genRetCode(Expression* E){
+string Gen::genRetCode(Expression* E){
     string code = "";
     code += E->code;
     code += tab + "return " + E->place + "\n\n";
     return code;
 }
-string genParam(string id_name){
+
+string Gen::genParam(string id_name){
     return tab + "param " + id_name + '\n';
 }
 
-string genLabel(string label){
+string Gen::genLabel(string label){
     return label + ":\n";
 }
 
-string genIfGotoOperation(string exp, string label){
+string Gen::genIfGotoOperation(string exp, string label){
     return tab + "if" + ' ' + exp + ' ' + "goto " + label + '\n'; 
 }
 
-string genGotoOperation(string label){
+string Gen::genGotoOperation(string label){
     return tab + "goto " + label + '\n';
 }
-string genBinaryOperation(string lval, string op, string rval){
+
+string Gen::genBinaryOperation(string lval, string op, string rval){
     return lval + ' ' + op + ' ' + rval;
+}
+
+string Gen::genArg(vector<Expression*>* arg_list){
+    string code = "";
+    for(Expression* arg : *arg_list){
+        code += tab + "param " + ((Identifier*)arg)->name + '\n';
+    }
+    return code;
+    
 }
 
 string Gen::newtemp(){
@@ -76,14 +87,7 @@ string Gen::genCode(vector<Statement*>* gloabal_decl_list){
     write2File(code);
     return code;
 }
-string genArg(vector<Expression*>* arg_list){
-    string code = "";
-    for(Expression* arg : *arg_list){
-        code += tab + "param " + ((Identifier*)arg)->name + '\n';
-    }
-    return code;
-    
-}
+
 void Gen::genFunctionInvoke(Expression*& E, Identifier* id, vector<Expression*>* arg_list, SymbolTable* sym_table){
     string code = "";
     /* Searching function:id from symbol table
@@ -159,7 +163,6 @@ void Gen::genRetStmt(Statement*& S, Expression* E){
     S->code = code;
 }
 
-
 void Gen::genParenthesis(Expression*& E, Expression*& E1){
     /* E->place = E1.place 
        E->code = E1->code
@@ -193,14 +196,7 @@ void Gen::genReal10(Expression*& E, Real10* num){
     E->place = to_string(num->val);
     E->code = "";
 }
-/*
-func(AstNode* a)
-    if(a->type == "if-stmt"){
-        a = (Statement*)
-        genIfStmt();
-    }
 
-*/
 void Gen::genIfStmt(Statement*& S, Expression* E, Statement* S1, Statement* S2){
     string code = "";
     string place = "";
@@ -235,13 +231,13 @@ void Gen::genIfStmt(Statement*& S, Expression* E, Statement* S1, Statement* S2){
     S->code = code;
 
 }
+
 void Gen::genFunction(Statement*& F, Identifier* id, Statement* block){
     string code = "";
     code = genFuncName(id->name);
     code += block->code;
     F->code = code;
 }
-
 
 /* Assign node is root (need to write S->code to file) */
 void Gen::genAssign(Assign*& S, Identifier* id, Expression* E){

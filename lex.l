@@ -57,7 +57,7 @@ using namespace std;
 			base *= 16;
 		}
 		if(dotpos != hex.size()){
-			base = 1.0/8;
+			base = 1.0 / 16;
 			for(int i = dotpos + 1; i < hex.size(); i++){
 				sum += 1.0 * numchar2int(hex[i]) * base;
 				base /= 16;
@@ -98,7 +98,7 @@ INT16  0x[0-9a-f][0-9a-f]*
 INT10  0|[1-9][0-9]* 
 INT8   0[1-7][0-7]* 
 NextLine \n
-Space [ \t]
+Space [ \t\r]
 OtherCharacter .
 %%
 

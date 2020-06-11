@@ -68,7 +68,6 @@
 %token <id> ID
 
 %type <e> expression simple_expression relop additive_expression addop term mulop factor call
-		  //binary_logic unary_logic
 %type <stmt> expression_stmt statement selection_stmt 
 			 iteration_stmt return_stmt var_declearation fun_declearation 
 			 declearation
@@ -123,8 +122,6 @@
 				;
 
 	var_declearation: type_specifier ID SEMICOLON {
-		
-		//semanticCheck($1, $2);
 		/* name, (type, name, type_specifier) */
 		
 		Variable* v = new Variable($1, $2, "id_var");
@@ -143,7 +140,6 @@
 		ArrayVariable* v = new ArrayVariable($1, $2, "arr_var", $4);
 		$$ = v;
 		
-
 		SemanticCheckVisitor *scv = new SemanticCheckVisitor(sym_table);
 		if(-1 == v->accept(scv)){
 			printf("Abort!\n");
@@ -159,7 +155,7 @@
 				  ;
 
 	fun_declearation: type_specifier ID LP params RP compound_stmt{
-		
+
 		Function* func = new Function($1, $2, $4, $6);
 		$$ = func;
 		
@@ -333,7 +329,6 @@
 		   }
 		   Gen::genArr(v->id, $1, $3);
 		   $$ = v;
-		   
 		}
 	   ;
 	
@@ -429,8 +424,12 @@
 		$$ = $2;
 	}
 	      | var {
-		
 		$1->id->number_type = sym_table->s_id[$1->id->name]->type_specifier;
+		if($1->id->number_type == "int"){
+			$$->num.number = $1->id->num.number; 
+		}else{
+			$$->num.f_number = $1->id->num.f_number;
+		}
 		$$ = $1->id;
 	} 
 		  | call {

@@ -8,19 +8,13 @@ IDN			main
 
 {			_
 
-int			_
+float		_
 
 IDN			a
 
-[			_
-
-INT10		10
-
-]			_
-
 ;			_
 
-int			_
+float		_
 
 IDN			b
 
@@ -32,37 +26,49 @@ IDN			c
 
 ;			_
 
+float		_
+
+IDN			d
+
+;			_
+
+IDN			a
+
+=			_
+
+REAL10		10.580000
+
+;			_
+
 IDN			b
 
 =			_
 
-INT10		5
+REAL10		1.567000
 
 ;			_
 
 IDN			c
 
 =			_
-
-INT10		6
-
-;			_
-
-IDN			a
-
-[			_
 
 IDN			b
 
 +			_
 
-IDN			c
+REAL10		1.200000
 
-]			_
+;			_
+
+IDN			d
 
 =			_
 
-INT10		5
+IDN			c
+
++			_
+
+REAL10		1.400000
 
 ;			_
 

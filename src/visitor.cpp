@@ -1,6 +1,7 @@
 #include "../header/visitor.h"
 #include "../header/ast.h"
-#include "../header/symbol.h"	
+#include "../header/symbol.h"
+#include "../header/codegen.h"	
 #define RET_FROM_BINOP 114514.1919810
 #define ERROR -1
 #define SUCCESS 1
@@ -95,15 +96,12 @@ float SemanticCheckVisitor::visit ( Expression* n ){
 		v = n->left->accept(this) / n->right->accept(this);
 	return v;
 }
-
 float SemanticCheckVisitor::visit(Int10* n){
 	return n->val;
 }
-
 float SemanticCheckVisitor::visit(Real10* n){
 	return n->val;
 }
-
 float SemanticCheckVisitor::visit(Identifier* id){
 	SymbolTable* sym_table = this->sym_table;
 	string type = sym_table->s_id[id->name]->type_specifier;
@@ -112,8 +110,7 @@ float SemanticCheckVisitor::visit(Identifier* id){
 	}
 	return sym_table->s_id[id->name]->f_num->val;
 }
-
-int SemanticCheckVisitor::visit(Variable* v){
+int   SemanticCheckVisitor::visit(Variable* v){
 	SymbolTable* sym_table = this->sym_table;
 	string name = v->id->name;
 	if(redeclCheck(name, sym_table)){
@@ -122,8 +119,7 @@ int SemanticCheckVisitor::visit(Variable* v){
 	}
 	return SUCCESS;
 }
-
-int SemanticCheckVisitor::visit(Function* func){
+int   SemanticCheckVisitor::visit(Function* func){
 	SymbolTable* sym_table = this->sym_table;
 	string name = func->id->name;
 	vector<ReturnStmt*>* ret_decl_list = func->block->ret_decl_list;
@@ -156,8 +152,7 @@ int SemanticCheckVisitor::visit(Function* func){
 	}	
 	return SUCCESS;
 }
-
-int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
+int   SemanticCheckVisitor::visit(ArrayVariable* arr_var){
 	SymbolTable* sym_table = this->sym_table;
 	string name = arr_var->id->name;
 	if(redeclCheck(name, sym_table)){
@@ -166,8 +161,7 @@ int SemanticCheckVisitor::visit(ArrayVariable* arr_var){
 	}
 	return SUCCESS;
 }
-
-int SemanticCheckVisitor::visit(AccessVar* acv){
+int   SemanticCheckVisitor::visit(AccessVar* acv){
 	SymbolTable* sym_table = this->sym_table;
 	string name = acv->id->name;
 	
@@ -201,8 +195,7 @@ int SemanticCheckVisitor::visit(AccessVar* acv){
 	
 	return SUCCESS;
 }
-
-int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
+int   SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 	SymbolTable* sym_table = this->sym_table;
 	string name = func_invoke->id->name;
 	if(!sym_table->s_func.count(name)){
@@ -213,7 +206,6 @@ int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 	FuncSymbol* func = sym_table->s_func[name];
 	vector<Expression*>* arg_list = func_invoke->arg_list;
 	vector<Variable*>* param_list = func->param_list;
-	cout << param_list->size() << endl;
 	if(arg_list->size() != param_list->size()){
 		RaiseError(FUNC_PARAMETER_INCOMPATIBLE, name, arg_list->size(), func->param_list->size());
 		return ERROR;
@@ -228,59 +220,57 @@ int SemanticCheckVisitor::visit(FunctionInvocation* func_invoke){
 
 	return SUCCESS;
 }
-
-int SemanticCheckVisitor::visit (IfStmt* n){
+int   SemanticCheckVisitor::visit (IfStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (WhileStmt* n){
+int   SemanticCheckVisitor::visit (WhileStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (BlockStmt* n){
+int   SemanticCheckVisitor::visit (BlockStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (EmptyStmt* n){
+int   SemanticCheckVisitor::visit (EmptyStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (ReturnStmt* n){
+int   SemanticCheckVisitor::visit (ReturnStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (ExpStmt* n){
+int   SemanticCheckVisitor::visit (ExpStmt* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (PrimitiveType* n){
+int   SemanticCheckVisitor::visit (PrimitiveType* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (BinOp* n){
+float   SemanticCheckVisitor::visit (BinOp* n){
+	float v;
+	if (n->type == "+")
+		v = n->left->accept(this) + n->right->accept(this);
+	else if (n->type == "-")
+		v = n->left->accept(this) - n->right->accept(this);
+	else if (n->type == "*")
+		v = n->left->accept(this) * n->right->accept(this);
+	else if (n->type == "/")
+		v = n->left->accept(this) / n->right->accept(this);
+	return v;
+}
+int   SemanticCheckVisitor::visit (UnaryOp* n){
 	return 0;
 }
-
-int SemanticCheckVisitor::visit (UnaryOp* n){
+int   SemanticCheckVisitor::visit (SyntaxRoot* n){
 	return 0;
 }
+  
 
-int SemanticCheckVisitor::visit (SyntaxRoot* n){
-	return 0;
-}
-
-
-void SyntaxTreeVisitor::printTab(){
+void  SyntaxTreeVisitor::printTab(){
 	for(int i = 0; i < this->depth; i++){
 		cout << '\t';
 	}
 }
-
-float  SyntaxTreeVisitor::visit (Expression* n){
+float SyntaxTreeVisitor::visit (Expression* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->left->accept(this);
@@ -289,42 +279,38 @@ float  SyntaxTreeVisitor::visit (Expression* n){
 	this->depth--;
 	return 0.0f;
 }
-
-float  SyntaxTreeVisitor::visit (Int10* n){
+float SyntaxTreeVisitor::visit (Int10* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0.0f;
 }
-
-float  SyntaxTreeVisitor::visit (Real10* n){
+float SyntaxTreeVisitor::visit (Real10* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0.0f;
 }
-
-float  SyntaxTreeVisitor::visit (Identifier* n){
+float SyntaxTreeVisitor::visit (Identifier* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0.0f;
 }
-
-int SyntaxTreeVisitor::visit (Variable* n){
+int   SyntaxTreeVisitor::visit (Variable* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->id->accept(this);
@@ -333,12 +319,11 @@ int SyntaxTreeVisitor::visit (Variable* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (ArrayVariable* n){
+int   SyntaxTreeVisitor::visit (ArrayVariable* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->id->accept(this);
@@ -347,12 +332,11 @@ int SyntaxTreeVisitor::visit (ArrayVariable* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (Function* n){
+int   SyntaxTreeVisitor::visit (Function* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->f_type->accept(this);
@@ -368,12 +352,11 @@ int SyntaxTreeVisitor::visit (Function* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (AccessVar* n){
+int   SyntaxTreeVisitor::visit (AccessVar* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->id->accept(this);
@@ -382,31 +365,29 @@ int SyntaxTreeVisitor::visit (AccessVar* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (FunctionInvocation* n){
+int   SyntaxTreeVisitor::visit (FunctionInvocation* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->id->accept(this);
 	vector<Expression*>* arg_list = n->arg_list;
 	for(Expression* arg : *arg_list){
 		
-		arg->left->accept(this);
+		arg->accept(this);
 		
-		arg->right->accept(this);
+		arg->accept(this);
 	}
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (IfStmt* n){
+int   SyntaxTreeVisitor::visit (IfStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->e->accept(this);
@@ -417,12 +398,11 @@ int SyntaxTreeVisitor::visit (IfStmt* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (WhileStmt* n){
+int   SyntaxTreeVisitor::visit (WhileStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->e->accept(this);
@@ -431,12 +411,11 @@ int SyntaxTreeVisitor::visit (WhileStmt* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (BlockStmt* n){
+int   SyntaxTreeVisitor::visit (BlockStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	vector<Statement*>* stmt_list = n->stmt_list;
@@ -453,56 +432,51 @@ int SyntaxTreeVisitor::visit (BlockStmt* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (EmptyStmt* n){
+int   SyntaxTreeVisitor::visit (EmptyStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (ReturnStmt* n){
+int   SyntaxTreeVisitor::visit (ReturnStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->e->accept(this);
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (ExpStmt* n){
+int   SyntaxTreeVisitor::visit (ExpStmt* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->e->accept(this);
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (PrimitiveType* n){
+int   SyntaxTreeVisitor::visit (PrimitiveType* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (BinOp* n){
+float SyntaxTreeVisitor::visit (BinOp* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	
 	n->left->accept(this);
@@ -511,23 +485,21 @@ int SyntaxTreeVisitor::visit (BinOp* n){
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (UnaryOp* n){
+int   SyntaxTreeVisitor::visit (UnaryOp* n){
 	
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	this->depth--;
 	return 0;
 }
-
-int SyntaxTreeVisitor::visit (SyntaxRoot* n){
+int   SyntaxTreeVisitor::visit (SyntaxRoot* n){
 	string str;
 	str += string(this->depth, '\t');
 	this->depth++;
-	str += n->type;
+	str += n->type + '\n';
 	this->grammar_tree->push_back(str);
 	vector<Statement*>* stmt_list;
 	stmt_list = n->stmt_list;
@@ -540,3 +512,109 @@ int SyntaxTreeVisitor::visit (SyntaxRoot* n){
 }
 
 
+float TACVisitor::visit (Expression* n){
+	n->left->accept(this);
+	n->right->accept(this);
+	return 0.0f;
+}
+float TACVisitor::visit (Int10* n){
+	return 0.0f;
+}
+float TACVisitor::visit (Real10* n){
+	return 0.0f;
+}
+float TACVisitor::visit (Identifier* n){
+	return 0.0f;
+}
+int   TACVisitor::visit (Variable* n){
+	n->id->accept(this);
+	n->v_type->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (ArrayVariable* n){
+	n->id->accept(this);
+	n->v_type->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (Function* n){
+	n->f_type->accept(this);
+	n->id->accept(this);
+	vector<Variable*>* param_list = n->param_list;
+	for(Variable* var : *param_list){
+		var->id->accept(this);
+		var->v_type->accept(this);
+	}
+	
+	n->block->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (AccessVar* n){
+	n->id->accept(this);
+	n->index->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (FunctionInvocation* n){
+	n->id->accept(this);
+	vector<Expression*>* arg_list = n->arg_list;
+	for(Expression* arg : *arg_list){
+		arg->left->accept(this);
+		arg->right->accept(this);
+	}
+	return 0;
+}
+int   TACVisitor::visit (IfStmt* n){
+	n->e->accept(this);
+	n->s1->accept(this);
+	n->s2->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (WhileStmt* n){
+	n->e->accept(this);
+	n->s->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (BlockStmt* n){
+	vector<Statement*>* stmt_list = n->stmt_list;
+	vector<Statement*>* local_decl_list = n->local_decl_list;
+
+	for(Statement* stmt : *stmt_list){
+		
+		stmt->accept(this);
+	}
+	for(Statement* local_decl : *local_decl_list){
+		
+		local_decl->accept(this);
+	}
+	return 0;
+}
+int   TACVisitor::visit (EmptyStmt* n){
+	return 0;
+}
+int   TACVisitor::visit (ReturnStmt* n){
+	n->e->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (ExpStmt* n){
+	n->e->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (PrimitiveType* n){
+	return 0;
+}
+float TACVisitor::visit (BinOp* n){
+	n->left->accept(this);
+	
+	n->right->accept(this);
+	return 0;
+}
+int   TACVisitor::visit (UnaryOp* n){
+	return 0;
+}
+int   TACVisitor::visit (SyntaxRoot* n){
+	vector<Statement*>* stmt_list;
+	stmt_list = n->stmt_list;
+	for(Statement* stmt : *stmt_list){
+		stmt->accept(this);
+	}
+	return 0;
+}

@@ -1,5 +1,6 @@
 int main(){
     int b;
-    a = 5;
+    b = 4;
+    k = 5;
     return 0;
 }

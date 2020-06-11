@@ -1,5 +1,7 @@
 int main(){
     int a;
-    func(a);
+    int b;
+    int c;
+    c = a + b;
     return 0;
 }

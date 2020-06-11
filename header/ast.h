@@ -204,7 +204,6 @@ public:
 	virtual float accept( Visitor* v) {return v->visit(this);}
 };
 
-
 class Real10 : public Expression{
 public:
 	float val;
